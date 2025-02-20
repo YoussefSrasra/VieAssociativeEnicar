@@ -1,0 +1,19 @@
+# Ignore Angular build files
+/dist/
+/node_modules/
+
+# Ignore Spring Boot build files
+/target/
+/.mvn/
+/.idea/
+/*.iml
+/*.log
+
+# Ignore environment files
+/src/main/resources/application.properties
+/src/main/resources/application-dev.properties
+/src/main/resources/application-prod.properties
+
+# Ignore IDE-specific files
+.vscode/
+.DS_Store
