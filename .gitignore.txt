@@ -1,6 +1,7 @@
 # Ignore Angular build files
-/dist/
-/node_modules/
+/node_modules
+/dist
+/.angular/cache
 
 # Ignore Spring Boot build files
 /target/
