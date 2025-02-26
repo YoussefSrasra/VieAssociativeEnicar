@@ -18,7 +18,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -32,22 +31,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Récupérer le token depuis l'en-tête Authorization
         String jwt = getJwtFromRequest(request);
 
-        // Vérifier si le token est valide
-        if (StringUtils.hasText(jwt) && jwtUtil.extractUsername(jwt) != null) {
-            String username = jwtUtil.extractUsername(jwt);
-
-            // Charger l'utilisateur depuis la base de données
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-            // Vérifier la validité du token
-            if (jwtUtil.validateToken(jwt, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (StringUtils.hasText(jwt)) {
+            try {
+                String username = jwtUtil.extractUsername(jwt);
+                if (username != null) {
+                    UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                    if (jwtUtil.validateToken(jwt, userDetails)) {
+                        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+                        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println("Failed to validate token: " + e.getMessage());
             }
         }
 
