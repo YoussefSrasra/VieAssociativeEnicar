@@ -4,8 +4,13 @@ import { BrowserModule  } from '@angular/platform-browser';
 import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { AccueilComponent } from './accueil/accueil.component';
+
+
 
 const routes: Routes =[
+  { path: 'accueil', component: AccueilComponent },
+  { path: '', redirectTo: '/accueil', pathMatch: 'full' },
   {
     path: '',
     redirectTo: 'dashboard',
