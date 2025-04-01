@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClubSphere - ENICarthage</title>
+    <style>
+        /* Reset et styles de base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        .header {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .topbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+        
+        .contact-info i, .social-links a {
+            margin-right: 15px;
+        }
+        
+        .branding {
+            padding: 15px 0;
+        }
+        
+        .logo img {
+            height: 50px;
+        }
+        
+        .navmenu ul {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .navmenu a {
+            padding: 10px;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .navmenu a:hover, .navmenu a.active {
+            color: #3498db;
+        }
+        
+        /* Sections */
+        .section {
+            padding: 60px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        /* Hero section */
+        .hero {
+            text-align: center;
+            background-color: #3498db;
+            color: white;
+            position: relative;
+        }
+        
+        .hero img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+            opacity: 0.7;
+        }
+        
+        .hero .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .welcome h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* About section */
+        .about .content h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .about .content p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        /* Services section */
+        .services {
+            background-color: #ecf0f1;
+        }
+        
+        .service-item {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+        
+        .service-item:hover {
+            transform: translateY(-10px);
+        }
+        
+        .service-item h3 {
+            color: #2c3e50;
+            margin: 15px 0;
+        }
+        
+        .service-item .icon img {
+            height: 60px;
+        }
+        
+        /* Login section */
+        .appointment {
+            background-color: #fff;
+        }
+        
+        .php-email-form {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: white;
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+        }
+        
+        fieldset {
+            border: none;
+            padding: 0;
+        }
+        
+        fieldset legend {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        fieldset label {
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Grid system */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+        
+        .col-lg-4, .col-md-6, .col-md-4, .col-md-6 {
+            padding: 0 15px;
+        }
+        
+        @media (min-width: 768px) {
+            .col-md-4 {
+                width: 33.333%;
+            }
+            .col-md-6 {
+                width: 50%;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .col-lg-4 {
+                width: 33.333%;
+            }
+            .col-lg-6 {
+                width: 50%;
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navmenu ul {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .hero .container {
+                position: relative;
+                transform: none;
+                top: auto;
+                left: auto;
+                padding: 40px 0;
+            }
+            
+            .welcome h2 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 40px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header" class="header sticky-top">
+        <div class="topbar d-flex align-items-center">
+            
+        </div>
+
+        <div class="branding d-flex align-items-center">
+            <div class="container position-relative d-flex align-items-center justify-content-between">
+                <a href="index.html" class="logo d-flex align-items-center me-auto">
+                    <img class="imglogo" src="assets/images/logo.png" alt="ClubSphere Logo" />
+                </a>
+
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="#hero" class="active">Accueil</a></li>
+                        <li><a href="#about">À propos</a></li>
+                        <li><a href="#services">Clubs</a></li>
+                        <li><a routerLink="/login">Connexion</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Hero Section -->
+        <section id="hero" class="hero section light-background">
+            <img src="assets/images/groupe.png" alt="Étudiants de l'ENICarthage" />
+
+            <div class="container position-relative">
+                <div class="welcome position-relative">
+                    <h2>BIENVENUE SUR CLUBSPHERE</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about section">
+            <div class="container">
+                <div class="row gy-4 gx-5">
+                    <div class="col-lg-6 position-relative align-self-start">
+                        <img src="assets/images/about.png" class="img-fluid" alt="À propos de ClubSphere" />
+                    </div>
+
+                    <div class="col-lg-6 content">
+                        <h3>À propos de nous</h3>
+                        <p>
+                            ClubSphere est une plateforme dédiée à la gestion des activités associatives et des clubs. Elle permet une organisation fluide et centralisée des demandes, des ressources et des événements.
+                        </p>
+                        <p>
+                            Grâce à une interface intuitive, les responsables de clubs peuvent soumettre et suivre leurs demandes (réservation de salles, emprunt de matériel, déclaration d'événements, etc.), tandis que l'administration peut les traiter de manière efficace.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services section">
+            <div class="container section-title">
+                <h2>Clubs</h2>
+                <p>La liste des clubs actifs de l'ENICarthage</p>
+            </div>
+
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/cme.png" alt="Club Mécatronique">
+                            </div>
+                            <h3>Club Mécatronique</h3>
+                            <p>
+                                Le Club Mécatronique ENICarthage est le premier club de mécatronique fondé en 2010 par des étudiants à l'Ecole Nationale d'Ingénieurs de Carthage avec pour vocation de développer, concevoir et réaliser des systèmes mécatroniques.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/melkart.png" alt="Club Melkart">
+                            </div>
+                            <h3>MELKART</h3>
+                            <p>
+                                Ce club a été créé en 2012. C'est une association estudiantine à travers laquelle les étudiants font leurs premiers pas vers la vie professionnelle.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/ieee.png" alt="IEEE ENICarthage">
+                            </div>
+                            <h3>IEEE ENICarthage</h3>
+                            <p>
+                                L'IEEE est la plus grande association professionnelle au monde dédiée à l'avancement de l'innovation technologique et de l'excellence au profit de l'humanité.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/enactus.png" alt="ENACTUS">
+                            </div>
+                            <h3>ENACTUS</h3>
+                            <p>
+                                Enactus est une organisation non gouvernementale internationale à but non lucratif, créée en 1975 aux USA.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/cpc.png" alt="CPC Enicarthage">
+                            </div>
+                            <h3>CPC Enicarthage</h3>
+                            <p>
+                                Le CPC ENICarthage est une organisation à but non lucratif affiliée à l'École Nationale d'Ingénieurs de Carthage (ENICarthage).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/mtc.png" alt="Microsoft Tech Club">
+                            </div>
+                            <h3>Microsoft Tech Club Enicarthage</h3>
+                            <p>
+                                Le Club Microsoft a pour mission principale de vous former et de renforcer vos compétences pour vous préparer au mieux à la vie professionnelle.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login" class="appointment section">
+            <div class="container section-title text-center">
+                <h2>CONNEXION</h2>
+            </div>
+
+            <div class="container d-flex justify-content-center">
+                <form id="loginForm" action="admin.html" method="POST" role="form" class="php-email-form w-50">
+                    <div class="form-group">
+                        <input type="text" name="username" class="form-control" id="username" placeholder="Nom d'utilisateur" required />
+                    </div>
+                    <div class="form-group mt-3">
+                        <input type="password" class="form-control" name="password" id="password" placeholder="Mot de passe" required />
+                    </div>
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">CONNEXION</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Forum Section -->
+        <section id="forum-enicarthage" class="appointment section">
+            <div class="container section-title">
+                <h2>Forum ENICarthage 9.0 - Appel à Candidature</h2>
+                <p>Les étudiants souhaitant intégrer l'organisation peuvent remplir le formulaire ci-dessous.</p>
+            </div>
+            
+            <div class="container">
+                <form action="#" method="post" role="form" class="php-email-form">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <input type="text" name="nom" class="form-control" id="nom" placeholder="Nom" required>
+                        </div>
+                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                            <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Prénom" required>
+                        </div>
+                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 form-group mt-3">
+                            <select name="niveau" id="niveau" class="form-select" required>
+                                <option value="">Niveau d'études</option>
+                                <option value="1A">1ère année</option>
+                                <option value="2A">2ème année</option>
+                                <option value="3A">3ème année</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group mt-3">
+                            <select name="comite" id="comite" class="form-select" required>
+                                <option value="">Choisissez un comité</option>
+                                <option value="logistique">Logistique</option>
+                                <option value="communication">Communication</option>
+                                <option value="sponsoring">Sponsoring</option>
+                                <option value="organisation">Organisation</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <fieldset>
+                            <legend>Participation :</legend>
+                            <input type="radio" id="membre" name="participation" value="membre" required>
+                            <label for="membre">Membre</label>
+                            <input type="radio" id="responsable" name="participation" value="responsable" required>
+                            <label for="responsable">Responsable comité</label>
+                        </fieldset>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <textarea class="form-control" name="motivation" rows="5" placeholder="Motivation" required></textarea>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            var username = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            
+            if (username === "admin" && password === "admin123") {
+                window.location.href = "admin.html";
+            } else {
+                alert("Nom d'utilisateur ou mot de passe incorrect");
+            }
+        });
+    </script>
+</body>
+</html>

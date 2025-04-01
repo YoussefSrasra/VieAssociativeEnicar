@@ -9,12 +9,17 @@ import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.
 
 const routes: Routes = [
   {
+    path: 'accueil',
+    loadComponent: () => import('./accueil/accueil.component').then((c) => c.AccueilComponent)
+  },
+  {
+   
     path: '',
     component: AdminComponent,
     children: [
       {
         path: '',
-        redirectTo: '/login',
+        redirectTo: '/accueil',
         pathMatch: 'full'
       },
       {
@@ -32,7 +37,8 @@ const routes: Routes = [
       {
         path: 'sample-page',
         loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
-      }
+      },
+      
     ]
   },
   {
