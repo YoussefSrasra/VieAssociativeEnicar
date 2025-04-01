@@ -14,6 +14,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.dev.backdev.Auth.service.UserDetailsServiceImpl;
 import com.dev.backdev.Auth.util.JwtUtil;
 
+import io.micrometer.common.lang.NonNull;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private UserDetailsServiceImpl userDetailsService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(  @NonNull  HttpServletRequest request,   @NonNull  HttpServletResponse response,  @NonNull  FilterChain filterChain)
             throws ServletException, IOException {
 
         String jwt = getJwtFromRequest(request);

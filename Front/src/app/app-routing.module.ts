@@ -13,9 +13,24 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: '/dashboard/default',
+        redirectTo: '/login',
         pathMatch: 'full'
       },
+      {
+        path: 'event-launch',
+        loadComponent: () => import('./features/event-launch/event-launch.component')
+          .then(c => c.EventLaunchComponent)
+      },
+      {
+        path: 'partnerships',
+        loadComponent: () => import('./features/partnerships/partnerships.component')
+          .then(c => c.PartnershipsComponent)
+      },
+      {
+        path: 'event-requests',
+        loadComponent: () => import('./features/event-requests/event-requests.component')
+          .then(c => c.EventRequestsComponent)
+      } ,
       {
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)

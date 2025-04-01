@@ -1,0 +1,24 @@
+.form-check {
+  padding-left: 0;
+  margin-bottom: 0.5rem;
+
+  .form-check-input {
+    margin-right: 0.5rem;
+  }
+}
+
+textarea {
+  min-height: 120px;
+}
+
+.datetime-input {
+  position: relative;
+
+  &::after {
+    content: "📅";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}

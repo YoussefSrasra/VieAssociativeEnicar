@@ -1,0 +1,19 @@
+.table {
+  th {
+    font-weight: 500;
+    color: #6c757d;
+  }
+
+  .btn-icon {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.badge {
+  &.bg-light-primary {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+  }
+  /* Ajoutez d'autres couleurs si nécessaire */
+}
