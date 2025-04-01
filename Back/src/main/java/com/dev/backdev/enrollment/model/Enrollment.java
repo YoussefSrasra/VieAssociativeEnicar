@@ -35,9 +35,10 @@ public class Enrollment {
     private String departementEtude;
     private String niveauEtude;
     private String messageMotivation;
+    private String email;
 
     @Enumerated(EnumType.STRING)
-    private EnrollmentStatus etat; // Changer le type de String à EnrollmentStatus
+    private EnrollmentStatus etat;
 
     // Getters and setters
 
