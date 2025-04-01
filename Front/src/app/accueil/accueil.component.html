@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClubSphere - ENICarthage</title>
+   
+</head>
+<body>
+    <header id="header" class="header sticky-top">
+        <div class="topbar d-flex align-items-center">
+            
+        </div>
+
+        <div class="branding d-flex align-items-center">
+            <div class="container position-relative d-flex align-items-center justify-content-between">
+                <a href="index.html" class="logo d-flex align-items-center me-auto">
+                    <img class="imglogo" src="assets/images/logo.png" alt="ClubSphere Logo" />
+                </a>
+
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="#hero" class="active">Accueil</a></li>
+                        <li><a href="#about">À propos</a></li>
+                        <li><a href="#services">Clubs</a></li>
+                        <li><a routerLink="/login">Connexion</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <!-- Hero Section -->
+        <section id="hero" class="hero section light-background">
+            <img src="assets/images/groupe.png" alt="Étudiants de l'ENICarthage" />
+
+            <div class="container position-relative">
+                <div class="welcome position-relative">
+                    <h2>BIENVENUE SUR CLUBSPHERE</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about section">
+            <div class="container">
+                <div class="row gy-4 gx-5">
+                    <div class="col-lg-6 position-relative align-self-start">
+                        <img src="assets/images/about.png" class="img-fluid" alt="À propos de ClubSphere" />
+                    </div>
+
+                    <div class="col-lg-6 content">
+                        <h3>À propos de nous</h3>
+                        <p>
+                            ClubSphere est une plateforme dédiée à la gestion des activités associatives et des clubs. Elle permet une organisation fluide et centralisée des demandes, des ressources et des événements.
+                        </p>
+                        <p>
+                            Grâce à une interface intuitive, les responsables de clubs peuvent soumettre et suivre leurs demandes (réservation de salles, emprunt de matériel, déclaration d'événements, etc.), tandis que l'administration peut les traiter de manière efficace.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services section">
+            <div class="container section-title">
+                <h2>Clubs</h2>
+                <p>La liste des clubs actifs de l'ENICarthage</p>
+            </div>
+
+            <div class="container">
+                <div class="row gy-4">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/cme.png" alt="Club Mécatronique">
+                            </div>
+                            <h3>Club Mécatronique</h3>
+                            <p>
+                                Le Club Mécatronique ENICarthage est le premier club de mécatronique fondé en 2010 par des étudiants à l'Ecole Nationale d'Ingénieurs de Carthage avec pour vocation de développer, concevoir et réaliser des systèmes mécatroniques.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/melkart.png" alt="Club Melkart">
+                            </div>
+                            <h3>MELKART</h3>
+                            <p>
+                                Ce club a été créé en 2012. C'est une association estudiantine à travers laquelle les étudiants font leurs premiers pas vers la vie professionnelle.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/ieee.png" alt="IEEE ENICarthage">
+                            </div>
+                            <h3>IEEE ENICarthage</h3>
+                            <p>
+                                L'IEEE est la plus grande association professionnelle au monde dédiée à l'avancement de l'innovation technologique et de l'excellence au profit de l'humanité.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/enactus.png" alt="ENACTUS">
+                            </div>
+                            <h3>ENACTUS</h3>
+                            <p>
+                                Enactus est une organisation non gouvernementale internationale à but non lucratif, créée en 1975 aux USA.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/cpc.png" alt="CPC Enicarthage">
+                            </div>
+                            <h3>CPC Enicarthage</h3>
+                            <p>
+                                Le CPC ENICarthage est une organisation à but non lucratif affiliée à l'École Nationale d'Ingénieurs de Carthage (ENICarthage).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="service-item position-relative">
+                            <div class="icon">
+                                <img src="assets/images/mtc.png" alt="Microsoft Tech Club">
+                            </div>
+                            <h3>Microsoft Tech Club Enicarthage</h3>
+                            <p>
+                                Le Club Microsoft a pour mission principale de vous former et de renforcer vos compétences pour vous préparer au mieux à la vie professionnelle.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+       
+        <app-creationclub></app-creationclub>
+        <!-- Forum Section -->
+        <section id="forum-enicarthage" class="appointment section">
+            <div class="container section-title">
+                <h2>Forum ENICarthage 9.0 - Appel à Candidature</h2>
+                <p>Les étudiants souhaitant intégrer l'organisation peuvent remplir le formulaire ci-dessous.</p>
+            </div>
+            
+            <div class="container">
+                <form action="#" method="post" role="form" class="php-email-form">
+                    <div class="row">
+                        <div class="col-md-4 form-group">
+                            <input type="text" name="nom" class="form-control" id="nom" placeholder="Nom" required>
+                        </div>
+                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                            <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Prénom" required>
+                        </div>
+                        <div class="col-md-4 form-group mt-3 mt-md-0">
+                            <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 form-group mt-3">
+                            <select name="niveau" id="niveau" class="form-select" required>
+                                <option value="">Niveau d'études</option>
+                                <option value="1A">1ère année</option>
+                                <option value="2A">2ème année</option>
+                                <option value="3A">3ème année</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 form-group mt-3">
+                            <select name="comite" id="comite" class="form-select" required>
+                                <option value="">Choisissez un comité</option>
+                                <option value="logistique">Logistique</option>
+                                <option value="communication">Communication</option>
+                                <option value="sponsoring">Sponsoring</option>
+                                <option value="organisation">Organisation</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <fieldset>
+                            <legend>Participation :</legend>
+                            <input type="radio" id="membre" name="participation" value="membre" required>
+                            <label for="membre">Membre</label>
+                            <input type="radio" id="responsable" name="participation" value="responsable" required>
+                            <label for="responsable">Responsable comité</label>
+                        </fieldset>
+                    </div>
+                    
+                    <div class="form-group mt-3">
+                        <textarea class="form-control" name="motivation" rows="5" placeholder="Motivation" required></textarea>
+                    </div>
+                    
+                    <div class="text-center mt-3">
+                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+   
+
+   
+</body>
+</html>

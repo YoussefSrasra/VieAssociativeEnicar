@@ -1,0 +1,50 @@
+
+<section id="forum-enicarthage" class="appointment section">
+    <div class="container section-title">
+        <h2>demande de creation de club</h2>
+        <p>Les étudiants souhaitant ouvrir un nouveau club doivent remplir ce formulaire. 
+            Merci de fournir des informations précises pour faciliter le traitement de votre demande</p>
+    </div>
+    
+    <div class="container">
+        <form action="#" method="post" role="form" class="php-email-form">
+            <!-- Informations personnelles -->
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <input type="text" name="nom" class="form-control" id="nom" placeholder="Nom" required>
+                </div>
+                <div class="col-md-6 form-group">
+                    <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Prénom" required>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 form-group mt-3">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                </div>
+                <div class="col-md-6 form-group mt-3">
+                    <select name="niveau" id="niveau" class="form-select" required>
+                        <option value="">Niveau d'études</option>
+                        <option value="1A">1ère année</option>
+                        <option value="2A">2ème année</option>
+                        <option value="3A">3ème année</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Informations sur le club -->
+            <div class="form-group mt-3">
+                <input type="text" name="club" class="form-control" id="club" placeholder="Nom du Club" required>
+            </div>
+            
+            <div class="form-group mt-3">
+                <textarea class="form-control" name="motivation" rows="5" placeholder="Description du club" required></textarea>
+            </div>
+            
+            <!-- Bouton de soumission -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </div>
+        </form>
+    </div>
+</section>

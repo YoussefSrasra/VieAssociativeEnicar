@@ -2,18 +2,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
 
 const routes: Routes = [
   {
+    path: 'accueil',
+    loadComponent: () => import('./accueil/accueil.component').then((c) => c.AccueilComponent)
+  },
+  {
+   
     path: '',
     component: AdminComponent,
     children: [
       {
         path: '',
-        redirectTo: '/login',
+        redirectTo: '/accueil',
         pathMatch: 'full'
       },
       {
@@ -31,7 +37,8 @@ const routes: Routes = [
       {
         path: 'sample-page',
         loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
-      }
+      },
+      
     ]
   },
   {
@@ -52,7 +59,10 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: 
+  [RouterModule.forRoot(routes),
+ 
+  ],
   exports: [RouterModule]
 })
 export class AppRoutingModule {}
