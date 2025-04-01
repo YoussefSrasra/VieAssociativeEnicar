@@ -29,21 +29,24 @@ public class SecurityConfig {
     private UserDetailsServiceImpl userDetailsService;
     @Autowired
     private JwtAuthenticationFilter jwtAuthenticationFilter;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
-            .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present      
-                .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present                
-                .requestMatchers("/api/member/**").hasRole("MEMBER")
-                .requestMatchers("/api/manager/**").hasRole("MANAGER")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
-            .httpBasic(Customizer.withDefaults()); // Utilisez Basic Auth pour simplifier (à remplacer par JWT plus tard)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/api/public/**").permitAll()
+                        .requestMatchers("/api/enrollments/**").permitAll()
+                        .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present
+                        .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present
+                        .requestMatchers("/api/member/**").hasRole("MEMBER")
+                        .requestMatchers("/api/manager/**").hasRole("MANAGER")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
+                .httpBasic(Customizer.withDefaults()); // Utilisez Basic Auth pour simplifier (à remplacer par JWT plus
+                                                       // tard)
         return http.build();
     }
 
@@ -65,8 +68,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-  
-
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
         return http.getSharedObject(AuthenticationManagerBuilder.class)
@@ -74,6 +75,6 @@ public class SecurityConfig {
                 .passwordEncoder(passwordEncoder())
                 .and()
                 .build();
-}
+    }
 
 }
