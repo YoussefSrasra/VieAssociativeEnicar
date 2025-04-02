@@ -1,7 +1,9 @@
 // angular import
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { EventLaunchComponent } from './features/event-launch/event-launch.component';
+import { MemberRegistrationComponent } from './features/member-registration/member-registration.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
@@ -12,8 +14,10 @@ const routes: Routes = [
     path: 'accueil',
     loadComponent: () => import('./accueil/accueil.component').then((c) => c.AccueilComponent)
   },
+  { path: 'admin/event/new', component: EventLaunchComponent },
+  { path: 'register/:id', component: MemberRegistrationComponent },
   {
-   
+
     path: '',
     component: AdminComponent,
     children: [
@@ -53,7 +57,7 @@ const routes: Routes = [
         path: 'sample-page',
         loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
       },
-      
+
     ]
   },
   {
@@ -74,9 +78,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: 
+  imports:
   [RouterModule.forRoot(routes),
- 
+    ReactiveFormsModule ,
   ],
   exports: [RouterModule]
 })

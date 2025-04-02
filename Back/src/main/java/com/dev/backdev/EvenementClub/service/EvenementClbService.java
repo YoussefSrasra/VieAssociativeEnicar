@@ -13,12 +13,19 @@ public class EvenementClbService {
 
     @Autowired
     private EvenementClbRepository evenementClbRepository;
+    private final EvenementClbRepository repository;
 
+    public EvenementClbService(EvenementClbRepository repository) {
+        this.repository = repository;
+    }
     public EvenementClb createEvent(EvenementClb evenementClb) {
         return evenementClbRepository.save(evenementClb);
     }
 
     public List<EvenementClb> getAllEvents() {
         return evenementClbRepository.findAll();
+    }
+    public EvenementClb getEventById(Long id) {
+        return repository.findById(id).orElseThrow();
     }
 }

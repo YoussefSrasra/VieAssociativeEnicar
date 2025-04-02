@@ -36,6 +36,9 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/club-request/").hasRole("MEMBER")
+                .requestMatchers("/api/enrollments**").permitAll()
+
                 .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present      
                 .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present                
                 .requestMatchers("/api/member/**").hasRole("MEMBER")
