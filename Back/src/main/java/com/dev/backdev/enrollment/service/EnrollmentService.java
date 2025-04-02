@@ -39,4 +39,19 @@ public class EnrollmentService {
         // Récupérer toutes les demandes d'enrôlement
         return enrollmentRepository.findAll();
     }
+    private final EnrollmentRepository repository;
+
+    public EnrollmentService(EnrollmentRepository repository) {
+        this.repository = repository;
+    }
+
+   
+
+    public List<Enrollment> getEnrollmentsByEvent(Long eventId) {
+        return repository.findByEvenementId(eventId);
+    }
+
+ 
+
+
 }

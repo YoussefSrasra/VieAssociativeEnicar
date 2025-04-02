@@ -36,6 +36,9 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/club-request/").hasRole("MEMBER")
+                .requestMatchers("/api/enrollments**").permitAll()
+
                 .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present      
                 .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present                
                 .requestMatchers("/api/member/**").hasRole("MEMBER")
@@ -69,11 +72,12 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder())
-                .and()
-                .build();
-}
+        AuthenticationManagerBuilder authenticationManagerBuilder = 
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
+    }
 
 }

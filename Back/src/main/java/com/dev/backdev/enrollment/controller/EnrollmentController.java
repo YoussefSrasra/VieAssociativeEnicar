@@ -39,4 +39,9 @@ public class EnrollmentController {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(enrollments);
     }
+    @GetMapping("/event/{eventId}")
+    public ResponseEntity<List<Enrollment>> getEnrollmentsByEvent(@PathVariable Long eventId) {
+        List<Enrollment> enrollments = enrollmentService.getEnrollmentsByEvent(eventId);
+        return ResponseEntity.ok(enrollments);
+    }
 }

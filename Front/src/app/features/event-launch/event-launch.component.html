@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="col-12">
+    <app-card headerTitle="Lancer un Nouvel Événement">
+      <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="p-3">
+
+        <!-- Nom de l'événement -->
+        <div class="mb-3">
+          <label class="form-label">Nom de l'événement *</label>
+          <input type="text" class="form-control" formControlName="event_name"
+                 [class.is-invalid]="eventForm.get('event_name')?.invalid && eventForm.get('event_name')?.touched">
+          <div class="invalid-feedback" *ngIf="eventForm.get('event_name')?.invalid && eventForm.get('event_name')?.touched">
+            Ce champ est obligatoire
+          </div>
+        </div>
+
+        <!-- Type et Dates -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Type d'événement *</label>
+            <select class="form-select" formControlName="event_type"
+                    [class.is-invalid]="eventForm.get('event_type')?.invalid && eventForm.get('event_type')?.touched" aria-label="Type d'événement">
+              <option value="">Sélectionnez...</option>
+              @for (type of eventTypes; track type) {
+                <option [value]="type">{{type}}</option>
+              }
+            </select>
+            <div class="invalid-feedback" *ngIf="eventForm.get('event_type')?.invalid && eventForm.get('event_type')?.touched">
+              Veuillez sélectionner un type
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Date de début *</label>
+            <input type="datetime-local" class="form-control" formControlName="start_date"
+                   [class.is-invalid]="eventForm.get('start_date')?.invalid && eventForm.get('start_date')?.touched">
+          </div>
+          <div class="col-md-3 mb-3">
+            <label class="form-label">Date de fin *</label>
+            <input type="datetime-local" class="form-control" formControlName="end_date"
+                   [class.is-invalid]="eventForm.get('end_date')?.invalid && eventForm.get('end_date')?.touched">
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+          <label class="form-label">Description *</label>
+          <textarea class="form-control" formControlName="description" rows="3"
+                    [class.is-invalid]="eventForm.get('description')?.invalid && eventForm.get('description')?.touched"></textarea>
+        </div>
+
+        <!-- Comités disponibles -->
+        <div class="mb-3">
+          <label class="form-label">Comités disponibles pour inscription</label>
+          <div class="row">
+            @for (committee of committeeTypes; track committee; let i = $index) {
+              <div class="col-md-3 mb-2">
+                <div class="form-check" *ngFor="let committee of committeeTypes; index as i">
+                  <input class="form-check-input"
+                         type="checkbox"
+                         [formControl]="committeesArray.at(i)">
+                  <label class="form-check-label">{{committee}}</label>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Autres informations -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nombre max de participants</label>
+            <input type="number" class="form-control" formControlName="max_participants" min="0">
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Exigences particulières</label>
+            <input type="text" class="form-control" formControlName="requirements">
+          </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="d-flex justify-content-between mt-4">
+          <button type="button" class="btn btn-outline-secondary" (click)="eventForm.reset()">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary" [disabled]="!eventForm.valid">
+            Publier l'événement
+          </button>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+</div>

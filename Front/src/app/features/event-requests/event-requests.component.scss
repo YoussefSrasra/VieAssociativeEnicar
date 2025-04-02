@@ -1,0 +1,25 @@
+/* Style pour les champs obligatoires */
+label:after {
+  content: " *";
+  color: #dc3545;
+}
+
+/* Style pour le checkbox */
+.form-check {
+  margin-bottom: 1rem;
+  padding-left: 0;
+
+  .form-check-input {
+    margin-left: 0;
+    margin-right: 0.5rem;
+  }
+}
+
+/* Style conditionnel pour le montant demandé */
+input[type="number"] {
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
