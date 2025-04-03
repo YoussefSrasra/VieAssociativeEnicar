@@ -51,15 +51,23 @@ export const NavigationItems: NavigationItem[] = [
         url: '/typography',
         icon: 'font-size'
       },
-      
       {
+        id: 'enrollment',
+        title: 'demandes inscription',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/enrollment',
+        icon: 'HomeOutlined '
+      },
+      
+      /*{
         id: 'color',
         title: 'Colors',
         type: 'item',
         classes: 'nav-item',
         url: '/color',
         icon: 'bg-colors'
-      },
+      },*/
       
     
       {
@@ -80,7 +88,7 @@ export const NavigationItems: NavigationItem[] = [
         target: true,
         external: true
       }
-      
+
     ]
   },
 
