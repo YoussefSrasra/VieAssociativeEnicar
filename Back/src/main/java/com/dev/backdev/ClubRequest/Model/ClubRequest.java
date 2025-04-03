@@ -1,4 +1,6 @@
 package com.dev.backdev.ClubRequest.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,18 +17,25 @@ public class ClubRequest {
     private Long id;
 
     private String type; // Forum, Hackathon, EnicARobotos...
+    @JsonProperty("event_name")
     private String eventName;
-    private String description;
-    private LocalDate startDate;
+        private String description;
+ @JsonProperty("start_date")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDate startDate;  
+    @JsonProperty("end_date")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDate endDate;
-    private String location;
+        private String location;
 
     @ElementCollection
     private List<String> committeeTypes; // Organisation, Logistique...
 
+    @JsonProperty("financial_request")
     private boolean financialRequest;
+    @JsonProperty("requested_amount")
     private Double requestedAmount;
-    private String status; // Pending, Approved, Rejected
+        private String status; // Pending, Approved, Rejected
 
     @ManyToOne
     @JoinColumn(name = "club_id")

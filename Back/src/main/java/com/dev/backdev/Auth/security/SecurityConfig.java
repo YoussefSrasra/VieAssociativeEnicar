@@ -36,7 +36,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/public/**").permitAll()
-                .requestMatchers("/api/club-request/").hasRole("MEMBER")
+                .requestMatchers("/api/club-requests/**").permitAll()
                 .requestMatchers("/api/enrollments**").permitAll()
 
                 .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present      
@@ -53,7 +53,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Autoriser le frontend Angular
+        configuration.setAllowedOrigins(List.of("http://localhost:59988",        "http://localhost:4200"
+        )); // Autoriser le frontend Angular
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Autoriser ces méthodes HTTP
         configuration.setAllowedHeaders(List.of("*")); // Autoriser tous les en-têtes
         configuration.setAllowCredentials(true); // Autoriser les cookies
