@@ -51,14 +51,7 @@ export const NavigationItems: NavigationItem[] = [
         url: '/typography',
         icon: 'font-size'
       },
-      {
-        id: 'typography',
-        title: 'Typography',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/typography',
-        icon: 'font-size'
-      },
+      
       {
         id: 'color',
         title: 'Colors',
@@ -67,14 +60,8 @@ export const NavigationItems: NavigationItem[] = [
         url: '/color',
         icon: 'bg-colors'
       },
-      {
-        id: 'color',
-        title: 'liste membre',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/color',
-        icon: 'bg-colors'
-      },
+      
+    
       {
         id: 'color',
         title: 'creation de club',
@@ -93,6 +80,7 @@ export const NavigationItems: NavigationItem[] = [
         target: true,
         external: true
       }
+      
     ]
   },
 

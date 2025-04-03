@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { EventLaunchComponent } from './features/event-launch/event-launch.component';
 import { MemberRegistrationComponent } from './features/member-registration/member-registration.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { authGuard } from './auth.guard';
 
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
@@ -43,7 +44,8 @@ const routes: Routes = [
       } ,
       {
         path: 'dashboard/default',
-        loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)
+        loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
+        canActivate: [authGuard]
       },
       {
         path: 'demandeclubadmin',
