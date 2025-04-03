@@ -1,0 +1,80 @@
+<div class="row">
+  <div class="col-12">
+    <app-card headerTitle="Suivi des Inscriptions aux Événements">
+      <!-- Liste des événements -->
+      <div class="table-responsive mb-4">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Événement</th>
+              <th>Nombre d'inscrits</th>
+              <th>Liste d'attente</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of events; track event.id) {
+              <tr (click)="selectEvent(event)" [class.table-primary]="selectedEvent?.id === event.id">
+                <td>{{ event.name }}</td>
+                <td>{{ event.registeredCount }}</td>
+                <td>{{ event.waitingListCount }}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline-primary" (click)="sendReminder(event); $event.stopPropagation()">
+                    <i class="fas fa-bell"></i> Envoyer Rappel
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Détails des participants -->
+      @if (selectedEvent) {
+        <div class="card">
+          <div class="card-header d-flex justify-content-between align-items-center">
+            <h5>Participants - {{ selectedEvent.name }}</h5>
+            <div class="d-flex gap-2">
+              <input type="text" class="form-control" placeholder="Rechercher..."
+                     [(ngModel)]="searchTerm" (input)="filterParticipants()">
+              <button class="btn btn-sm btn-success" (click)="exportParticipants()">
+                <i class="fas fa-download"></i> Exporter
+              </button>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Date Inscription</th>
+                    <th>Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (participant of filteredParticipants; track participant.id) {
+                    <tr>
+                      <td>{{ participant.name }}</td>
+                      <td>{{ participant.email }}</td>
+                      <td>{{ participant.registrationDate | date:'dd/MM/yyyy' }}</td>
+                      <td>
+                        <span class="badge" [ngClass]="{
+                          'bg-success': participant.status === 'confirmed',
+                          'bg-warning': participant.status === 'waiting'
+                        }">
+                          {{ participant.status === 'confirmed' ? 'Confirmé' : 'En attente' }}
+                        </span>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      }
+    </app-card>
+  </div>
+</div>

@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { EventLaunchComponent } from './features/event-launch/event-launch.component';
 import { MemberRegistrationComponent } from './features/member-registration/member-registration.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AdminEventRequestsComponent } from './components/admin-event-requests/admin-event-requests.component';
+import { EventRegistrationsComponent } from './components/event-registrations/event-registrations.component';
 
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
@@ -30,6 +32,16 @@ const routes: Routes = [
         path: 'event-launch',
         loadComponent: () => import('./features/event-launch/event-launch.component')
           .then(c => c.EventLaunchComponent)
+      },
+      {
+        path: 'admin/event-requests',
+        component: AdminEventRequestsComponent,
+        data: { title: 'Gestion des demandes - Admin' }
+      },
+      {
+        path: 'admin/event-registrations',
+        component: EventRegistrationsComponent,
+        data: { title: 'Suivi des inscriptions' }
       },
       {
         path: 'partnerships',

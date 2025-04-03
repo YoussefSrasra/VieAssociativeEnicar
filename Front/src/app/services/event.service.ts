@@ -8,7 +8,10 @@ export class EventService {
 
   addEvent(event: any) {
     const current = this._events.value;
-    this._events.next([...current, event]);
-    console.log('Événement ajouté:', event); // Pour débogage
+    this._events.next([...current, {
+      ...event,
+      id: Date.now(),
+      date: new Date()
+    }]);
   }
 }
