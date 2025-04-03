@@ -38,7 +38,22 @@ public class Enrollment {
     private String email;
     
     @Enumerated(EnumType.STRING)
-    private EnrollmentStatus etat;
+    private EnrollmentStatus etat = EnrollmentStatus.EN_ATTENTE;
+
+    // Constructeur personnalisé sans le paramètre etat
+    public Enrollment(String nom, String prenom, String numeroTelephone, 
+                    String dateNaissance, String departementEtude,
+                    String niveauEtude, String messageMotivation, String email) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.numeroTelephone = numeroTelephone;
+        this.dateNaissance = dateNaissance;
+        this.departementEtude = departementEtude;
+        this.niveauEtude = niveauEtude;
+        this.messageMotivation = messageMotivation;
+        this.email = email;
+        // etat sera automatiquement EN_ATTENTE grâce à l'initialisation du champ
+    }
 
     // Getters and setters
     public EnrollmentStatus getEtat() {
