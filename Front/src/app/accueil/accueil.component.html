@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClubSphere - ENICarthage</title>
-   
+
 </head>
 <body>
     <header id="header" class="header sticky-top">
         <div class="topbar d-flex align-items-center">
-            
+
         </div>
 
         <div class="branding d-flex align-items-center">
@@ -147,7 +147,7 @@
             </div>
         </section>
 
-       
+
         <app-creationclub></app-creationclub>
         <!-- Forum Section -->
         <section id="forum-enicarthage" class="appointment section">
@@ -155,7 +155,7 @@
                 <h2>Forum ENICarthage 9.0 - Appel à Candidature</h2>
                 <p>Les étudiants souhaitant intégrer l'organisation peuvent remplir le formulaire ci-dessous.</p>
             </div>
-            
+
             <div class="container">
                 <form action="#" method="post" role="form" class="php-email-form">
                     <div class="row">
@@ -169,10 +169,10 @@
                             <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6 form-group mt-3">
-                            <select name="niveau" id="niveau" class="form-select" required>
+                            <select name="niveau" id="niveau" class="form-select" required aria-label="Type d'événement">
                                 <option value="">Niveau d'études</option>
                                 <option value="1A">1ère année</option>
                                 <option value="2A">2ème année</option>
@@ -180,7 +180,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 form-group mt-3">
-                            <select name="comite" id="comite" class="form-select" required>
+                            <select name="comite" id="comite" class="form-select" required aria-label="Type d'événement">
                                 <option value="">Choisissez un comité</option>
                                 <option value="logistique">Logistique</option>
                                 <option value="communication">Communication</option>
@@ -189,7 +189,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group mt-3">
                         <fieldset>
                             <legend>Participation :</legend>
@@ -199,11 +199,11 @@
                             <label for="responsable">Responsable comité</label>
                         </fieldset>
                     </div>
-                    
+
                     <div class="form-group mt-3">
                         <textarea class="form-control" name="motivation" rows="5" placeholder="Motivation" required></textarea>
                     </div>
-                    
+
                     <div class="text-center mt-3">
                         <button type="submit" class="btn btn-primary">Envoyer</button>
                     </div>
@@ -211,8 +211,8 @@
             </div>
         </section>
     </main>
-   
 
-   
+
+
 </body>
 </html>

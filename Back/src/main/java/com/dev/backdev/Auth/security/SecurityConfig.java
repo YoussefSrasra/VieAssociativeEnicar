@@ -33,36 +33,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/enrollments").permitAll()
-                        .requestMatchers("/api/demandes").permitAll()
-                        .requestMatchers("/api/demandes/**").hasRole("ADMIN")
-                        .requestMatchers("/api/events").hasRole("ADMIN")
-                        .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present
-                        .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present
-                        .requestMatchers("/api/member/**").hasRole("MEMBER")
-                        .requestMatchers("/api/manager/**").hasRole("MANAGER")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class) // Add JWT filter
-                .httpBasic(Customizer.withDefaults()); // Utilisez Basic Auth pour simplifier (à remplacer par JWT plus
-                                                       // tard)
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/public/**").permitAll()
+                .requestMatchers("/api/enrollments").permitAll()
+                .requestMatchers("/api/enrollments/**").permitAll()
+                .requestMatchers("/api/demandes").permitAll()
+                .requestMatchers("/api/demandes/**").hasRole("ADMIN")
+                .requestMatchers("/api/club-request/").hasRole("MEMBER")
+                .requestMatchers("/api/events").hasRole("ADMIN")
+                .requestMatchers("/api/clubs").hasRole("ADMIN")
+                .requestMatchers("/api/clubs/**").hasRole("ADMIN")
+                .requestMatchers("/api/member/**").hasRole("MEMBER")
+                .requestMatchers("/api/manager/**").hasRole("MANAGER")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated())
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Autoriser le frontend Angular
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE")); // Autoriser ces méthodes HTTP
-        configuration.setAllowedHeaders(List.of("*")); // Autoriser tous les en-têtes
-        configuration.setAllowCredentials(true); // Autoriser les cookies
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration); // Appliquer cette configuration à tous les endpoints
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 
@@ -73,11 +74,11 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder())
-                .and()
-                .build();
+        AuthenticationManagerBuilder authenticationManagerBuilder = 
+            http.getSharedObject(AuthenticationManagerBuilder.class);
+        authenticationManagerBuilder
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(passwordEncoder());
+        return authenticationManagerBuilder.build();
     }
-
 }

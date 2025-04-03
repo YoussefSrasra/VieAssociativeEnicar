@@ -1,7 +1,9 @@
 // angular import
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
+import { EventLaunchComponent } from './features/event-launch/event-launch.component';
+import { MemberRegistrationComponent } from './features/member-registration/member-registration.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
@@ -12,8 +14,10 @@ const routes: Routes = [
     path: 'accueil',
     loadComponent: () => import('./accueil/accueil.component').then((c) => c.AccueilComponent)
   },
+  { path: 'admin/event/new', component: EventLaunchComponent },
+  { path: 'register/:id', component: MemberRegistrationComponent },
   {
-   
+
     path: '',
     component: AdminComponent,
     children: [
@@ -22,6 +26,21 @@ const routes: Routes = [
         redirectTo: '/accueil',
         pathMatch: 'full'
       },
+      {
+        path: 'event-launch',
+        loadComponent: () => import('./features/event-launch/event-launch.component')
+          .then(c => c.EventLaunchComponent)
+      },
+      {
+        path: 'partnerships',
+        loadComponent: () => import('./features/partnerships/partnerships.component')
+          .then(c => c.PartnershipsComponent)
+      },
+      {
+        path: 'event-requests',
+        loadComponent: () => import('./features/event-requests/event-requests.component')
+          .then(c => c.EventRequestsComponent)
+      } ,
       {
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)
@@ -42,7 +61,7 @@ const routes: Routes = [
         path: 'sample-page',
         loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
       },
-      
+
     ]
   },
   {
@@ -63,9 +82,9 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: 
+  imports:
   [RouterModule.forRoot(routes),
- 
+    ReactiveFormsModule ,
   ],
   exports: [RouterModule]
 })

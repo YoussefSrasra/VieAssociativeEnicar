@@ -1,0 +1,111 @@
+<div class="row">
+  <!-- Cartes de statut -->
+  @for (card of statusCards; track card) {
+    <div class="col-md-6 col-xl-3">
+      <app-card [showHeader]="false" blockClass="dashboard-card">
+        <h6 class="mb-2 f-w-400 text-muted">{{ card.title }}</h6>
+        <h4 class="mb-3">
+          {{ card.value }}
+          <span class="badge {{ card.color }} border-0">
+            <i class="fas fa-{{ card.icon }}"></i>
+          </span>
+        </h4>
+      </app-card>
+    </div>
+  }
+
+  <!-- Formulaire de demande -->
+  <div class="col-md-12 col-xl-8">
+    <app-card headerTitle="Nouvelle Demande d'Événement">
+      <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <!-- Colonne gauche -->
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Nom de l'événement *</label>
+              <input type="text" class="form-control" formControlName="event_name">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Type d'événement *</label>
+              <select class="form-select" formControlName="type"aria-label="Type d'événement" >
+                <option value="">Sélectionnez un type...</option>
+                <option *ngFor="let type of eventTypes" [value]="type">{{type}}</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Date de début *</label>
+              <input type="datetime-local" class="form-control" formControlName="start_date">
+            </div>
+          </div>
+
+          <!-- Colonne droite -->
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label class="form-label">Lieu *</label>
+              <input type="text" class="form-control" formControlName="location">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Date de fin *</label>
+              <input type="datetime-local" class="form-control" formControlName="end_date">
+            </div>
+
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="financialRequest" formControlName="financial_request">
+              <label class="form-check-label" for="financialRequest">Demande de soutien financier</label>
+            </div>
+
+            <div class="mb-3" *ngIf="eventForm.get('financial_request')?.value">
+              <label class="form-label">Montant demandé (€)</label>
+              <input type="number" class="form-control" formControlName="requested_amount" min="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Description *</label>
+          <textarea class="form-control" formControlName="description" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Nombre de participants estimé</label>
+          <input type="number" class="form-control" formControlName="attendees" min="0">
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+          <button type="submit" class="btn btn-primary" [disabled]="!eventForm.valid">
+            Soumettre la demande
+          </button>
+        </div>
+      </form>
+    </app-card>
+  </div>
+
+  <!-- Demandes récentes -->
+  <div class="col-md-12 col-xl-4">
+    <app-card headerTitle="Vos Demandes Récentes">
+      <div class="list-group list-group-flush">
+        @for (request of recentRequests; track request) {
+          <div class="list-group-item">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h6 class="mb-1">{{ request.event_name }}</h6>
+                <small class="text-muted">{{ request.id }} • {{ request.start_date }}</small>
+              </div>
+              <span class="badge"
+                    [ngClass]="{
+                      'bg-success': request.status === 'Approuvé',
+                      'bg-warning': request.status === 'En attente',
+                      'bg-danger': request.status === 'Rejeté'
+                    }">
+                {{ request.status }}
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+    </app-card>
+  </div>
+</div>
