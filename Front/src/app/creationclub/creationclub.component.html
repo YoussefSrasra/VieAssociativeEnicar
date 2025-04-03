@@ -1,29 +1,32 @@
 
 <section id="forum-enicarthage" class="appointment section">
     <div class="container section-title">
-        <h2>demande de creation de club</h2>
+        <h2>Demande de création de club</h2>
         <p>Les étudiants souhaitant ouvrir un nouveau club doivent remplir ce formulaire. 
-            Merci de fournir des informations précises pour faciliter le traitement de votre demande</p>
+            Merci de fournir des informations précises pour faciliter le traitement de votre demande.</p>
     </div>
     
     <div class="container">
-        <form action="#" method="post" role="form" class="php-email-form">
+        <form (ngSubmit)="soumettreDemande()" #demandeForm="ngForm">
             <!-- Informations personnelles -->
             <div class="row">
                 <div class="col-md-6 form-group">
-                    <input type="text" name="nom" class="form-control" id="nom" placeholder="Nom" required>
+                    <input type="text" class="form-control" id="nom" placeholder="Nom" required 
+                           [(ngModel)]="demande.nom" name="nom">
                 </div>
                 <div class="col-md-6 form-group">
-                    <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Prénom" required>
+                    <input type="text" class="form-control" id="prenom" placeholder="Prénom" required
+                           [(ngModel)]="demande.prenom" name="prenom">
                 </div>
             </div>
             
             <div class="row">
                 <div class="col-md-6 form-group mt-3">
-                    <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
+                    <input type="email" class="form-control" id="email" placeholder="Email" required
+                           [(ngModel)]="demande.email" name="email">
                 </div>
                 <div class="col-md-6 form-group mt-3">
-                    <select name="niveau" id="niveau" class="form-select" required>
+                    <select id="niveau" class="form-select" required [(ngModel)]="demande.niveau" name="niveau">
                         <option value="">Niveau d'études</option>
                         <option value="1A">1ère année</option>
                         <option value="2A">2ème année</option>
@@ -34,11 +37,13 @@
             
             <!-- Informations sur le club -->
             <div class="form-group mt-3">
-                <input type="text" name="club" class="form-control" id="club" placeholder="Nom du Club" required>
+                <input type="text" class="form-control" id="club" placeholder="Nom du Club" required
+                       [(ngModel)]="demande.nomClub" name="nomClub">
             </div>
             
             <div class="form-group mt-3">
-                <textarea class="form-control" name="motivation" rows="5" placeholder="Description du club" required></textarea>
+                <textarea class="form-control" rows="5" placeholder="Description du club" required
+                          [(ngModel)]="demande.description" name="description"></textarea>
             </div>
             
             <!-- Bouton de soumission -->

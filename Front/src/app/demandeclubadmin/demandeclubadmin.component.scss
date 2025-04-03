@@ -1,0 +1,72 @@
+.table {
+    margin-top: 20px;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+  
+  .btn-sm {
+    margin-right: 5px;
+  }
+  /* Style pour les en-têtes du tableau */
+.table-dark th {
+  color: #333; /* Couleur foncée pour le texte */
+  background-color: #f8f9fa !important; /* Fond clair */
+  border-bottom: 2px solid #dee2e6; /* Bordure pour séparation */
+}
+
+/* Style pour les lignes du tableau */
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Style pour les badges */
+.badge {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: white !important; /* Texte blanc pour les badges */
+}
+
+/* Couleurs spécifiques pour les états */
+.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+/* Style pour les boutons */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+  margin: 0 2px;
+}
+
+.btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+}
+
+.btn-info {
+  background-color: #0dcaf0;
+  border-color: #0dcaf0;
+  color: white;
+}
+
+/* Espacement entre les boutons */
+.me-2 {
+  margin-right: 0.5rem !important;
+}
+
+/* Style pour les icônes */
+.bi {
+  margin-right: 4px;
+}

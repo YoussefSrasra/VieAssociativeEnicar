@@ -36,34 +36,7 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
-  {
-    id: 'authentication',
-    title: 'Authentication',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
-      {
-        id: 'login',
-        title: 'Login',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/login',
-        icon: 'login',
-        target: true,
-        breadcrumbs: false
-      },
-      {
-        id: 'register',
-        title: 'Register',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/register',
-        icon: 'profile',
-        target: true,
-        breadcrumbs: false
-      }
-    ]
-  },
+  
   {
     id: 'utilities',
     title: 'UI Components',
@@ -79,11 +52,35 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'font-size'
       },
       {
+        id: 'typography',
+        title: 'Typography',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/typography',
+        icon: 'font-size'
+      },
+      {
         id: 'color',
         title: 'Colors',
         type: 'item',
         classes: 'nav-item',
         url: '/color',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'color',
+        title: 'liste membre',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/color',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'color',
+        title: 'creation de club',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/demandeclubadmin',
         icon: 'bg-colors'
       },
       {
