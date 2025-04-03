@@ -52,6 +52,14 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'font-size'
       },
       {
+        id: 'typography',
+        title: 'Typography',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/typography',
+        icon: 'font-size'
+      },
+      {
         id: 'color',
         title: 'Colors',
         type: 'item',
@@ -69,10 +77,10 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'color',
-        title: 'Colors',
+        title: 'creation de club',
         type: 'item',
         classes: 'nav-item',
-        url: '/color',
+        url: '/demandeclubadmin',
         icon: 'bg-colors'
       },
       {

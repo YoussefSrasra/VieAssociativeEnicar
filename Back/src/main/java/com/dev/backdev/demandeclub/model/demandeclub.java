@@ -1,4 +1,5 @@
 package com.dev.backdev.demandeClub.model;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -16,7 +17,18 @@ public class DemandeClub {
     private String nom;
     private String prenom;
     private String email;
-    private String nomClub; 
+    private String nomClub;
+    
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Etat etat = Etat.EN_ATTENTE; // Valeur par défaut "EN_ATTENTE"
+}
+
+enum Etat {
+    ACCEPTE,
+    REJETE,
+    EN_ATTENTE
 }

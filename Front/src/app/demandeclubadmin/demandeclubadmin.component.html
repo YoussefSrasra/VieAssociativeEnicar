@@ -1,0 +1,64 @@
+<div class="container mt-4">
+    <h2>Demandes de création de club</h2>
+    
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+  
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="!loading && !error">
+      <div *ngIf="demandes.length === 0" class="alert alert-info">
+        Aucune demande de création de club trouvée.
+      </div>
+  
+      <div class="table-responsive" *ngIf="demandes.length > 0">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+             
+              <th>Nom Club</th>
+              <th>Demandeur</th>
+              <th>Email</th>
+              <th>Description</th>
+              <th>État</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let demande of demandes">
+              
+              <td>{{ demande.nomClub }}</td>
+              <td>{{ demande.nom }} {{ demande.prenom }}</td>
+              <td>{{ demande.email }}</td>
+              <td class="text-truncate" style="max-width: 200px;">{{ demande.description }}</td>
+              <td>
+                <span [ngClass]="{
+                  'badge bg-warning': demande.etat === 'EN_ATTENTE',
+                  'badge bg-success': demande.etat === 'ACCEPTE',
+                  'badge bg-danger': demande.etat === 'REJETE'
+                }">
+                  {{ demande.etat }}
+                </span>
+              </td>
+              <td>
+                <button class="btn btn-danger btn-sm me-2" (click)="deleteDemande(demande.id)">
+                  <i class="bi bi-trash"></i> Supprimer
+                </button>
+                <button class="btn btn-success btn-sm" (click)="approveDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
+                  <i class="bi bi-check"></i> Approuver
+                </button>
+                <button class="btn btn-warning btn-sm" (click)="rejectDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
+                  <i class="bi bi-x"></i> Rejeter
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
