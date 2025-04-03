@@ -52,6 +52,10 @@ const routes: Routes = [
         loadComponent: () => import('./demandeclubadmin/demandeclubadmin.component').then((c) => c.DemandeclubadminComponent)
       },
       {
+        path: 'enrollment',
+        loadComponent: () => import('./enrollment/enrollment.component').then((c) => c.EnrollmentComponent)
+      },
+      {
         path: 'typography',
         loadComponent: () => import('./demo/component/basic-component/color/color.component').then((c) => c.ColorComponent)
       },

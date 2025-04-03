@@ -1,0 +1,62 @@
+<div class="container">
+    <h2>Liste des Inscriptions</h2>
+    
+    <div *ngIf="isLoading" class="loading">
+      Chargement en cours...
+    </div>
+    
+    <div *ngIf="errorMessage" class="alert alert-danger">
+      {{ errorMessage }}
+    </div>
+    
+    <table class="table" *ngIf="!isLoading && enrollments.length > 0">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Département</th>
+          <th>Niveau</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let enrollment of enrollments">
+          <td>{{ enrollment.nom }}</td>
+          <td>{{ enrollment.prenom }}</td>
+          <td>{{ enrollment.email }}</td>
+          <td>{{ enrollment.numeroTelephone }}</td>
+          <td>{{ enrollment.departementEtude }}</td>
+          <td>{{ enrollment.niveauEtude }}</td>
+          <td>
+            <span [ngClass]="{
+              'badge bg-warning': enrollment.etat === 'EN_ATTENTE',
+              'badge bg-success': enrollment.etat === 'ACCEPTE',
+              'badge bg-danger': enrollment.etat === 'REJETE'
+            }">
+           
+              {{ enrollment.etat }}
+            </span>
+          </td>
+          <td>
+            <button *ngIf="enrollment.etat === 'EN_ATTENTE'" 
+                    (click)="approveEnrollment(enrollment.id!)" 
+                    class="btn btn-success btn-sm">
+              Approuver
+            </button>
+            <button *ngIf="enrollment.etat === 'EN_ATTENTE'" 
+                    (click)="rejectEnrollment(enrollment.id!)" 
+                    class="btn btn-danger btn-sm ms-2">
+              Rejeter
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    
+    <div *ngIf="!isLoading && enrollments.length === 0" class="alert alert-info">
+      Aucune inscription trouvée.
+    </div>
+  </div>

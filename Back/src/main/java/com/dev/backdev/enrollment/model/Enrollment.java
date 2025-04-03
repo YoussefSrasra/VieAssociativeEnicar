@@ -1,15 +1,11 @@
 package com.dev.backdev.enrollment.model;
 
-import com.dev.backdev.EvenementClub.model.EvenementClb;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,14 +36,11 @@ public class Enrollment {
     private String niveauEtude;
     private String messageMotivation;
     private String email;
-    @ManyToOne
-    @JoinColumn(name = "evenement_id")
-    private EvenementClb evenement;
+    
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus etat;
 
     // Getters and setters
-
     public EnrollmentStatus getEtat() {
         return etat;
     }
