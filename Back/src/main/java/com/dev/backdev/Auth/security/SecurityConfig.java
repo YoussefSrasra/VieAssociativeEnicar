@@ -38,8 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/api/enrollments").permitAll()
-                        .requestMatchers("/api/demandes/**").permitAll()
-
+                        .requestMatchers("/api/demandes").permitAll()
+                        .requestMatchers("/api/demandes/**").hasRole("ADMIN")
                         .requestMatchers("/api/events").hasRole("ADMIN")
                         .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present
                         .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present

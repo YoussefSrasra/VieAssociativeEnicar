@@ -20,7 +20,6 @@
         <table class="table table-striped table-hover">
           <thead class="table-dark">
             <tr>
-             
               <th>Nom Club</th>
               <th>Demandeur</th>
               <th>Email</th>
@@ -31,7 +30,6 @@
           </thead>
           <tbody>
             <tr *ngFor="let demande of demandes">
-              
               <td>{{ demande.nomClub }}</td>
               <td>{{ demande.nom }} {{ demande.prenom }}</td>
               <td>{{ demande.email }}</td>
@@ -46,15 +44,21 @@
                 </span>
               </td>
               <td>
-                <button class="btn btn-danger btn-sm me-2" (click)="deleteDemande(demande.id)">
-                  <i class="bi bi-trash"></i> Supprimer
-                </button>
-                <button class="btn btn-success btn-sm" (click)="approveDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
-                  <i class="bi bi-check"></i> Approuver
-                </button>
-                <button class="btn btn-warning btn-sm" (click)="rejectDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
-                  <i class="bi bi-x"></i> Rejeter
-                </button>
+                <div *ngIf="demande.etat === 'ACCEPTE'; else pendingActions">
+                 
+                </div>
+                
+                <ng-template #pendingActions>
+                  <button class="btn btn-danger btn-sm me-2" (click)="deleteDemande(demande.id)">
+                    <i class="bi bi-trash"></i> Supprimer
+                  </button>
+                  <button class="btn btn-success btn-sm me-2" (click)="approveDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
+                    <i class="bi bi-check"></i> Approuver
+                  </button>
+                  <button class="btn btn-warning btn-sm" (click)="rejectDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
+                    <i class="bi bi-x"></i> Rejeter
+                  </button>
+                </ng-template>
               </td>
             </tr>
           </tbody>

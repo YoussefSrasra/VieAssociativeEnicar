@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common'; 
 import { RouterModule } from '@angular/router';
 
-
 interface DemandeClub {
   id: number;
   nom: string;
@@ -13,16 +12,16 @@ interface DemandeClub {
   email: string;
   nomClub: string;
   description: string;
-  etat: 'ACCEPTE' | 'REJETE' | 'EN_ATTENTE';} 
+  etat: 'ACCEPTE' | 'REJETE' | 'EN_ATTENTE';
+  showActions?: boolean;
+}
+
 @Component({
   selector: 'app-demandeclubadmin',
-  imports: [RouterModule, FormsModule,CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './demandeclubadmin.component.html',
   styleUrl: './demandeclubadmin.component.scss'
 })
-
-
-
 export class DemandeclubadminComponent implements OnInit {
   demandes: DemandeClub[] = [];
   loading = true;
@@ -39,13 +38,50 @@ export class DemandeclubadminComponent implements OnInit {
     this.http.get<DemandeClub[]>(`${environment.apiUrl}/api/demandes`)
       .subscribe({
         next: (data) => {
-          this.demandes = data;
+          this.demandes = data.map(demande => ({
+            ...demande,
+            showActions: false
+          }));
           this.loading = false;
         },
         error: (err) => {
           this.error = 'Failed to load requests. Please try again later.';
           this.loading = false;
           console.error(err);
+        }
+      });
+  }
+
+  toggleActions(demande: DemandeClub): void {
+    demande.showActions = !demande.showActions;
+  }
+
+  approveDemande(id: number): void {
+    this.http.put<DemandeClub>(`${environment.apiUrl}/api/demandes/${id}/approve`, {})
+      .subscribe({
+        next: (updatedDemande) => {
+          this.demandes = this.demandes.map(d => 
+            d.id === id ? { ...updatedDemande, showActions: false } : d
+          );
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Failed to approve request');
+        }
+      });
+  }
+
+  rejectDemande(id: number): void {
+    this.http.put<DemandeClub>(`${environment.apiUrl}/api/demandes/${id}/reject`, {})
+      .subscribe({
+        next: (updatedDemande) => {
+          this.demandes = this.demandes.map(d => 
+            d.id === id ? { ...updatedDemande, showActions: false } : d
+          );
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Failed to reject request');
         }
       });
   }
@@ -63,36 +99,5 @@ export class DemandeclubadminComponent implements OnInit {
           }
         });
     }
-  }
-  approveDemande(id: number): void {
-    this.http.patch(`${environment.apiUrl}/api/demandes/${id}/approve`, {})
-      .subscribe({
-        next: () => {
-          const index = this.demandes.findIndex(d => d.id === id);
-          if (index !== -1) {
-            this.demandes[index].etat = 'ACCEPTE';
-          }
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Échec de l\'approbation de la demande');
-        }
-      });
-  }
-  
-  rejectDemande(id: number): void {
-    this.http.patch(`${environment.apiUrl}/api/demandes/${id}/reject`, {})
-      .subscribe({
-        next: () => {
-          const index = this.demandes.findIndex(d => d.id === id);
-          if (index !== -1) {
-            this.demandes[index].etat = 'REJETE';
-          }
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Échec du rejet de la demande');
-        }
-      });
   }
 }

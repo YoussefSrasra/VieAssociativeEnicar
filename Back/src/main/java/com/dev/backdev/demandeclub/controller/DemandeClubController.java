@@ -31,4 +31,13 @@ public class DemandeClubController {
         demandeClubService.deleteDemande(id);
         return ResponseEntity.ok().build();
     }
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<DemandeClub> approveDemande(@PathVariable Long id) {
+        return ResponseEntity.ok(demandeClubService.updateDemandeState(id, "ACCEPTE"));
+    }
+
+    @PutMapping("/{id}/reject")
+    public ResponseEntity<DemandeClub> rejectDemande(@PathVariable Long id) {
+        return ResponseEntity.ok(demandeClubService.updateDemandeState(id, "REJETE"));
+    }
 }
