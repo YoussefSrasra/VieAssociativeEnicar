@@ -13,7 +13,6 @@ interface DemandeClub {
   nomClub: string;
   description: string;
   etat: 'ACCEPTE' | 'REJETE' | 'EN_ATTENTE';
-  showActions?: boolean;
 }
 
 @Component({
@@ -33,27 +32,29 @@ export class DemandeclubadminComponent implements OnInit {
     this.loadDemandes();
   }
 
+  getEtatText(etat: string): string {
+    const etats = {
+      'EN_ATTENTE': 'En attente',
+      'ACCEPTE': 'Approuvé',
+      'REJETE': 'Rejeté'
+    };
+    return etats[etat] || etat;
+  }
+
   loadDemandes(): void {
     this.loading = true;
     this.http.get<DemandeClub[]>(`${environment.apiUrl}/api/demandes`)
       .subscribe({
         next: (data) => {
-          this.demandes = data.map(demande => ({
-            ...demande,
-            showActions: false
-          }));
+          this.demandes = data;
           this.loading = false;
         },
         error: (err) => {
-          this.error = 'Failed to load requests. Please try again later.';
+          this.error = 'Échec du chargement des demandes. Veuillez réessayer plus tard.';
           this.loading = false;
           console.error(err);
         }
       });
-  }
-
-  toggleActions(demande: DemandeClub): void {
-    demande.showActions = !demande.showActions;
   }
 
   approveDemande(id: number): void {
@@ -61,12 +62,12 @@ export class DemandeclubadminComponent implements OnInit {
       .subscribe({
         next: (updatedDemande) => {
           this.demandes = this.demandes.map(d => 
-            d.id === id ? { ...updatedDemande, showActions: false } : d
+            d.id === id ? updatedDemande : d
           );
         },
         error: (err) => {
           console.error(err);
-          alert('Failed to approve request');
+          alert('Échec de l\'approbation de la demande');
         }
       });
   }
@@ -76,18 +77,18 @@ export class DemandeclubadminComponent implements OnInit {
       .subscribe({
         next: (updatedDemande) => {
           this.demandes = this.demandes.map(d => 
-            d.id === id ? { ...updatedDemande, showActions: false } : d
+            d.id === id ? updatedDemande : d
           );
         },
         error: (err) => {
           console.error(err);
-          alert('Failed to reject request');
+          alert('Échec du rejet de la demande');
         }
       });
   }
 
   deleteDemande(id: number): void {
-    if (confirm('Are you sure you want to delete this request?')) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette demande ?')) {
       this.http.delete(`${environment.apiUrl}/api/demandes/${id}`)
         .subscribe({
           next: () => {
@@ -95,9 +96,46 @@ export class DemandeclubadminComponent implements OnInit {
           },
           error: (err) => {
             console.error(err);
-            alert('Failed to delete request');
+            alert('Échec de la suppression de la demande');
           }
         });
+    }
+  }
+
+  genererCompte(demande: DemandeClub): void {
+    if (confirm(`Générer un compte pour ${demande.prenom} ${demande.nom} (${demande.email}) ?`)) {
+      this.http.post(`${environment.apiUrl}/api/comptes/generer`, {
+        email: demande.email,
+        nom: demande.nom,
+        prenom: demande.prenom,
+        club: demande.nomClub
+      }).subscribe({
+        next: () => {
+          alert('Compte généré avec succès');
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Échec de la génération du compte');
+        }
+      });
+    }
+  }
+
+  creerClub(demande: DemandeClub): void {
+    if (confirm(`Créer le club "${demande.nomClub}" ?`)) {
+      this.http.post(`${environment.apiUrl}/api/clubs`, {
+        nom: demande.nomClub,
+        description: demande.description,
+        createurEmail: demande.email
+      }).subscribe({
+        next: () => {
+          alert('Club créé avec succès');
+        },
+        error: (err) => {
+          console.error(err);
+          alert('Échec de la création du club');
+        }
+      });
     }
   }
 }
