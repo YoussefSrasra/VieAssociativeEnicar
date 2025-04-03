@@ -1,8 +1,8 @@
-package com.dev.backdev.demandeClub.repository;
+package com.dev.backdev.demandeclub.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.dev.backdev.demandeClub.model.DemandeClub;
+import com.dev.backdev.demandeclub.model.demandeclub;
 
-public interface DemandeClubRepository extends JpaRepository<DemandeClub, Long> {
+public interface DemandeClubRepository extends JpaRepository<demandeclub, Long> {
 } 

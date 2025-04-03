@@ -1,10 +1,11 @@
-package com.dev.backdev.demandeClub.service;
+
+package com.dev.backdev.demandeclub.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.dev.backdev.demandeClub.model.DemandeClub;
-import com.dev.backdev.demandeClub.model.Etat; // Import ajouté
-import com.dev.backdev.demandeClub.repository.DemandeClubRepository;
+import com.dev.backdev.demandeclub.model.demandeclub;
+import com.dev.backdev.demandeclub.model.Etat; // Import ajouté
+import com.dev.backdev.demandeclub.repository.DemandeClubRepository;
 import java.util.List;
 import java.util.Arrays;
 
@@ -12,29 +13,29 @@ import java.util.Arrays;
 public class DemandeClubService {
 
     @Autowired
-    private DemandeClubRepository demandeClubRepository;
+    private DemandeClubRepository DemandeClubRepository;
 
-    public List<DemandeClub> getAllDemandes() {
-        return demandeClubRepository.findAll();
+    public List<demandeclub> getAllDemandes() {
+        return DemandeClubRepository.findAll();
     }
 
-    public DemandeClub createDemande(DemandeClub demande) {
-        return demandeClubRepository.save(demande);
+    public demandeclub createDemande(demandeclub demande) {
+        return DemandeClubRepository.save(demande);
     }
 
     public void deleteDemande(Long id) {
-        demandeClubRepository.deleteById(id);
+        DemandeClubRepository.deleteById(id);
     }
 
-    public DemandeClub updateDemandeState(Long id, String newState) {
-        DemandeClub demande = demandeClubRepository.findById(id)
+    public demandeclub updateDemandeState(Long id, String newState) {
+        demandeclub demande = DemandeClubRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
         
         try {
             // Utilisation directe de l'enum Etat
             Etat etat = Etat.valueOf(newState.toUpperCase());
             demande.setEtat(etat);
-            return demandeClubRepository.save(demande);
+            return DemandeClubRepository.save(demande);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException(
                 "État invalide: " + newState + 

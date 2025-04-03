@@ -1,4 +1,4 @@
-package com.dev.backdev.demandeClub.model;
+package com.dev.backdev.demandeclub.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -8,7 +8,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class DemandeClub {
+public class demandeclub {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

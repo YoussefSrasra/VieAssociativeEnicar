@@ -1,11 +1,11 @@
-package com.dev.backdev.demandeClub.controller;
+package com.dev.backdev.demandeclub.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.dev.backdev.demandeClub.model.DemandeClub;
-import com.dev.backdev.demandeClub.service.DemandeClubService;
+import com.dev.backdev.demandeclub.model.demandeclub;
+import com.dev.backdev.demandeclub.service.DemandeClubService;
 
 import java.util.List;
 
@@ -17,12 +17,12 @@ public class DemandeClubController {
     private DemandeClubService demandeClubService;
 
     @GetMapping
-    public List<DemandeClub> getAllDemandes() {
+    public List<demandeclub> getAllDemandes() {
         return demandeClubService.getAllDemandes();
     }
 
     @PostMapping
-    public ResponseEntity<DemandeClub> createDemande(@RequestBody DemandeClub demande) {
+    public ResponseEntity<demandeclub> createDemande(@RequestBody demandeclub demande) {
         return ResponseEntity.ok(demandeClubService.createDemande(demande));
     }
 
@@ -32,12 +32,12 @@ public class DemandeClubController {
         return ResponseEntity.ok().build();
     }
     @PutMapping("/{id}/approve")
-    public ResponseEntity<DemandeClub> approveDemande(@PathVariable Long id) {
+    public ResponseEntity<demandeclub> approveDemande(@PathVariable Long id) {
         return ResponseEntity.ok(demandeClubService.updateDemandeState(id, "ACCEPTE"));
     }
 
     @PutMapping("/{id}/reject")
-    public ResponseEntity<DemandeClub> rejectDemande(@PathVariable Long id) {
+    public ResponseEntity<demandeclub> rejectDemande(@PathVariable Long id) {
         return ResponseEntity.ok(demandeClubService.updateDemandeState(id, "REJETE"));
     }
 }

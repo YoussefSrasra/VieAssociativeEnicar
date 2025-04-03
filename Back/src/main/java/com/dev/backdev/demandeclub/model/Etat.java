@@ -1,4 +1,4 @@
-package com.dev.backdev.demandeClub.model;
+package com.dev.backdev.demandeclub.model;
 
 public enum Etat {
 
