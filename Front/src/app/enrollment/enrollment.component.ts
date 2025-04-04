@@ -16,6 +16,8 @@ export class EnrollmentComponent implements OnInit {
   isLoading = true;
   errorMessage = '';
   selectedMotivation = '';
+  showMotivationModal: boolean = false;
+
 
   constructor(private enrollmentService: EnrollmentService) { }
 
@@ -42,16 +44,6 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
-  showMotivation(motivation: string): void {
-    this.selectedMotivation = motivation;
-    // Ouvre le modal Bootstrap
-    const modalElement = document.getElementById('motivationModal');
-    if (modalElement) {
-      const modal = new bootstrap.Modal(modalElement);
-      modal.show();
-    }
-  }
-
   approveEnrollment(id: number): void {
     this.enrollmentService.approveEnrollment(id).subscribe({
       next: () => {
@@ -69,4 +61,13 @@ export class EnrollmentComponent implements OnInit {
       error: (err) => console.error(err)
     });
   }
+  // Dans votre composant
+showMotivation(motivation: string): void {
+  this.selectedMotivation = motivation;
+  this.showMotivationModal = true;
+}
+
+closeMotivation(): void {
+  this.showMotivationModal = false;
+}
 }

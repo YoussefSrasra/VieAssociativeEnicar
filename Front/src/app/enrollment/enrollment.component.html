@@ -61,26 +61,17 @@
       </tr>
     </tbody>
   </table>
-  
-  <div *ngIf="!isLoading && enrollments.length === 0" class="alert alert-info">
-    Aucune inscription trouvée.
-  </div>
-
-  <!-- Modal pour afficher le message de motivation -->
-  <div class="modal fade" id="motivationModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Message de motivation</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          {{ selectedMotivation }}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-        </div>
-      </div>
+  <!-- Dans votre template -->
+<div *ngIf="showMotivationModal" class="motivation-overlay">
+  <div class="motivation-modal">
+    <div class="modal-header">
+      <h3>Message de motivation</h3>
+      <button (click)="closeMotivation()" class="close-btn">&times;</button>
+    </div>
+    <div class="modal-body">
+      {{ selectedMotivation }}
     </div>
   </div>
 </div>
+
+ 
