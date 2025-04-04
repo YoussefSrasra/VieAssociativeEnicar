@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PartnerService } from '../../services/partner.service'; // Assure-toi du chemin correct vers ton service
 
 @Component({
   selector: 'app-partnerships',
   standalone: true,
-  imports: [CardComponent,ReactiveFormsModule],
+  imports: [CardComponent, ReactiveFormsModule],
   templateUrl: './partnerships.component.html',
   styleUrls: ['./partnerships.component.scss']
 })
-export class PartnershipsComponent {
+export class PartnershipsComponent implements OnInit {
   partnershipForm = this.fb.group({
     name: ['', Validators.required],
     type: ['', Validators.required],
@@ -29,39 +30,71 @@ export class PartnershipsComponent {
     'Partenaire Académique'
   ];
 
-  partners = [
-    { id: 1, name: 'Entreprise A', type: 'Financier', contact: 'contact@a.com', since: '2022' },
-    { id: 2, name: 'Société B', type: 'Technologique', contact: 'contact@b.com', since: '2021' },
-    { id: 3, name: 'Organisation C', type: 'Institutionnel', contact: 'contact@c.com', since: '2023' }
-  ];
-
+  partners: any[] = [];  // Liste des partenaires
   editingPartner: any = null;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private partnerService: PartnerService) {}
 
+  ngOnInit() {
+    this.loadPartners();  // Charger les partenaires au démarrage
+  }
+
+  // Charger la liste des partenaires
+  loadPartners() {
+    this.partnerService.getAllPartners().subscribe(
+      (data) => {
+        this.partners = data;
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des partenaires', error);
+      }
+    );
+  }
+
+  // Soumettre le formulaire
   onSubmit() {
     if (this.partnershipForm.valid) {
       const formData = this.partnershipForm.value;
 
       if (this.editingPartner) {
-        // Mise à jour
-        const index = this.partners.findIndex(p => p.id === this.editingPartner.id);
-        this.partners[index] = { ...this.editingPartner, ...formData };
+        // Mise à jour du partenaire existant
+        this.partnerService.updatePartner(this.editingPartner.id, formData).subscribe(
+          () => {
+            this.loadPartners();  // Recharger les partenaires après mise à jour
+            this.resetForm();
+          },
+          (error) => console.error('Erreur lors de la mise à jour du partenaire', error)
+        );
+      } else {
+        // Ajouter un nouveau partenaire
+        this.partnerService.createPartner(formData).subscribe(
+          () => {
+            this.loadPartners();  // Recharger les partenaires après ajout
+            this.resetForm();
+          },
+          (error) => console.error('Erreur lors de l\'ajout du partenaire', error)
+        );
       }
-
-      this.resetForm();
     }
   }
 
+  // Modifier un partenaire
   editPartner(partner: any) {
     this.editingPartner = partner;
     this.partnershipForm.patchValue(partner);
   }
 
+  // Supprimer un partenaire
   deletePartner(id: number) {
-    this.partners = this.partners.filter(p => p.id !== id);
+    this.partnerService.deletePartner(id).subscribe(
+      () => {
+        this.loadPartners();  // Recharger les partenaires après suppression
+      },
+      (error) => console.error('Erreur lors de la suppression du partenaire', error)
+    );
   }
 
+  // Réinitialiser le formulaire
   resetForm() {
     this.partnershipForm.reset();
     this.editingPartner = null;

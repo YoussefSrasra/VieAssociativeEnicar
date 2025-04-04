@@ -2,118 +2,111 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { FormsModule } from '@angular/forms';
-
-interface Event {
-  id: number;
-  name: string;
-  registeredCount: number;
-  waitingListCount: number;
-  participants: Participant[];
-}
-
-interface Participant {
-  id: number;
-  name: string;
-  email: string;
-  registrationDate: Date;
-  status: 'confirmed' | 'waiting';
-}
+import { ParticipantService } from '../../services/participant.service';
 
 @Component({
   selector: 'app-event-registrations',
   standalone: true,
-  imports: [CommonModule, CardComponent, FormsModule],
+  imports: [CommonModule, CardComponent, FormsModule,],
   templateUrl: './event-registrations.component.html',
   styleUrls: ['./event-registrations.component.scss']
 })
 export class EventRegistrationsComponent implements OnInit {
-  events: Event[] = [];
-  selectedEvent: Event | null = null;
+  events: any[] = [];
+  selectedEvent: any = null;
   searchTerm = '';
-  filteredParticipants: Participant[] = [];
+  filteredParticipants: any[] = [];
+  isLoading = true;
+  errorMessage: string = ''; // Ajout pour la gestion d'erreur
+  participants: any[] = []; // Ajout de cette propriété
+   filteredMembers: any[] = [];  // Membres uniquement
+  filteredResponsibles: any[] = [];  // Responsables uniquement
+
+  constructor(private participantService: ParticipantService) {}
 
   ngOnInit(): void {
-    // Simuler des données (remplacer par un appel API)
-    this.events = [
-      {
-        id: 1,
-        name: 'Soirée Gala',
-        registeredCount: 50,
-        waitingListCount: 5,
-        participants: this.generateParticipants(50, 5)
+    this.loadEvents();
+  }
+
+  loadEvents(): void {
+    this.participantService.getEventStats().subscribe({
+      next: (events) => {
+        this.events = events;
+        this.isLoading = false;
       },
-      {
-        id: 2,
-        name: 'Conférence Tech',
-        registeredCount: 30,
-        waitingListCount: 2,
-        participants: this.generateParticipants(30, 2)
+      error: (err) => {
+        console.error('Error:', err);
+        this.errorMessage = 'Failed to load events';
+        this.isLoading = false;
       }
-    ];
+    });
   }
 
-  private generateParticipants(registered: number, waiting: number): Participant[] {
-    const participants: Participant[] = [];
-
-    // Inscrits confirmés
-    for (let i = 1; i <= registered; i++) {
-      participants.push({
-        id: i,
-        name: `Participant ${i}`,
-        email: `participant${i}@example.com`,
-        registrationDate: new Date(),
-        status: 'confirmed'
-      });
-    }
-
-    // Liste d'attente
-    for (let i = 1; i <= waiting; i++) {
-      participants.push({
-        id: registered + i,
-        name: `En attente ${i}`,
-        email: `waiting${i}@example.com`,
-        registrationDate: new Date(),
-        status: 'waiting'
-      });
-    }
-
-    return participants;
-  }
-
-  selectEvent(event: Event): void {
+  selectEvent(event: any): void {
     this.selectedEvent = event;
-    this.filterParticipants();
+    this.isLoading = true;
+
+    console.log('Event sélectionné:', event);
+
+    this.participantService.getParticipantsByEvent(event.eventName).subscribe({
+      next: (participants) => {
+        console.log('Données brutes reçues:', participants);
+
+        // Store participants and initialize filteredParticipants
+        this.participants = participants;
+        this.filteredParticipants = [...this.participants];
+
+        console.log('Participants après traitement:', this.participants);
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Erreur complète:', err);
+        this.isLoading = false;
+      }
+    });
   }
 
   filterParticipants(): void {
-    if (!this.selectedEvent) return;
+    if (!this.searchTerm) {
+      this.filteredParticipants = [...this.participants];
+      return;
+    }
 
-    this.filteredParticipants = this.selectedEvent.participants.filter(p =>
-      p.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-      p.email.toLowerCase().includes(this.searchTerm.toLowerCase())
+    const term = this.searchTerm.toLowerCase();
+    this.filteredParticipants = this.participants.filter(p =>
+      (p.nom?.toLowerCase().includes(term)) ||
+      (p.email?.toLowerCase().includes(term))
+      // Removed prenom filter since it's not in your database
     );
   }
 
-  sendReminder(event: Event): void {
-    if (confirm(`Envoyer un rappel pour ${event.name} ?`)) {
-      // Implémenter la logique d'envoi
-      console.log(`Rappel envoyé pour ${event.name}`);
-      alert(`Rappel envoyé aux ${event.registeredCount} participants !`);
+  sendReminder(event: any): void {
+    if (confirm(`Envoyer un rappel pour ${event.eventName} ?`)) {
+      this.participantService.sendReminder(event.id).subscribe({
+        next: () => {
+          alert(`Rappel envoyé aux ${event.registeredCount} participants !`);
+        },
+        error: (err) => {
+          console.error('Erreur:', err);
+          alert('Erreur lors de l\'envoi des rappels');
+        }
+      });
     }
   }
 
   exportParticipants(): void {
     if (!this.selectedEvent) return;
 
-    // Implémenter l'export CSV
     const csvContent = this.convertToCSV(this.selectedEvent.participants);
-    this.downloadCSV(csvContent, `participants_${this.selectedEvent.name}.csv`);
+    this.downloadCSV(csvContent, `participants_${this.selectedEvent.eventName}.csv`);
   }
 
-  private convertToCSV(participants: Participant[]): string {
-    const headers = ['ID', 'Nom', 'Email', 'Date Inscription', 'Statut'];
+  private convertToCSV(participants: any[]): string {
+    const headers = ['ID', 'Nom', 'Prénom', 'Email', 'Date Inscription', 'Comité', 'Niveau'];
     const rows = participants.map(p =>
-      [p.id, p.name, p.email, p.registrationDate.toLocaleDateString(), p.status === 'confirmed' ? 'Confirmé' : 'En attente']
+      [p.id, p.nom, p.prenom, p.email,
+       new Date(p.createdAt).toLocaleDateString(),
+       p.comite, p.niveauEtudes]
     );
 
     return [headers, ...rows].map(e => e.join(',')).join('\n');
@@ -125,5 +118,41 @@ export class EventRegistrationsComponent implements OnInit {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
+  }
+  approveParticipant(participantId: number) {
+    if (confirm('Confirmez l\'approbation de ce participant ?')) {
+      this.participantService.approveParticipant(participantId).subscribe({
+        next: () => {
+          alert('Participant approuvé avec succès');
+          this.refreshParticipants();
+        },
+        error: (err) => {
+          alert('Erreur lors de l\'approbation');
+          console.error(err);
+        }
+      });
+    }
+  }
+
+  rejectParticipant(participantId: number) {
+    if (confirm("Confirmez le refus de ce participant ?")) {
+      this.participantService.rejectParticipant(participantId).subscribe({
+        next: () => {
+          alert("Participant refusé avec succès");
+          this.refreshParticipants();
+        },
+        error: (err) => {
+          alert("Erreur lors du refus");
+          console.error(err);
+        }
+      });
+    }
+  }
+
+
+  private refreshParticipants() {
+    if (this.selectedEvent) {
+      this.selectEvent(this.selectedEvent);
+    }
   }
 }

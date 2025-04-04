@@ -63,6 +63,7 @@
             </div>
         </section>
 
+
         <!-- Services Section -->
         <section id="services" class="services section">
             <div class="container section-title">
@@ -70,149 +71,125 @@
                 <p>La liste des clubs actifs de l'ENICarthage</p>
             </div>
 
-            <div class="container">
-                <div class="row gy-4">
-                    <div class="col-lg-4 col-md-6">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <img src="assets/images/cme.png" alt="Club Mécatronique">
-                            </div>
-                            <h3>Club Mécatronique</h3>
-                            <p>
-                                Le Club Mécatronique ENICarthage est le premier club de mécatronique fondé en 2010 par des étudiants à l'Ecole Nationale d'Ingénieurs de Carthage avec pour vocation de développer, concevoir et réaliser des systèmes mécatroniques.
-                            </p>
-                        </div>
-                    </div>
+          <app-club></app-club>
 
-                    <div class="col-lg-4 col-md-6">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <img src="assets/images/melkart.png" alt="Club Melkart">
-                            </div>
-                            <h3>MELKART</h3>
-                            <p>
-                                Ce club a été créé en 2012. C'est une association estudiantine à travers laquelle les étudiants font leurs premiers pas vers la vie professionnelle.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <img src="assets/images/ieee.png" alt="IEEE ENICarthage">
-                            </div>
-                            <h3>IEEE ENICarthage</h3>
-                            <p>
-                                L'IEEE est la plus grande association professionnelle au monde dédiée à l'avancement de l'innovation technologique et de l'excellence au profit de l'humanité.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <img src="assets/images/enactus.png" alt="ENACTUS">
-                            </div>
-                            <h3>ENACTUS</h3>
-                            <p>
-                                Enactus est une organisation non gouvernementale internationale à but non lucratif, créée en 1975 aux USA.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <img src="assets/images/cpc.png" alt="CPC Enicarthage">
-                            </div>
-                            <h3>CPC Enicarthage</h3>
-                            <p>
-                                Le CPC ENICarthage est une organisation à but non lucratif affiliée à l'École Nationale d'Ingénieurs de Carthage (ENICarthage).
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4 col-md-6">
-                        <div class="service-item position-relative">
-                            <div class="icon">
-                                <img src="assets/images/mtc.png" alt="Microsoft Tech Club">
-                            </div>
-                            <h3>Microsoft Tech Club Enicarthage</h3>
-                            <p>
-                                Le Club Microsoft a pour mission principale de vous former et de renforcer vos compétences pour vous préparer au mieux à la vie professionnelle.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
 
         <app-creationclub></app-creationclub>
+        <section id="latest-event" class="section">
+          <div class="container">
+            <div *ngIf="latestEvent" class="latest-event-card">
+              <h2 class="section-title">📢 DERNIER ÉVÉNEMENT</h2>
+
+              <div class="event-detail">
+                <p><strong>📌 Nom de l'événement : </strong> {{ latestEvent.eventName }}</p>
+              </div>
+
+              <div class="event-detail">
+                <p><strong>🎭 Type d'événement : </strong> {{ latestEvent.eventType }}</p>
+              </div>
+
+              <div class="event-detail">
+                <p><strong>📝 Description : </strong> {{ latestEvent.description }}</p>
+              </div>
+
+              <div class="event-detail">
+                <p><strong>📅 Date : </strong>
+                  <i class="bi bi-calendar"></i>
+                  {{ latestEvent.startDate | date:'dd/MM/yyyy' }}
+                </p>
+              </div>
+
+              <div class="event-detail">
+                <p><strong>🏛️ Organisé par : </strong>
+                  <i class="bi bi-people-fill"></i>
+                  {{ latestEvent.clubName }}
+                </p>
+              </div>
+
+
+            </div>
+          </div>
+        </section>
+
         <!-- Forum Section -->
         <section id="forum-enicarthage" class="appointment section">
-            <div class="container section-title">
-                <h2>Forum ENICarthage 9.0 - Appel à Candidature</h2>
-                <p>Les étudiants souhaitant intégrer l'organisation peuvent remplir le formulaire ci-dessous.</p>
-            </div>
+          <div class="container section-title">
+              <h2>{{ latestEvent?.eventName }}</h2>
+              <p>Les étudiants souhaitant intégrer l'organisation peuvent remplir le formulaire ci-dessous.</p>
+          </div>
 
-            <div class="container">
-                <form action="#" method="post" role="form" class="php-email-form">
-                    <div class="row">
-                        <div class="col-md-4 form-group">
-                            <input type="text" name="nom" class="form-control" id="nom" placeholder="Nom" required>
-                        </div>
-                        <div class="col-md-4 form-group mt-3 mt-md-0">
-                            <input type="text" name="prenom" class="form-control" id="prenom" placeholder="Prénom" required>
-                        </div>
-                        <div class="col-md-4 form-group mt-3 mt-md-0">
-                            <input type="email" name="email" class="form-control" id="email" placeholder="Email" required>
-                        </div>
-                    </div>
+          <div class="container">
+            <form #participantForm="ngForm" (ngSubmit)="onSubmit(participantForm)" class="php-email-form">
+              <!-- Event selection dropdown -->
+              <div class="form-group mb-4">
+                  <label for="eventName" class="form-label">Nom de l'événement</label>
+                  <input type="text" name="eventName" id="eventName" class="form-control"
+                         [(ngModel)]="formData.eventName" placeholder="Entrez le nom de l'événement" required>
+              </div>
 
-                    <div class="row">
-                        <div class="col-md-6 form-group mt-3">
-                            <select name="niveau" id="niveau" class="form-select" required aria-label="Type d'événement">
-                                <option value="">Niveau d'études</option>
-                                <option value="1A">1ère année</option>
-                                <option value="2A">2ème année</option>
-                                <option value="3A">3ème année</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6 form-group mt-3">
-                            <select name="comite" id="comite" class="form-select" required aria-label="Type d'événement">
-                                <option value="">Choisissez un comité</option>
-                                <option value="logistique">Logistique</option>
-                                <option value="communication">Communication</option>
-                                <option value="sponsoring">Sponsoring</option>
-                                <option value="organisation">Organisation</option>
-                            </select>
-                        </div>
-                    </div>
+              <div class="row">
+                  <div class="col-md-4 form-group">
+                      <input type="text" name="nom" class="form-control" id="nom"
+                             [(ngModel)]="formData.nom" placeholder="Nom" required>
+                  </div>
+                  <div class="col-md-4 form-group mt-3 mt-md-0">
+                      <input type="text" name="prenom" class="form-control" id="prenom"
+                             [(ngModel)]="formData.prenom" placeholder="Prénom" required>
+                  </div>
+                  <div class="col-md-4 form-group mt-3 mt-md-0">
+                      <input type="email" name="email" class="form-control" id="email"
+                             [(ngModel)]="formData.email" placeholder="Email" required>
+                  </div>
+              </div>
 
-                    <div class="form-group mt-3">
-                        <fieldset>
-                            <legend>Participation :</legend>
-                            <input type="radio" id="membre" name="participation" value="membre" required>
-                            <label for="membre">Membre</label>
-                            <input type="radio" id="responsable" name="participation" value="responsable" required>
-                            <label for="responsable">Responsable comité</label>
-                        </fieldset>
-                    </div>
+              <div class="row">
+                  <div class="col-md-6 form-group mt-3">
+                      <select name="niveau" id="niveau" class="form-select"
+                              [(ngModel)]="formData.niveauEtudes" required     aria-label="Type d'événement"   >
+                          <option value="">Niveau d'études</option>
+                          <option value="1A">1ère année</option>
+                          <option value="2A">2ème année</option>
+                          <option value="3A">3ème année</option>
+                      </select>
+                  </div>
+                  <div class="col-md-6 form-group mt-3">
+                      <select name="comite" id="comite" class="form-select"
+                              [(ngModel)]="formData.comite" required  aria-label="Type d'événement" >
+                          <option value="">Choisissez un comité</option>
+                          <option *ngFor="let committee of latestEvent?.committees" [value]="committee">
+                              {{ committee }}
+                          </option>
+                      </select>
+                  </div>
+              </div>
 
-                    <div class="form-group mt-3">
-                        <textarea class="form-control" name="motivation" rows="5" placeholder="Motivation" required></textarea>
-                    </div>
+              <div class="form-group mt-3">
+                  <fieldset>
+                      <legend>Participation :</legend>
+                      <input type="radio" id="membre" name="participation" value="membre"
+                             [(ngModel)]="formData.participationType" required>
+                      <label for="membre">Membre</label>
+                      <input type="radio" id="responsable" name="participation" value="responsable"
+                             [(ngModel)]="formData.participationType" required>
+                      <label for="responsable">Responsable comité</label>
+                  </fieldset>
+              </div>
 
-                    <div class="text-center mt-3">
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
-                    </div>
-                </form>
-            </div>
-        </section>
-    </main>
+              <div class="form-group mt-3">
+                  <textarea class="form-control" name="motivation" rows="5"
+                            [(ngModel)]="formData.motivation" placeholder="Motivation" required></textarea>
+              </div>
+
+              <div class="text-center mt-3">
+                  <button type="submit" class="btn btn-primary">Envoyer</button>
+              </div>
+          </form>
+          </div>
+      </section>
 
 
 
-</body>
-</html>
+
+
+

@@ -4,6 +4,7 @@ import { CardComponent } from '../../shared/components/card/card.component';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CandidatureService } from '../../services/candidature.service';
+import { EventLaunchService } from '../../services/event-launch.service';
 
 @Component({
   selector: 'app-event-launch',
@@ -41,40 +42,50 @@ export class EventLaunchComponent {
       this.committeeTypes.map(() => this.fb.nonNullable.control(false))
     ),
     max_participants: [''],
-    requirements: ['']
+    club_name: [''] // Remplace requirements par club_name
   });
 
   constructor(
     private fb: FormBuilder,
-    private eventService: CandidatureService
+    private eventService: EventLaunchService
   ) {}
-
-  get committeesArray(): FormArray<FormControl<boolean>> {
-    return this.eventForm.controls.committees;
+  private createCommitteeControls() {
+    return Array(4).fill(false).map(() => this.fb.control(false));
   }
+
+
   eventData: any[] = [];  // Pour stocker les événements soumis
 
   onSubmit(): void {
     if (this.eventForm.valid) {
-      const formData = {
-        ...this.eventForm.getRawValue(),
-        selected_committees: this.getSelectedCommittees(),
-        max_participants: this.eventForm.value.max_participants
-          ? Number(this.eventForm.value.max_participants)
-          : undefined
-      };
-
-      // Appel du service pour transmettre l'événement
-      this.eventService.addEvent(formData).subscribe(response => {
-        console.log('Événement soumis:', response);
-        this.eventData.push(response);  // Ajouter l'événement soumis à la liste
+      this.eventService.createEvent(this.eventForm.value).subscribe({
+        next: (res) => {
+          console.log('Success:', res);
+          this.showSuccessAlert();
+          this.resetForm();
+        },
+        error: (err) => this.showErrorAlert(err)
       });
-      this.eventForm.reset();
     }
   }
-
-  private getSelectedCommittees(): string[] {
-    return this.committeeTypes
-      .filter((_, i) => this.committeesArray.at(i).value);
+  getCommitteeControl(index: number): FormControl {
+    return this.committeesArray.at(index) as FormControl;
   }
+  get committeesArray() {
+    return this.eventForm.get('committees') as FormArray;
+  }
+  private showSuccessAlert(): void {
+    alert('Événement créé avec succès!');
+  }
+
+  private showErrorAlert(error: any): void {
+    alert(`Erreur: ${error.message || 'Une erreur est survenue'}`);
+  }
+
+  private resetForm(): void {
+    this.eventForm.reset();
+    this.committeesArray.controls.forEach(control => control.setValue(false));
+  }
+
+
 }

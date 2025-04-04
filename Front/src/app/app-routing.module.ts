@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AdminEventRequestsComponent } from './components/admin-event-requests/admin-event-requests.component';
 import { EventRegistrationsComponent } from './components/event-registrations/event-registrations.component';
 
+
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
@@ -44,6 +45,11 @@ const routes: Routes = [
         data: { title: 'Suivi des inscriptions' }
       },
       {
+        path: 'partnership-list',
+        loadComponent: () => import('./partnership-list/partnership-list.component')
+          .then(c => c.PartnershipListComponent)
+      },
+      {
         path: 'partnerships',
         loadComponent: () => import('./features/partnerships/partnerships.component')
           .then(c => c.PartnershipsComponent)
@@ -56,6 +62,10 @@ const routes: Routes = [
       {
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent)
+      },
+      {
+        path: 'demandeclubadmin',
+        loadComponent: () => import('./demandeclubadmin/demandeclubadmin.component').then((c) => c.DemandeclubadminComponent)
       },
       {
         path: 'typography',

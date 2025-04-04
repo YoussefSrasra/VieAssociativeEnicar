@@ -5,14 +5,58 @@ import { RouterModule } from '@angular/router';
 import { LoginService } from 'src/app/login.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CreationclubComponent } from "../creationclub/creationclub.component";
+import { CommonModule } from '@angular/common';
+import { ParticipantService } from '../services/participant.service';
+import { NgForm } from '@angular/forms';
+
+import {ClubComponent} from 'src/app/clubaccueil/clubaccueil.component';
+import { CreationClubComponent } from "../creationclub/creationclub.component";
+import { EventLaunchService } from '../services/event-launch.service';
+
 
 @Component({
   selector: 'app-accueil',
-  imports: [RouterModule, CreationclubComponent],
+  imports: [RouterModule, CreationClubComponent, ClubComponent, FormsModule,CommonModule],
   templateUrl: './accueil.component.html',
   styleUrl: './accueil.component.scss'
 })
-export class AccueilComponent {
+export class AccueilComponent implements OnInit {
+  latestEvent: any = null; // Remplacez upcomingEvents
+  isLoading = true;
+  formData: any = {};
+
+  constructor(private eventService: EventLaunchService ,    private participantService: ParticipantService
+  ) {}
+
+  ngOnInit(): void {
+    this.loadLatestEvent();
+  }
+
+  loadLatestEvent(): void {
+    this.eventService.getLatestEvent().subscribe({
+      next: (event) => {
+        this.latestEvent = event;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Erreur:', err);
+        this.isLoading = false;
+      }
+    });
+  }
+  onSubmit(form: NgForm): void {
+    if (form.valid) {
+      this.participantService.registerParticipant(this.formData).subscribe({
+        next: (response) => {
+          alert('Inscription réussie !');
+          form.resetForm();
+        },
+        error: (err) => {
+          console.error('Erreur:', err);
+          alert('Une erreur est survenue');
+        }
+      });
+    }
+  }
 
 }

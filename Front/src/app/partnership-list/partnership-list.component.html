@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-12">
+    <app-card headerTitle="Liste des Partenaires">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Nom</th>
+            <th>Type</th>
+            <th>Contact</th>
+            <th>Téléphone</th>
+            <th>Partenaire depuis</th>
+            <th>Détails</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let partner of partners">
+            <td>{{ partner.id }}</td>
+            <td>{{ partner.name }}</td>
+            <td>{{ partner.type }}</td>
+            <td>{{ partner.contact }}</td>
+            <td>{{ partner.phone }}</td>
+            <td>{{ partner.since }}</td>
+            <td>{{ partner.details }}</td>
+            <td>
+
+              <button class="btn btn-danger btn-icon" (click)="deletePartner(partner.id)">
+                Supprimer
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </app-card>
+  </div>
+</div>

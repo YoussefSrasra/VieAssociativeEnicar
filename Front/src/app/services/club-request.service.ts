@@ -1,39 +1,55 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8081/api/club-requests';
-const headers = new HttpHeaders({
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*' // Temporaire pour le test
-});
+interface EventRequest {
+  id?: number;
+  club: { id: number };
+  eventName: string;
+  type: string;
+  description: string;
+  location: string;
+  startDate: string;
+  endDate: string;
+  financialRequest?: boolean;
+  requestedAmount?: number;
+  estimatedAttendees?: number;
+  status?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class ClubRequestService {
-  constructor(private http: HttpClient) {}
+  private apiUrl = 'http://localhost:8081/api/event-requests';
 
-  createRequest(request: any): Observable<any> {
-    return this.http.post(API_URL, request);
+  constructor(private http: HttpClient) { }
+
+  createEventRequest(eventRequest: EventRequest): Observable<EventRequest> {
+    return this.http.post<EventRequest>(this.apiUrl, eventRequest);
   }
 
-  getAllRequests(): Observable<any> {
-    return this.http.get(API_URL);
+  getEventRequests(): Observable<EventRequest[]> {
+    return this.http.get<EventRequest[]>(this.apiUrl);
   }
 
-  getRequestById(id: number): Observable<any> {
-    return this.http.get(`${API_URL}/${id}`);
+  getEventRequestsByClub(clubId: number): Observable<EventRequest[]> {
+    return this.http.get<EventRequest[]>(`${this.apiUrl}/club/${clubId}`);
   }
 
-  approveRequest(id: number): Observable<any> {
-    return this.http.put(`${API_URL}/${id}/approve`, {});
+  approveEventRequest(id: number): Observable<EventRequest> {
+    return this.http.put<EventRequest>(`${this.apiUrl}/${id}/approve`, {});
   }
 
+  rejectEventRequest(id: number): Observable<EventRequest> {
+    return this.http.put<EventRequest>(`${this.apiUrl}/${id}/reject`, {});
+  }
+
+  deleteEventRequest(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  }
   rejectRequest(id: number): Observable<any> {
-    return this.http.put(`${API_URL}/${id}/reject`, {});
+    return this.http.put(`${this.apiUrl}/requests/${id}/reject`, null);
   }
 
-  getRequestsByStatus(status: string): Observable<any> {
-    return this.http.get(`${API_URL}/status/${status}`);
-  }
 }

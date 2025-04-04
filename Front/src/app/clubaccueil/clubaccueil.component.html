@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+    <!-- Message d'erreur -->
+    <div *ngIf="error" class="alert alert-danger">
+      {{ error }}
+    </div>
+
+    <!-- Liste des clubs -->
+    <div *ngFor="let club of clubs" class="col-md-4 mb-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ club.name }}</h5>
+          <p class="card-text">
+            <strong>Spécialité:</strong>
+            {{ club.specialty }}
+            <br />
+            <strong>Statut:</strong>
+            {{ club.status }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aucun club -->
+    <div *ngIf="!loading && clubs.length === 0 && !error" class="col-12">
+      <div class="alert alert-info">Aucun club disponible dans le système.</div>
+    </div>
+  </div>
+</div>

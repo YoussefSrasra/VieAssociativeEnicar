@@ -16,24 +16,26 @@ public class ClubRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+   
     private String type; // Forum, Hackathon, EnicARobotos...
-    @JsonProperty("event_name")
+    @Column(name = "event_name", nullable = false) // Exactement comme dans la base
     private String eventName;
         private String description;
- @JsonProperty("start_date")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+        @Column(name = "start_date")
+
     private LocalDate startDate;  
-    @JsonProperty("end_date")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @Column(name = "end_date")
+
     private LocalDate endDate;
         private String location;
 
     @ElementCollection
     private List<String> committeeTypes; // Organisation, Logistique...
+    @Column(name = "financial_request")
 
-    @JsonProperty("financial_request")
     private boolean financialRequest;
-    @JsonProperty("requested_amount")
+    
+
     private Double requestedAmount;
         private String status; // Pending, Approved, Rejected
 
@@ -96,4 +98,5 @@ public class ClubRequest {
 
     public Club getClub() { return club; }
     public void setClub(Club club) { this.club = club; }
+    
 }
