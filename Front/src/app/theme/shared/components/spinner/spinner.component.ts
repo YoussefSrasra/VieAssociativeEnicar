@@ -10,7 +10,7 @@ import { Spinkit } from './spinkits';
   selector: 'app-spinner',
   templateUrl: './spinner.component.html',
   styleUrls: ['./spinner.component.scss', './spinkit-css/sk-line-material.scss'],
-  encapsulation: ViewEncapsulation.None
+ // encapsulation: ViewEncapsulation.None
 })
 export class SpinnerComponent implements OnDestroy {
   private router = inject(Router);
