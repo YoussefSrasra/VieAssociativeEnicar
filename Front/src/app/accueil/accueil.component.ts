@@ -6,14 +6,14 @@ import { LoginService } from 'src/app/login.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import {ClubComponent} from 'src/app/clubaccueil/clubaccueil.component';
+import {ClubAccueilComponent} from 'src/app/clubaccueil/clubaccueil.component';
 import { CreationClubComponent } from "../creationclub/creationclub.component"; 
 
 
 
 @Component({
   selector: 'app-accueil',
-  imports: [RouterModule, CreationClubComponent, ClubComponent, FormsModule],
+  imports: [RouterModule, CreationClubComponent, ClubAccueilComponent, FormsModule],
   templateUrl: './accueil.component.html',
   styleUrl: './accueil.component.scss'
 })

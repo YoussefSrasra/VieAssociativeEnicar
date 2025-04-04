@@ -1,7 +1,9 @@
-import { Component,OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { EnrollmentService } from './enrollment.service';
 import { Enrollment } from './enrollment.model';
 import { CommonModule } from '@angular/common';
+
+declare var bootstrap: any; // Déclaration pour TypeScript
 
 @Component({
   selector: 'app-enrollment',
@@ -13,11 +15,16 @@ export class EnrollmentComponent implements OnInit {
   enrollments: Enrollment[] = [];
   isLoading = true;
   errorMessage = '';
+  selectedMotivation = '';
 
   constructor(private enrollmentService: EnrollmentService) { }
 
   ngOnInit(): void {
     this.loadEnrollments();
+    // Initialiser les tooltips/popovers si nécessaire
+    // [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]')).forEach(function (el) {
+    //   new bootstrap.Tooltip(el);
+    // });
   }
 
   loadEnrollments(): void {
@@ -35,10 +42,20 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
+  showMotivation(motivation: string): void {
+    this.selectedMotivation = motivation;
+    // Ouvre le modal Bootstrap
+    const modalElement = document.getElementById('motivationModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
   approveEnrollment(id: number): void {
     this.enrollmentService.approveEnrollment(id).subscribe({
       next: () => {
-        this.loadEnrollments(); // Recharger la liste après approbation
+        this.loadEnrollments();
       },
       error: (err) => console.error(err)
     });
@@ -47,7 +64,7 @@ export class EnrollmentComponent implements OnInit {
   rejectEnrollment(id: number): void {
     this.enrollmentService.rejectEnrollment(id).subscribe({
       next: () => {
-        this.loadEnrollments(); // Recharger la liste après rejet
+        this.loadEnrollments();
       },
       error: (err) => console.error(err)
     });
