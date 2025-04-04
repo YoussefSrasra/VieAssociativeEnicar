@@ -43,7 +43,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/demandes/**").permitAll()
                         .requestMatchers("/api/club-request/").hasRole("MEMBER")
                         .requestMatchers("/api/events").hasRole("ADMIN")
-                        .requestMatchers("/api/clubs").hasRole("ADMIN")
+                        .requestMatchers("/api/clubs").permitAll()
                         .requestMatchers("/api/clubs/**").hasRole("ADMIN")
                         .requestMatchers("/api/member/**").hasRole("MEMBER")
                         .requestMatchers("/api/manager/**").hasRole("MANAGER")

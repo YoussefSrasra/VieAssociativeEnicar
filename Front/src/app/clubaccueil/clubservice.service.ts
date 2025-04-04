@@ -11,17 +11,7 @@ export class ClubService {
 
   constructor(private http: HttpClient) { }
 
-  getAllClubs(): Observable<Club[]> {
-    return this.http.get<Club[]>(this.apiUrl);
+  getAllClubs(): Observable<any[]> {
+    return this.http.get<any[]>(this.apiUrl);
   }
-}
-
-interface Club {
-  id: number;
-  name: string;
-  specialty: string;
-  status: string;
-  responsibleMember: {
-    id: number;
-  };
 }

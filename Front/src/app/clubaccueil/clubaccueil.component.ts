@@ -1,19 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ClubService } from './clubservice.service';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { catchError, of, finalize } from 'rxjs';
 
+// Interface définie localement
+interface Club {
+  id: number;
+  name: string;
+  specialty: string;
+  status?: string;
+}
+
 @Component({
-  selector: 'app-club',
+  selector: 'app-club-accueil',
   templateUrl: './clubaccueil.component.html',
-  imports: [FormsModule, CommonModule],
+  styleUrls: ['./clubaccueil.component.scss'],
   standalone: true,
-  styleUrls: ['./clubaccueil.component.scss']
+  imports: [CommonModule, FormsModule]
 })
-export class ClubComponent implements OnInit {
-  clubs: any[] = [];
+export class ClubAccueilComponent implements OnInit {
+  clubs: Club[] = [];
   loading = true;
   error: string | null = null;
 
@@ -33,12 +40,8 @@ export class ClubComponent implements OnInit {
       finalize(() => this.loading = false)
     ).subscribe({
       next: (data) => {
-        this.clubs = data;
-        console.log('Clubs reçus:', data); // Debug
+        this.clubs = data as Club[]; // Conversion explicite
       }
     });
   }
 }
-  
-
-  

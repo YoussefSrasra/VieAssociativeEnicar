@@ -8,10 +8,11 @@ import { EventLaunchComponent } from './features/event-launch/event-launch.compo
 
 @Component({
   selector: 'app-root',
+  //standalone:true,
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  imports: [RouterOutlet, SpinnerComponent
-    ,MemberRegistrationComponent ,EventLaunchComponent
+  imports: [RouterOutlet
+    //evenntalunchComponent,MemberregistrationComponent,SpinnerComponent,
   ],
 })
 export class AppComponent {
