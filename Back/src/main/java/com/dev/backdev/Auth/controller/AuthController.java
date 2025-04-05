@@ -41,8 +41,9 @@ public class AuthController {
     }   
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody UserRegistrationDTO userDto) {
-        return authService.registerUser(userDto);
+    public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRegistrationDTO userDto) {
+        User user = authService.registerUser(userDto);
+        return ResponseEntity.ok(new UserResponseDto(user));
     }
 
     @PostMapping("/login")
@@ -74,6 +75,18 @@ public class AuthController {
                 .body(Map.of("error", e.getMessage()));
         }
     }
+    @DeleteMapping("/delete-user-byname/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        try {
+            authService.deleteUser(username);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of("error", e.getMessage()));
+        }
+    }
+
      @GetMapping("/users")
     public List<UserResponseDto> getAllUsers() {
         return authService.getAllUsers();
