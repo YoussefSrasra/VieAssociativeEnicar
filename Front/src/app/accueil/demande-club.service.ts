@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class DemandeClubService {
-  private apiUrl = 'http://localhost:8081/api/demandes'; // URL correcte
+  private apiUrl = 'http://localhost:8080/api/demandes'; // URL correcte
 
   constructor(private http: HttpClient) {}
 

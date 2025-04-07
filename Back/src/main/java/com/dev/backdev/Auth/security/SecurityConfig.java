@@ -48,7 +48,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/partners").permitAll()
                         .requestMatchers("/api/event-requests/**").permitAll() 
                         .requestMatchers("/api/demandes").permitAll()
-                        .requestMatchers("/api/demandes/**").hasRole("ADMIN")
+                        .requestMatchers("/api/demandes/**").permitAll()
+                        
                         .requestMatchers("/api/club-request/").hasRole("MEMBER")
                         .requestMatchers("/api/events").hasRole("ADMIN")
                       

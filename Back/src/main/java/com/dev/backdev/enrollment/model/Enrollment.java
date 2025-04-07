@@ -1,7 +1,9 @@
 package com.dev.backdev.enrollment.model;
 
+import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.EvenementClub.model.EvenementClb;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -40,11 +42,17 @@ public class Enrollment {
     private String niveauEtude;
     private String messageMotivation;
     private String email;
+
     @ManyToOne
     @JoinColumn(name = "evenement_id")
     private EvenementClb evenement;
+
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus etat;
+
+    
+    @Column(name = "club_id") // Juste la colonne ID
+    private Long clubId; // Remplace Club club par Long clubId
 
     // Getters and setters
 
