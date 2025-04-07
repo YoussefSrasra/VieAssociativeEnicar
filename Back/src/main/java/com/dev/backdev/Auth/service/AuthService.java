@@ -14,6 +14,7 @@ import com.dev.backdev.Auth.model.User;
 import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Repository.ClubRepository;
+import com.dev.backdev.Email.EmailService;
 
 
 @Service
@@ -21,13 +22,16 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ClubRepository clubRepository; // Add this
+    private final ClubRepository clubRepository;
+    private final EmailService emailService;
 
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,ClubRepository clubRepository) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,ClubRepository clubRepository, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.clubRepository = clubRepository;
+        this.emailService = emailService;
+
     }
 
      public User registerUser(UserRegistrationDTO userDto) {
@@ -43,6 +47,12 @@ public class AuthService {
         user.setRole(userDto.getRole());
         user.setClub(club); // Assign the fetched club
 
+        emailService.sendCredentials(
+            user.getEmail(),
+            userDto.getUsername(),
+            userDto.getPassword() // Raw password (will be sent via email)
+        );
+
         return userRepository.save(user);
     }
     public void deleteUser(Long userId) {
@@ -56,6 +66,18 @@ public class AuthService {
         
         userRepository.delete(user);
     }
+    public void deleteUser(String username) {
+        User user = userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        // Handle club relationships if needed
+        if (user.getResponsibleClub() != null) {
+            throw new RuntimeException("Cannot delete a club manager. Reassign club first.");
+        }
+        
+        userRepository.delete(user);
+    }
+
      public List<UserResponseDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         return users.stream()

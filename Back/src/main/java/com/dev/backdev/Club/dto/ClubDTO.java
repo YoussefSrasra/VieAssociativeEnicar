@@ -9,14 +9,16 @@ public class ClubDTO {
     private String name;
     private String specialty;
     private String status;
+    private String logo;
     private String responsibleMember; // Only the username
     private List<String> members; // List of usernames
 
-    public ClubDTO(Long id, String name, String specialty, String status, String responsibleMember, List<String> members) {
+    public ClubDTO(Long id, String name, String specialty, String status, String logo, String responsibleMember, List<String> members) {
         this.id = id;
         this.name = name;
         this.specialty = specialty;
         this.status = status;
+        this.logo = logo;
         this.responsibleMember = responsibleMember;
         this.members = members;
     }
@@ -69,11 +71,14 @@ public class ClubDTO {
     public void setMembers(List<String> members) {
         this.members = members;
     }
-    private Club convertToClub(ClubDTO clubDTO) {
-        Club club = new Club();
-        club.setId(clubDTO.getId());
-        // Assurez-vous d'implémenter tous les champs nécessaires
-        return club;
+
+
+    public String getLogo() {
+        return logo;
     }
-    
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
 }
