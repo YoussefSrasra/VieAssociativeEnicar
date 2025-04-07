@@ -1,5 +1,7 @@
 package com.dev.backdev.enrollment.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +33,11 @@ public class EnrollmentController {
     public ResponseEntity<Enrollment> rejectEnrollment(@PathVariable Long id) {
         Enrollment updatedEnrollment = enrollmentService.rejectEnrollment(id);
         return ResponseEntity.ok(updatedEnrollment);
+    }
+    @GetMapping
+    public ResponseEntity<List<Enrollment>> getAllEnrollments() {
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
+        return ResponseEntity.ok(enrollments);
     }
 
   
