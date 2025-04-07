@@ -24,6 +24,7 @@ public class Club {
     private Long id;
 
     private String name;
+    @Column(length = 255) 
     private String specialty;
     private String status; // e.g., "active", "inactive", "pending"
    @Lob

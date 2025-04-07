@@ -77,9 +77,20 @@ export class ClubAccueilComponent implements OnInit {
     });
   }
 
-  getSafeLogoUrl(logoBase64: string | undefined): SafeUrl | null {
+  getSafeLogoUrl(logoBase64: string | undefined): string | null {
     if (!logoBase64) return null;
-    return this.sanitizer.bypassSecurityTrustUrl('data:image/*;base64,' + logoBase64);
+  
+    // Si la chaîne commence déjà par 'data:image', on extrait la partie Base64
+    if (logoBase64.startsWith('data:image')) {
+      // On supprime le préfixe en trouvant la virgule après 'base64,'
+      const base64Index = logoBase64.indexOf('base64,');
+      if (base64Index !== -1) {
+        return logoBase64.substring(base64Index + 7); // +7 pour sauter 'base64,'
+      }
+    }
+  
+    // Si ce n'est pas un format 'data:image', on suppose que c'est déjà du pur Base64
+    return logoBase64;
   }
 
   openEnrollmentModal(club: Club): void {

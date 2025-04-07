@@ -18,7 +18,9 @@ public class demandeclub {
     private String prenom;
     private String email;
     private String nomClub;
-    private String logoFileName; 
+    
+    @Column(columnDefinition = "TEXT")
+    private String logoBase64; // Stocke uniquement la chaîne base64 de l'image
     
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -26,21 +28,4 @@ public class demandeclub {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Etat etat = Etat.EN_ATTENTE; // Valeur par défaut "EN_ATTENTE"
-    
-    
-    
-   
-    // getters et setters
-    public Etat getEtat() {
-        return etat;
-    }
-    
-    public void setEtat(Etat etat) {
-        this.etat = etat;
-    }
- 
 }
-
-
-
- 

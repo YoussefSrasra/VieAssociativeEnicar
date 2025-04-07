@@ -1,4 +1,3 @@
-
 <section id="forum-enicarthage" class="appointment section">
     <div class="container section-title">
         <h2>Demande de création de club</h2>
@@ -35,8 +34,6 @@
                 </div>
             </div>
             
-
-            
             <!-- Informations sur le club -->
             <div class="form-group mt-3">
                 <input type="text" class="form-control" id="club" placeholder="Nom du Club" required
@@ -46,6 +43,14 @@
             <div class="form-group mt-3">
                 <textarea class="form-control" rows="5" placeholder="Description du club" required
                           [(ngModel)]="demande.description" name="description"></textarea>
+            </div>
+            
+            <!-- Nouveau champ pour le logo du club -->
+            <div class="form-group mt-3">
+                <label for="logo" class="form-label">Logo du club (optionnel)</label>
+                <input type="file" class="form-control" id="logo" accept="image/*"
+                       (change)="onFileSelected($event)">
+                <small class="text-muted">Taille maximale recommandée: 1MB</small>
             </div>
             
             <!-- Bouton de soumission -->
