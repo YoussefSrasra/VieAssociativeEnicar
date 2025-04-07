@@ -9,6 +9,8 @@ import { authGuard } from './auth.guard';
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
+import { AdminEventRequestsComponent } from './components/admin-event-requests/admin-event-requests.component';
+import { EventRegistrationsComponent } from './components/event-registrations/event-registrations.component';
 
 const routes: Routes = [
   {
@@ -31,6 +33,21 @@ const routes: Routes = [
         path: 'event-launch',
         loadComponent: () => import('./features/event-launch/event-launch.component')
           .then(c => c.EventLaunchComponent)
+      },
+      {
+        path: 'admin/event-requests',
+        component: AdminEventRequestsComponent,
+        data: { title: 'Gestion des demandes - Admin' }
+      },
+      {
+        path: 'admin/event-registrations',
+        component: EventRegistrationsComponent,
+        data: { title: 'Suivi des inscriptions' }
+      },
+      {
+        path: 'partnership-list',
+        loadComponent: () => import('./partnership-list/partnership-list.component')
+          .then(c => c.PartnershipListComponent)
       },
       {
         path: 'partnerships',

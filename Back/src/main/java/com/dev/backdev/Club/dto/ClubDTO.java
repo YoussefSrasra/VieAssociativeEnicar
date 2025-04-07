@@ -2,19 +2,23 @@ package com.dev.backdev.Club.dto;
 
 import java.util.List;
 
+import com.dev.backdev.Club.Model.Club;
+
 public class ClubDTO {
     private Long id;
     private String name;
     private String specialty;
     private String status;
+    private String logo;
     private String responsibleMember; // Only the username
     private List<String> members; // List of usernames
 
-    public ClubDTO(Long id, String name, String specialty, String status, String responsibleMember, List<String> members) {
+    public ClubDTO(Long id, String name, String specialty, String status, String logo, String responsibleMember, List<String> members) {
         this.id = id;
         this.name = name;
         this.specialty = specialty;
         this.status = status;
+        this.logo = logo;
         this.responsibleMember = responsibleMember;
         this.members = members;
     }
@@ -67,4 +71,14 @@ public class ClubDTO {
     public void setMembers(List<String> members) {
         this.members = members;
     }
+
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
 }

@@ -83,4 +83,4 @@ public class User {
     public void setClub(Club club) {
         this.club = club;
     }
-}
+}   

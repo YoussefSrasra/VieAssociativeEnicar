@@ -33,22 +33,34 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/public/**").permitAll()
-                        .requestMatchers("/api/enrollments").permitAll()
-                        .requestMatchers("/api/enrollments/**").hasRole("MANAGER")
-                        .requestMatchers("/api/demandes").permitAll()
-                        .requestMatchers("/api/demandes/**").permitAll()
-                        .requestMatchers("/api/club-request/").hasRole("MEMBER")
-                        .requestMatchers("/api/events").hasRole("ADMIN")
-                        .requestMatchers("/api/clubs").permitAll()
-                        .requestMatchers("/api/clubs/**").hasRole("ADMIN")
-                        .requestMatchers("/api/member/**").hasRole("MEMBER")
-                        .requestMatchers("/api/manager/**").hasRole("MANAGER")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .anyRequest().authenticated())
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/public/**").permitAll() 
+                             .requestMatchers("/api/club-requests/**").permitAll()
+                .requestMatchers("/api/enrollments**").permitAll()
+                .requestMatchers("/api/participants/**").permitAll()
+
+                .requestMatchers("/api/clubs").hasRole("ADMIN") // Ensure this line is present     
+                .requestMatchers("/api/even/**").permitAll()   
+                .requestMatchers("/api/partners/**").permitAll()      
+   
+                .requestMatchers("/api/event-requests/**").permitAll()
+
+                .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present                
+                .requestMatchers("/api/enrollments").permitAll()
+                .requestMatchers("/api/enrollments/**").permitAll()
+                .requestMatchers("/api/demandes").permitAll()
+                .requestMatchers("/api/demandes/**").hasRole("ADMIN")
+                .requestMatchers("/api/club-request/").hasRole("MEMBER")
+                .requestMatchers("/api/events").hasRole("ADMIN")
+                .requestMatchers("/api/clubs").hasRole("ADMIN")
+                .requestMatchers("/api/clubs/**").hasRole("ADMIN")
+                .requestMatchers("/api/member/**").hasRole("MEMBER")
+                .requestMatchers("/api/manager/**").hasRole("MANAGER")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated())
+        
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .httpBasic(Customizer.withDefaults());
         return http.build();
@@ -66,7 +78,6 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

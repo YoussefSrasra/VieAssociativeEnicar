@@ -24,7 +24,7 @@ public class Club {
     private String name;
     private String specialty;
     private String status; // e.g., "active", "inactive", "pending"
-
+    private String logo;
     @OneToOne
     @JoinColumn(name = "responsible_member_id", referencedColumnName = "id")
     private User responsibleMember;
@@ -37,11 +37,12 @@ public class Club {
     // Constructors, Getters, and Setters
     public Club() {}
 
-    public Club(String name, String specialty, String status, User responsibleMember) {
+    public Club(String name, String specialty, String status, User responsibleMember , String logo) {
         this.name = name;
         this.specialty = specialty;
         this.status = status;
         this.responsibleMember = responsibleMember;
+        this.logo = logo;
     }
 
     // Getters and Setters
@@ -77,6 +78,14 @@ public class Club {
         this.status = status;
     }
 
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
+    }
+
     public User getResponsibleMember() {
         return responsibleMember;
     }
@@ -92,5 +101,6 @@ public class Club {
     public void setMembers(List<User> members) {
         this.members = members;
     }
+    
 
 }
