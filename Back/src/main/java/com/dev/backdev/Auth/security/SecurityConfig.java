@@ -45,7 +45,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/even/**").permitAll()   
                 .requestMatchers("/api/partners/**").permitAll()      
    
- 
+                .requestMatchers("/api/event-requests/**").permitAll()
+
                 .requestMatchers("/api/clubs/**").hasRole("ADMIN") // Ensure this line is present                
                 .requestMatchers("/api/enrollments").permitAll()
                 .requestMatchers("/api/enrollments/**").permitAll()
@@ -59,19 +60,20 @@ public class SecurityConfig {
                 .requestMatchers("/api/manager/**").hasRole("MANAGER")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated())
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-            .httpBasic(Customizer.withDefaults());
+        
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic(Customizer.withDefaults());
         return http.build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"   )); // Autoriser le frontend Angular
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE" , "PATCH")); // Autoriser ces méthodes HTTP
-        configuration.setAllowedHeaders(List.of("*")); // Autoriser tous les en-têtes
-        configuration.setAllowCredentials(true); // Autoriser les cookies
-        
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -83,11 +85,11 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = 
-            http.getSharedObject(AuthenticationManagerBuilder.class);
+        AuthenticationManagerBuilder authenticationManagerBuilder = http
+                .getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder
-            .userDetailsService(userDetailsService)
-            .passwordEncoder(passwordEncoder());
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
         return authenticationManagerBuilder.build();
     }
 }

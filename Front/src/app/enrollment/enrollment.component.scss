@@ -1,0 +1,53 @@
+.loading {
+    padding: 20px;
+    text-align: center;
+    font-style: italic;
+    color: #666;
+  }
+  
+  .badge {
+    padding: 5px 10px;
+    border-radius: 10px;
+    font-size: 0.8em;
+  }
+  
+  .table {
+    margin-top: 20px;
+  }
+  /* Dans votre fichier CSS */
+.motivation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.motivation-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 80%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}

@@ -48,8 +48,17 @@ export class ClubRequestService {
   deleteEventRequest(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-  rejectRequest(id: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/requests/${id}/reject`, null);
+
+
+  getAllRequests(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}`);
   }
 
+  approveRequest(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/approve`, {});
+  }
+
+  rejectRequest(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/reject`, {});
+  }
 }

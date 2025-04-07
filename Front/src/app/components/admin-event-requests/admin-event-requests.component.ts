@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-admin-event-requests',
   standalone: true,
-  imports: [CommonModule, CardComponent, DatePipe, FormsModule],
+  imports: [CommonModule, CardComponent, FormsModule],
   templateUrl: './admin-event-requests.component.html',
   styleUrls: ['./admin-event-requests.component.scss']
 })
@@ -41,7 +41,11 @@ export class AdminEventRequestsComponent implements OnInit {
         this.isLoading = false;
       },
       error: (err) => {
-        console.error(err);
+        console.error('Erreur complète:', err);
+        console.error('Status:', err.status);
+        console.error('Message:', err.message);
+        console.error('URL:', err.url);
+        console.error('Erreur complète:', JSON.stringify(err, null, 2));
         this.isLoading = false;
       }
     });
@@ -102,3 +106,5 @@ export class AdminEventRequestsComponent implements OnInit {
     }
   }
 }
+
+

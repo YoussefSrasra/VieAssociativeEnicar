@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -69,5 +70,11 @@ public class EventRequestService {
 
     public void deleteEventRequest(Long id) {
         eventRequestRepository.deleteById(id);
+    }
+    public EventRequest saveEventRequest(EventRequest eventRequest) {
+        return eventRequestRepository.save(eventRequest);
+    }
+    public List<Map<String, Object>> getAllEventRequestsForDisplay() {
+        return eventRequestRepository.findAllForDisplay();
     }
 }

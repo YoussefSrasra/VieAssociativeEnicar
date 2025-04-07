@@ -47,9 +47,7 @@ public class EnrollmentService {
 
    
 
-    public List<Enrollment> getEnrollmentsByEvent(Long eventId) {
-        return repository.findByEvenementId(eventId);
-    }
+   
 
  
 

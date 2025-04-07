@@ -9,14 +9,15 @@ import { CommonModule } from '@angular/common';
 import { ParticipantService } from '../services/participant.service';
 import { NgForm } from '@angular/forms';
 
-import {ClubComponent} from 'src/app/clubaccueil/clubaccueil.component';
 import { CreationClubComponent } from "../creationclub/creationclub.component";
 import { EventLaunchService } from '../services/event-launch.service';
+import {ClubAccueilComponent} from 'src/app/clubaccueil/clubaccueil.component';
+
 
 
 @Component({
   selector: 'app-accueil',
-  imports: [RouterModule, CreationClubComponent, ClubComponent, FormsModule,CommonModule],
+  imports: [RouterModule, CreationClubComponent, FormsModule,CommonModule,ClubAccueilComponent,FormsModule],
   templateUrl: './accueil.component.html',
   styleUrl: './accueil.component.scss'
 })

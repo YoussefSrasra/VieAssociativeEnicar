@@ -65,6 +65,9 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+    public void setEmail(String email) {
+        this.email = email;
+    }
     public Club getResponsibleClub() {
         return responsibleClub;
     }
@@ -80,4 +83,4 @@ public class User {
     public void setClub(Club club) {
         this.club = club;
     }
-}
+}   

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import com.dev.backdev.enrollment.model.Enrollment;
 import com.dev.backdev.enrollment.service.EnrollmentService;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/enrollments")
@@ -34,14 +33,9 @@ public class EnrollmentController {
         return ResponseEntity.ok(updatedEnrollment);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Enrollment>> getAllEnrollments() {
-        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
-        return ResponseEntity.ok(enrollments);
-    }
-    @GetMapping("/event/{eventId}")
-    public ResponseEntity<List<Enrollment>> getEnrollmentsByEvent(@PathVariable Long eventId) {
-        List<Enrollment> enrollments = enrollmentService.getEnrollmentsByEvent(eventId);
-        return ResponseEntity.ok(enrollments);
-    }
+  
+
+
+    
+    // Suppression de la méthode getEnrollmentsByEvent qui n'est plus nécessaire
 }

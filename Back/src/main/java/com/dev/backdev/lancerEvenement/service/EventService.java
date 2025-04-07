@@ -2,9 +2,7 @@ package com.dev.backdev.lancerEvenement.service;
 
 import com.dev.backdev.lancerEvenement.model.Event;
 import com.dev.backdev.lancerEvenement.repository.EventRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
