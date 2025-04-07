@@ -45,6 +45,14 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setEmail(userDto.getEmail());
         user.setRole(userDto.getRole());
+        user.setNom(userDto.getNom());
+        user.setPrenom(userDto.getPrenom());
+        user.setCin(userDto.getCin());
+        user.setFiliere(userDto.getFiliere());
+        user.setNiveau(userDto.getNiveau());
+        user.setSexe(userDto.getSexe());
+        user.setFormation(userDto.getFormation());
+        user.setPhoto(userDto.getPhoto());
         user.setClub(club); // Assign the fetched club
 
         emailService.sendCredentials(
@@ -110,13 +118,7 @@ public class AuthService {
     private UserResponseDto convertToUserResponseDTO(User user) {
         String clubName = (user.getClub() != null) ? user.getClub().getName() : null;
         
-        return new UserResponseDto(
-            user.getId(), 
-            user.getUsername(), 
-            user.getEmail(), 
-            user.getRole(), 
-            clubName
-        );
+        return new UserResponseDto(user);
     }
 
     public UserResponseDto updateUser(String username, UserUpdateDTO updateDTO) {
