@@ -6,11 +6,13 @@ import java.util.List;
 import com.dev.backdev.Auth.model.User;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -24,6 +26,8 @@ public class Club {
     private String name;
     private String specialty;
     private String status; // e.g., "active", "inactive", "pending"
+   @Lob
+@Column(columnDefinition = "LONGTEXT") // For MySQL
     private String logo;
     @OneToOne
     @JoinColumn(name = "responsible_member_id", referencedColumnName = "id")

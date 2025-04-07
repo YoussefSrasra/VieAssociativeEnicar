@@ -18,6 +18,7 @@ public class demandeclub {
     private String prenom;
     private String email;
     private String nomClub;
+    private String logoFileName; 
     
     @Column(columnDefinition = "TEXT")
     private String description;
