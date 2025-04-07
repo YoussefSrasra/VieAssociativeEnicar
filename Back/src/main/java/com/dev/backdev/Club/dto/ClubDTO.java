@@ -2,6 +2,8 @@ package com.dev.backdev.Club.dto;
 
 import java.util.List;
 
+import com.dev.backdev.Club.Model.Club;
+
 public class ClubDTO {
     private Long id;
     private String name;
@@ -70,6 +72,7 @@ public class ClubDTO {
         this.members = members;
     }
 
+
     public String getLogo() {
         return logo;
     }
@@ -77,4 +80,5 @@ public class ClubDTO {
     public void setLogo(String logo) {
         this.logo = logo;
     }
+
 }

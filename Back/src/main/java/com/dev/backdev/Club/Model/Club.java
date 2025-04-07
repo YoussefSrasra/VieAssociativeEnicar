@@ -101,5 +101,6 @@ public class Club {
     public void setMembers(List<User> members) {
         this.members = members;
     }
+    
 
 }

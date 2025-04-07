@@ -22,6 +22,8 @@ public class ClubRequestController {
         return clubRequestService.createRequest(request);
     }
 
+
+    
     @GetMapping
     public List<ClubRequest> getAllRequests() {
         return clubRequestService.getAllRequests();

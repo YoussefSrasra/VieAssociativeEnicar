@@ -36,7 +36,7 @@ export const NavigationItems: NavigationItem[] = [
       }
     ]
   },
-  
+
   {
     id: 'utilities',
     title: 'UI Components',
@@ -76,6 +76,54 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/demandeclubadmin',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'event launcher ',
+        title: 'lancer event ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/event-launch',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'event suivi ',
+        title: 'suivi event ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/event-registrations',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'demande evenet  ',
+        title: 'demande event club ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/event-requests',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'suivi demande evenet  ',
+        title: 'suivi demande event club ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/event-requests',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'partnerships  ',
+        title: 'partnerships ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/partnerships',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'list partnerships  ',
+        title: 'list partnerships ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/partnership-list',
         icon: 'bg-colors'
       },
       {

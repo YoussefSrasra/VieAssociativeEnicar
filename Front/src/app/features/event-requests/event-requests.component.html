@@ -1,72 +1,90 @@
 <div class="row">
   <!-- Cartes de statut -->
-  @for (card of statusCards; track card) {
-    <div class="col-md-6 col-xl-3">
-      <app-card [showHeader]="false" blockClass="dashboard-card">
-        <h6 class="mb-2 f-w-400 text-muted">{{ card.title }}</h6>
-        <h4 class="mb-3">
-          {{ card.value }}
-          <span class="badge {{ card.color }} border-0">
-            <i class="fas fa-{{ card.icon }}"></i>
-          </span>
-        </h4>
-      </app-card>
-    </div>
-  }
+  <div class="col-md-6 col-xl-3 mb-4" *ngFor="let card of statusCards; trackBy: trackByFn">
+    <app-card [showHeader]="false" blockClass="dashboard-card">
+      <h6 class="mb-2 f-w-400 text-muted">{{ card.title }}</h6>
+      <h4 class="mb-3">
+        {{ card.value }}
+        <span class="badge {{ card.color }} border-0">
+          <i class="fas fa-{{ card.icon }}"></i>
+        </span>
+      </h4>
+    </app-card>
+  </div>
 
   <!-- Formulaire de demande -->
-  <div class="col-md-12 col-xl-8">
+  <div class="col-md-12 col-xl-8 mb-4">
     <app-card headerTitle="Nouvelle Demande d'Événement">
       <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <!-- Colonne gauche -->
           <div class="col-md-6">
             <div class="mb-3">
+              <label class="form-label">ID du Club *</label>
+              <input type="number" class="form-control" formControlName="club_id"
+                     [class.is-invalid]="eventForm.get('club_id')?.invalid && eventForm.get('club_id')?.touched">
+              <div class="invalid-feedback">Un ID de club valide est requis</div>
+            </div>
+
+            <div class="mb-3">
               <label class="form-label">Nom de l'événement *</label>
-              <input type="text" class="form-control" formControlName="event_name">
+              <input type="text" class="form-control" formControlName="event_name"
+                     [class.is-invalid]="eventForm.get('event_name')?.invalid && eventForm.get('event_name')?.touched">
+              <div class="invalid-feedback">Ce champ est obligatoire</div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Type d'événement *</label>
-              <select class="form-select" formControlName="type"aria-label="Type d'événement" >
+              <select class="form-select" formControlName="type"
+                      [class.is-invalid]="eventForm.get('type')?.invalid && eventForm.get('type')?.touched"  aria-label="Type d'événement">
                 <option value="">Sélectionnez un type...</option>
                 <option *ngFor="let type of eventTypes" [value]="type">{{type}}</option>
               </select>
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label">Date de début *</label>
-              <input type="datetime-local" class="form-control" formControlName="start_date">
+              <div class="invalid-feedback">Veuillez sélectionner un type</div>
             </div>
           </div>
 
           <!-- Colonne droite -->
           <div class="col-md-6">
             <div class="mb-3">
-              <label class="form-label">Lieu *</label>
-              <input type="text" class="form-control" formControlName="location">
+              <label class="form-label">Date de début *</label>
+              <input type="datetime-local" class="form-control" formControlName="start_date"
+                     [class.is-invalid]="eventForm.get('start_date')?.invalid && eventForm.get('start_date')?.touched">
+              <div class="invalid-feedback">Date invalide</div>
             </div>
 
             <div class="mb-3">
               <label class="form-label">Date de fin *</label>
-              <input type="datetime-local" class="form-control" formControlName="end_date">
+              <input type="datetime-local" class="form-control" formControlName="end_date"
+                     [class.is-invalid]="eventForm.get('end_date')?.invalid && eventForm.get('end_date')?.touched">
+              <div class="invalid-feedback">Date invalide</div>
             </div>
 
-            <div class="mb-3 form-check">
-              <input type="checkbox" class="form-check-input" id="financialRequest" formControlName="financial_request">
+            <div class="mb-3 form-check form-switch">
+              <input type="checkbox" class="form-check-input" id="financialRequest"
+                     formControlName="financial_request">
               <label class="form-check-label" for="financialRequest">Demande de soutien financier</label>
-            </div>
-
-            <div class="mb-3" *ngIf="eventForm.get('financial_request')?.value">
-              <label class="form-label">Montant demandé (€)</label>
-              <input type="number" class="form-control" formControlName="requested_amount" min="0">
             </div>
           </div>
         </div>
 
         <div class="mb-3">
+          <label class="form-label">Lieu *</label>
+          <input type="text" class="form-control" formControlName="location"
+                 [class.is-invalid]="eventForm.get('location')?.invalid && eventForm.get('location')?.touched">
+          <div class="invalid-feedback">Ce champ est obligatoire</div>
+        </div>
+
+        <div class="mb-3" *ngIf="eventForm.get('financial_request')?.value">
+          <label class="form-label">Montant demandé (€)</label>
+          <input type="number" class="form-control" formControlName="requested_amount" min="0">
+        </div>
+
+        <div class="mb-3">
           <label class="form-label">Description *</label>
-          <textarea class="form-control" formControlName="description" rows="3"></textarea>
+          <textarea class="form-control" formControlName="description" rows="3"
+                   [class.is-invalid]="eventForm.get('description')?.invalid && eventForm.get('description')?.touched"></textarea>
+          <div class="invalid-feedback">Veuillez saisir une description</div>
         </div>
 
         <div class="mb-3">
@@ -75,8 +93,14 @@
         </div>
 
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-          <button type="submit" class="btn btn-primary" [disabled]="!eventForm.valid">
-            Soumettre la demande
+          <button type="button" class="btn btn-outline-secondary me-2"
+                  [disabled]="isSubmitting" (click)="eventForm.reset()">
+            Annuler
+          </button>
+          <button type="submit" class="btn btn-primary"
+                  [disabled]="!eventForm.valid || isSubmitting">
+            <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+            {{ isSubmitting ? 'Envoi en cours...' : 'Soumettre' }}
           </button>
         </div>
       </form>
@@ -87,24 +111,43 @@
   <div class="col-md-12 col-xl-4">
     <app-card headerTitle="Vos Demandes Récentes">
       <div class="list-group list-group-flush">
-        @for (request of recentRequests; track request) {
-          <div class="list-group-item">
-            <div class="d-flex justify-content-between">
-              <div>
-                <h6 class="mb-1">{{ request.event_name }}</h6>
-                <small class="text-muted">{{ request.id }} • {{ request.start_date }}</small>
+        <div *ngIf="recentRequests.length === 0" class="list-group-item text-center text-muted py-3">
+          Aucune demande récente
+        </div>
+
+        <div *ngFor="let request of recentRequests; trackBy: trackByRequest"
+             class="list-group-item">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h6 class="mb-1">{{ request.eventName }}</h6>
+              <small class="text-muted">{{ request.type }} • {{ request.startDate | date:'dd/MM/yyyy' }}</small>
+              <div class="mt-1">
+                <small class="text-muted">Club ID: {{ request.club?.id }}</small>
               </div>
-              <span class="badge"
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="badge me-2"
                     [ngClass]="{
-                      'bg-success': request.status === 'Approuvé',
-                      'bg-warning': request.status === 'En attente',
-                      'bg-danger': request.status === 'Rejeté'
+                      'bg-success': request.status === 'APPROVED',
+                      'bg-warning': request.status === 'PENDING',
+                      'bg-danger': request.status === 'REJECTED'
                     }">
-                {{ request.status }}
+                {{ request.status === 'APPROVED' ? 'Approuvé' :
+                   request.status === 'PENDING' ? 'En attente' : 'Rejeté' }}
               </span>
+              <div *ngIf="request.status === 'PENDING'" class="btn-group btn-group-sm">
+                <button (click)="approveRequest(request.id); $event.stopPropagation()"
+                        class="btn btn-success" title="Approuver">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button (click)="rejectRequest(request.id); $event.stopPropagation()"
+                        class="btn btn-danger" title="Rejeter">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
             </div>
           </div>
-        }
+        </div>
       </div>
     </app-card>
   </div>

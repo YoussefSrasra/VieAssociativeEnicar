@@ -1,4 +1,6 @@
 package com.dev.backdev.ClubRequest.Model;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,19 +16,28 @@ public class ClubRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+   
     private String type; // Forum, Hackathon, EnicARobotos...
+    @Column(name = "event_name", nullable = false) // Exactement comme dans la base
     private String eventName;
-    private String description;
-    private LocalDate startDate;
+        private String description;
+        @Column(name = "start_date")
+
+    private LocalDate startDate;  
+    @Column(name = "end_date")
+
     private LocalDate endDate;
-    private String location;
+        private String location;
 
     @ElementCollection
     private List<String> committeeTypes; // Organisation, Logistique...
+    @Column(name = "financial_request")
 
     private boolean financialRequest;
+    
+
     private Double requestedAmount;
-    private String status; // Pending, Approved, Rejected
+        private String status; // Pending, Approved, Rejected
 
     @ManyToOne
     @JoinColumn(name = "club_id")
@@ -87,4 +98,5 @@ public class ClubRequest {
 
     public Club getClub() { return club; }
     public void setClub(Club club) { this.club = club; }
+    
 }
