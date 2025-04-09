@@ -92,7 +92,7 @@
   <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
     <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
       <img src="assets/images/user/avatar-2.jpg" alt="user-image" class="user-avatar me-2" />
-      <span class="f-w-600">John Doe</span>
+      <span class="f-w-600">Aroujaa</span>
     </a>
     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
       <div class="dropdown-header">
@@ -114,14 +114,33 @@
             Profile
           </a>
           <ng-template ngbNavContent>
+
+
+
+
+
+
+
+
+            
             @for (task of profile; track task) {
               <div>
-                <a class="dropdown-item">
+                <a class="dropdown-item" [routerLink]="task.routerLink" routerLinkActive="active">
                   <i class="text-muted" antIcon theme="outline" type="{{ task.icon }}"></i>
                   <span>{{ task.title }}</span>
                 </a>
               </div>
             }
+
+
+
+
+
+
+
+
+
+
             <div>
               <a class="dropdown-item">
                 <i class="text-muted" antIcon theme="outline" type="logout"></i>
@@ -130,6 +149,17 @@
             </div>
           </ng-template>
         </li>
+
+
+
+
+
+
+
+
+
+
+
         <li ngbNavItem="2">
           <a ngbNavLink>
             <i class="me-2" antIcon theme="outline" type="setting"></i>
