@@ -39,17 +39,11 @@ public class EnrollmentService {
         // Récupérer toutes les demandes d'enrôlement
         return enrollmentRepository.findAll();
     }
+
     private final EnrollmentRepository repository;
 
     public EnrollmentService(EnrollmentRepository repository) {
         this.repository = repository;
     }
-
-   
-
-   
-
- 
-
 
 }
