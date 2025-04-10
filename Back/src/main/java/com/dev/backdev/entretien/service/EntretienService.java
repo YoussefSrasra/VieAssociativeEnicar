@@ -2,10 +2,12 @@ package com.dev.backdev.entretien.service;
 
 import com.dev.backdev.entretien.model.Entretien;
 import com.dev.backdev.entretien.repository.EntretienRepository;
+import com.dev.backdev.enrollment.model.Enrollment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EntretienService {
@@ -17,12 +19,13 @@ public class EntretienService {
         this.entretienRepository = entretienRepository;
     }
 
+    // Méthodes existantes
     public List<Entretien> getAllEntretiens() {
         return entretienRepository.findAll();
     }
 
-    public Entretien getEntretienById(Long id) {
-        return entretienRepository.findById(id).orElse(null);
+    public Optional<Entretien> getEntretienById(Long id) {
+        return entretienRepository.findById(id);
     }
 
     public Entretien saveEntretien(Entretien entretien) {
@@ -33,17 +36,25 @@ public class EntretienService {
         entretienRepository.deleteById(id);
     }
 
-    public Entretien updateEntretien(Long id, Entretien entretienDetails) {
-        Entretien entretien = entretienRepository.findById(id).orElse(null);
-        if (entretien != null) {
-            entretien.setEnrollment(entretienDetails.getEnrollment());
-            entretien.setDateEntretien(entretienDetails.getDateEntretien());
-            entretien.setHeureEntretien(entretienDetails.getHeureEntretien());
-            entretien.setStatut(entretienDetails.getStatut());
-            entretien.setConfirmation(entretienDetails.isConfirmation());
-            entretien.setResultat(entretienDetails.getResultat());
-            return entretienRepository.save(entretien);
-        }
-        return null;
+    // Méthodes ajoutées pour supporter la création automatique
+    public boolean existsByEnrollment(Enrollment enrollment) {
+        return entretienRepository.existsByEnrollment(enrollment);
+    }
+
+    public Optional<Entretien> findByEnrollment(Enrollment enrollment) {
+        return entretienRepository.findByEnrollment(enrollment);
+    }
+
+    // Version améliorée de updateEntretien
+    public Optional<Entretien> updateEntretien(Long id, Entretien entretienDetails) {
+        return entretienRepository.findById(id)
+                .map(entretien -> {
+                    entretien.setDateEntretien(entretienDetails.getDateEntretien());
+                    entretien.setHeureEntretien(entretienDetails.getHeureEntretien());
+                    entretien.setStatut(entretienDetails.getStatut());
+                    entretien.setConfirmation(entretienDetails.isConfirmation());
+                    entretien.setResultat(entretienDetails.getResultat());
+                    return entretienRepository.save(entretien);
+                });
     }
 }

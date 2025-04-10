@@ -8,45 +8,40 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/api/entretiens")
 public class EntretienController {
 
     private final EntretienService entretienService;
 
-    @Autowired
+    
     public EntretienController(EntretienService entretienService) {
         this.entretienService = entretienService;
     }
 
     @GetMapping
-    public List<Entretien> getAllEntretiens() {
-        return entretienService.getAllEntretiens();
+    public ResponseEntity<List<Entretien>> getAllEntretiens() {
+        return ResponseEntity.ok(entretienService.getAllEntretiens());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Entretien> getEntretienById(@PathVariable Long id) {
-        Entretien entretien = entretienService.getEntretienById(id);
-        if (entretien != null) {
-            return ResponseEntity.ok(entretien);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> getEntretienById(@PathVariable Long id) {
+        return entretienService.getEntretienById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Entretien createEntretien(@RequestBody Entretien entretien) {
-        return entretienService.saveEntretien(entretien);
+    public ResponseEntity<Entretien> createEntretien(@RequestBody Entretien entretien) {
+        return ResponseEntity.ok(entretienService.saveEntretien(entretien));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Entretien> updateEntretien(@PathVariable Long id, @RequestBody Entretien entretienDetails) {
-        Entretien updatedEntretien = entretienService.updateEntretien(id, entretienDetails);
-        if (updatedEntretien != null) {
-            return ResponseEntity.ok(updatedEntretien);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<?> updateEntretien(@PathVariable Long id, @RequestBody Entretien entretienDetails) {
+        return entretienService.updateEntretien(id, entretienDetails)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")

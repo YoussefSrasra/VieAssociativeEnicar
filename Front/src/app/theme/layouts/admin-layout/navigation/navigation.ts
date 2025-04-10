@@ -59,6 +59,14 @@ export const NavigationItems: NavigationItem[] = [
         url: '/enrollment',
        
       },
+      {
+        id: 'entretiens',
+        title: 'Entretiens',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/entretiens',
+        icon: 'font-size'
+      },
       
       /*{
         id: 'color',

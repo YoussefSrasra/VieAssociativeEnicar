@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev.backdev.enrollment.model.Enrollment;
-import com.dev.backdev.enrollment.service.EnrollmentService;
 
+import com.dev.backdev.enrollment.service.EnrollmentService;
 
 @RestController
 @RequestMapping("/api/enrollments")
@@ -34,15 +34,14 @@ public class EnrollmentController {
         Enrollment updatedEnrollment = enrollmentService.rejectEnrollment(id);
         return ResponseEntity.ok(updatedEnrollment);
     }
+
     @GetMapping
     public ResponseEntity<List<Enrollment>> getAllEnrollments() {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(enrollments);
     }
 
-  
-
-
     
+
     // Suppression de la méthode getEnrollmentsByEvent qui n'est plus nécessaire
 }
