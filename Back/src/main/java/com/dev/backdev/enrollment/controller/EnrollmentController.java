@@ -1,6 +1,7 @@
 package com.dev.backdev.enrollment.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -40,7 +41,12 @@ public class EnrollmentController {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(enrollments);
     }
-
+    @GetMapping("/{id}")
+    public ResponseEntity<Enrollment> getEnrollmentById(@PathVariable Long id) {
+        Optional<Enrollment> enrollment = enrollmentService.getEnrollmentById(id);
+        return enrollment.map(ResponseEntity::ok)
+                       .orElse(ResponseEntity.notFound().build());
+    }
     
 
     // Suppression de la méthode getEnrollmentsByEvent qui n'est plus nécessaire

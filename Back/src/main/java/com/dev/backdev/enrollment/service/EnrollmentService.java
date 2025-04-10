@@ -12,6 +12,7 @@ import com.dev.backdev.entretien.model.StatutEntretien;
 import com.dev.backdev.entretien.service.EntretienService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EnrollmentService {
@@ -25,6 +26,10 @@ public class EnrollmentService {
         this.entretienService = entretienService;
     }
 
+    public Optional<Enrollment> getEnrollmentById(Long id) {
+        return enrollmentRepository.findById(id);
+    }
+
     public Enrollment createEnrollment(Enrollment enrollment) {
         enrollment.setEtat(EnrollmentStatus.EN_ATTENTE);
         return enrollmentRepository.save(enrollment);
@@ -33,7 +38,7 @@ public class EnrollmentService {
     public Enrollment approveEnrollment(Long enrollmentId) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                 .orElseThrow(() -> new RuntimeException("Enrollment non trouvé"));
-        
+
         enrollment.setEtat(EnrollmentStatus.ACCEPTE);
         Enrollment updatedEnrollment = enrollmentRepository.save(enrollment);
 
@@ -46,7 +51,7 @@ public class EnrollmentService {
     public Enrollment rejectEnrollment(Long enrollmentId) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                 .orElseThrow(() -> new RuntimeException("Enrollment non trouvé"));
-        
+
         enrollment.setEtat(EnrollmentStatus.REJETE);
         return enrollmentRepository.save(enrollment);
     }
@@ -62,7 +67,7 @@ public class EnrollmentService {
         entretien.setResultat(ResultatEntretien.EN_ATTENTE);
         entretien.setConfirmation(false);
         // dateEntretien et heureEntretien restent null
-        
+
         entretienService.saveEntretien(entretien);
     }
 }

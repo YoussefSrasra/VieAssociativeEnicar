@@ -37,3 +37,212 @@ table {
   .container {
     padding: 20px;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /* Variables */
+$primary-color: #4361ee;
+$secondary-color: #3f37c9;
+$light-gray: #f8f9fa;
+$dark-gray: #495057;
+$border-color: #dee2e6;
+$shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$transition: all 0.3s ease;
+
+/* Base Styles */
+.entretien-container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.entretien-title {
+  color: $primary-color;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.8rem;
+}
+
+/* Table Styles */
+.table-wrapper {
+  overflow-x: auto;
+  box-shadow: $shadow;
+  border-radius: 8px;
+}
+
+.entretien-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+
+  th, td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid $border-color;
+  }
+
+  th {
+    background-color: $primary-color;
+    color: white;
+    font-weight: 500;
+  }
+
+  tr:hover {
+    background-color: rgba($primary-color, 0.05);
+  }
+}
+
+/* Form Elements */
+input, select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid $border-color;
+  border-radius: 4px;
+  transition: $transition;
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
+  }
+}
+
+/* Candidate Name Link */
+.candidate-name {
+  color: $primary-color;
+  cursor: pointer;
+  font-weight: 500;
+  transition: $transition;
+
+  &:hover {
+    color: $secondary-color;
+    text-decoration: underline;
+  }
+}
+
+/* Save Button */
+.save-btn {
+  background-color: $primary-color;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: $transition;
+  font-weight: 500;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: $shadow;
+
+  h3 {
+    color: $primary-color;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: $dark-gray;
+  transition: $transition;
+
+  &:hover {
+    color: $primary-color;
+  }
+}
+
+.detail-row {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: $dark-gray;
+  width: 120px;
+}
+
+.detail-value {
+  flex: 1;
+  color: $dark-gray;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .entretien-container {
+    padding: 1rem;
+  }
+
+  .entretien-table {
+    th, td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+
+  .detail-row {
+    flex-direction: column;
+  }
+
+  .detail-label {
+    width: 100%;
+    margin-bottom: 0.25rem;
+  }
+}

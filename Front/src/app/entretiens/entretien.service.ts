@@ -29,4 +29,7 @@ export class EntretienService {
   updateEntretien(id: number, entretien: Entretien): Observable<Entretien> {
     return this.http.put<Entretien>(`${this.apiUrl}/${id}`, entretien);
   }
+  getEnrollmentDetails(enrollmentId: number): Observable<any> {
+    return this.http.get(`http://localhost:8080/api/enrollments/${enrollmentId}`);
+  }
 }
