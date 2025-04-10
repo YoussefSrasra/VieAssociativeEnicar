@@ -77,7 +77,9 @@ export class NavRightComponent {
 
     {
       icon: 'user',
-      title: 'View Profile'
+      title: 'View Profile',
+      routerLink: '/dashboard/default' 
+     
     },
     /*{
       icon: 'profile',
