@@ -14,6 +14,8 @@ interface EventRequest {
   financialRequest?: boolean;
   requestedAmount?: number;
   estimatedAttendees?: number;
+  needEquipment?: boolean;
+  equipmentDescription?: string;
   status?: string;
 }
 

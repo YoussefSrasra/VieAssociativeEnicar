@@ -4,6 +4,7 @@ import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Service.ClubService;
 import com.dev.backdev.Club.dto.ClubDTO;
 import com.dev.backdev.EventRequest.Model.EventRequest;
+import com.dev.backdev.EventRequest.Repository.EventRequestRepository;
 import com.dev.backdev.EventRequest.Service.EventRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public class EventRequestController {
 
     @Autowired
     private EventRequestService eventRequestService;
-    
+    private EventRequestRepository eventRequestRepository ;
     @Autowired
     private ClubService clubService;
     @PostMapping
@@ -57,10 +58,7 @@ public class EventRequestController {
 
 
 
-    @GetMapping
-public ResponseEntity<List<Map<String, Object>>> getAllEventRequests() {
-    return ResponseEntity.ok(eventRequestService.getAllEventRequestsForDisplay());
-}
+
 
     @GetMapping("/{id}")
     public ResponseEntity<EventRequest> getEventRequestById(@PathVariable Long id) {
@@ -99,6 +97,8 @@ public ResponseEntity<List<Map<String, Object>>> getAllEventRequests() {
         eventRequestService.deleteEventRequest(id);
         return ResponseEntity.noContent().build();
     }
-
-    
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> getAllEventRequests() {
+        return ResponseEntity.ok(eventRequestService.getAllEventRequestsForDisplay());
+    }
 }

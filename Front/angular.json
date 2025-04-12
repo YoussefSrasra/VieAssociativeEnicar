@@ -26,7 +26,7 @@
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
-            "scripts": []
+            "scripts": [ "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"]
           },
           "configurations": {
             "production": {
@@ -106,3 +106,4 @@
     "schematicCollections": ["@angular-eslint/schematics"]
   }
 }
+

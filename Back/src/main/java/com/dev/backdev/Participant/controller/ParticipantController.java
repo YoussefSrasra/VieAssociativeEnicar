@@ -79,6 +79,7 @@ public ResponseEntity<Void> approveParticipant(@PathVariable Long id) {
     return ResponseEntity.ok().build();
 }
 
+
 @PatchMapping("/{id}/reject")
 public ResponseEntity<Void> rejectParticipant(@PathVariable Long id) {
     participantService.rejectParticipant(id);

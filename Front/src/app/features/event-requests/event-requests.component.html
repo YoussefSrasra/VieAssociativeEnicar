@@ -79,7 +79,19 @@
           <label class="form-label">Montant demandé (€)</label>
           <input type="number" class="form-control" formControlName="requested_amount" min="0">
         </div>
+        <div class="mb-3 form-check form-switch">
+          <input type="checkbox" class="form-check-input" id="needEquipment"
+                 formControlName="need_equipment">
+          <label class="form-check-label" for="needEquipment">Besoin d'équipement</label>
+      </div>
 
+
+
+      <div class="mb-3" *ngIf="eventForm.get('need_equipment')?.value">
+        <label class="form-label">Description des équipements nécessaires</label>
+        <textarea class="form-control" formControlName="equipment_description" rows="3"
+                  placeholder="Ex: Projecteur, 2 microphones, tables..."></textarea>
+    </div>
         <div class="mb-3">
           <label class="form-label">Description *</label>
           <textarea class="form-control" formControlName="description" rows="3"

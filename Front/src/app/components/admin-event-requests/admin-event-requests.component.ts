@@ -105,6 +105,57 @@ export class AdminEventRequestsComponent implements OnInit {
       });
     }
   }
+
+  async generateReport(request: any): Promise<void> {
+    // Créer une instance de jsPDF
+    try {
+      const { jsPDF } = window['jspdf'];  // Utilisation de `window['jspdf']` pour accéder à jsPDF
+
+      const doc = new jsPDF();
+
+      // Titre du document
+      doc.setFontSize(18);
+      doc.text('Rapport de Demande d\'Événement', 105, 15, { align: 'center' });
+      doc.setFontSize(12);
+
+      // Informations de la demande
+      const yStart = 30;
+      let y = yStart;
+
+      const addLine = (label: string, value: string) => {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}: `, 20, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(value, 20 + doc.getTextWidth(`${label}: `), y);
+        y += 7;
+      };
+
+      addLine('ID de la demande', request.id.toString());
+      addLine('Nom de l\'événement', request.eventName);
+      addLine('Type', request.type);
+      addLine('Club', request.clubId.toString() || 'Non spécifié');
+      addLine('Date de début', new Date(request.startDate).toLocaleString());
+      addLine('Date de fin', new Date(request.endDate).toLocaleString());
+      addLine('Participants', request.estimatedAttendees?.toString() || 'Non spécifié');
+      addLine('Montant demandé', request.financialRequest ? `${request.requestedAmount} €` : 'Non');
+      addLine('Équipements', request.needEquipment ? request.equipmentDescription || 'Oui' : 'Non');
+      addLine('Statut', this.getStatusText(request.status));
+
+      // Ligne de séparation
+      doc.line(20, y + 5, 190, y + 5);
+      y += 10;
+
+      // Date de génération du rapport
+      doc.text(`Rapport généré le: ${new Date().toLocaleString()}`, 20, y);
+
+      // Enregistrer le PDF
+      doc.save(`rapport-evenement-${request.id}.pdf`);
+    } catch (error) {
+      console.error('Erreur lors de la génération du PDF:', error);
+      alert('Impossible de générer le PDF. Veuillez réessayer.');
+    }
+  }
+
 }
 
 

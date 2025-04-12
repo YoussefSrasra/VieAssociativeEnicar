@@ -22,6 +22,8 @@
                   <button class="btn btn-sm btn-outline-primary" (click)="sendReminder(event); $event.stopPropagation()">
                     <i class="fas fa-bell"></i> Envoyer Rappel
                   </button>
+
+
                 </td>
               </tr>
             }
@@ -96,9 +98,16 @@
                               (click)="rejectParticipant(participant.id)">
                         <i class="fas fa-times"></i> Refuser
                       </button>
+                      <button *ngIf="participant.participationType === 'Responsable'"
+                              class="btn btn-sm btn-outline-warning ms-2"
+                              (click)="generateFormForResponsible(participant); $event.stopPropagation()">
+                        <i class="fas fa-edit"></i> Générer Formulaire
+                      </button>
                     </div>
                   </td>
                 </tr>
+
+
               }
             </tbody>
           </table>
