@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
 import com.dev.backdev.Auth.dto.UserRegistrationDTO;
 import com.dev.backdev.Auth.dto.UserResponseDto;
 import com.dev.backdev.Auth.dto.UserUpdateDTO;
@@ -64,6 +66,16 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid username or password"));
         }
     }
+
+     @PostMapping("/complete-profile")
+    public ResponseEntity<UserResponseDto> completeProfile(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @RequestBody ProfileCompletionDTO dto) {
+        User User = authService.completeProfile(userDetails.getUsername(), dto);
+        UserResponseDto updateUser=new  UserResponseDto(User);
+        return ResponseEntity.ok(updateUser);
+    }
+
      @DeleteMapping("/delete-user/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         try {
@@ -75,7 +87,7 @@ public class AuthController {
                 .body(Map.of("error", e.getMessage()));
         }
     }
-    @DeleteMapping("/delete-user-byname/{username}")
+    @DeleteMapping("/delete-user/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
         try {
             authService.deleteUser(username);
@@ -116,6 +128,13 @@ public class AuthController {
     {
         UserResponseDto updatedUser = authService.updateUser(username, updateDTO);
         return ResponseEntity.ok(updatedUser);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        return userRepository.findByUsername(userDetails.getUsername())
+                .map(user -> ResponseEntity.ok(new UserResponseDto(user)))
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

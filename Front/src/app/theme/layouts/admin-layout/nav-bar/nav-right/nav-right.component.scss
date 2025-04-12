@@ -1,0 +1,40 @@
+.flex-shrink-0 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+}
+
+.flex-shrink-1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    
+    .user-avatar-1 {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block !important; // Force display
+        opacity: 1 !important; // Force visibility
+    }
+}
+.header-user-profile {
+    .pc-head-link {
+        .flex-shrink-1{
+            position: relative;
+            z-index: 1;
+            &:hover {         
+                opacity: 1;                
+            }
+        }
+    }
+}
