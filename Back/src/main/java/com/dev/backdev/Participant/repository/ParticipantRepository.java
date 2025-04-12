@@ -26,5 +26,6 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
         Long getRegisteredCount();
         Long getResponsablesCount();
     }
-    
+    @Query("SELECT DISTINCT p.eventName FROM Participant p")
+    List<String> findDistinctEventNames();
 }

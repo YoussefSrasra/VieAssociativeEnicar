@@ -50,10 +50,18 @@ const routes: Routes = [
           .then(c => c.PartnershipListComponent)
       },
       {
+        path: 'feedback-evenement',
+        loadComponent: () => import('./feedback-evenement//feedback-evenement.component')
+          .then(c => c.FeedbackEvenementComponent)
+      },
+
+
+      {
         path: 'partnerships',
         loadComponent: () => import('./features/partnerships/partnerships.component')
           .then(c => c.PartnershipsComponent)
       },
+
       {
         path: 'event-requests',
         loadComponent: () => import('./features/event-requests/event-requests.component')
@@ -62,6 +70,11 @@ const routes: Routes = [
       {
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
+        canActivate: [authGuard]
+      },
+      {
+        path: 'contacts-urgence',
+        loadComponent: () => import('./gestion-contacts-urgence/gestion-contacts-urgence.component').then((c) => c.GestionContactsUrgenceComponent),
         canActivate: [authGuard]
       },
       {

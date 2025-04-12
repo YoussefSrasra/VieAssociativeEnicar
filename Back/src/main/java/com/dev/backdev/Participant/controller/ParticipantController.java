@@ -85,4 +85,11 @@ public ResponseEntity<Void> rejectParticipant(@PathVariable Long id) {
     participantService.rejectParticipant(id);
     return ResponseEntity.ok().build();
 }
+@GetMapping("/distinct-events")
+public ResponseEntity<List<String>> getDistinctEventNames() {
+    List<String> distinctEventNames = participantService.getDistinctEventNames();
+    return new ResponseEntity<>(distinctEventNames, HttpStatus.OK);
+}
+
+
 }

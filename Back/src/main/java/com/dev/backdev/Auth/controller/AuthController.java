@@ -78,6 +78,15 @@ public class AuthController {
     public List<UserResponseDto> getAllUsers() {
         return authService.getAllUsers();
     }
+// UserController.java
+@GetMapping("/managers")
+public List<UserResponseDto> getAllManagers() {
+    return userRepository.findByRole("MANAGER")
+        .stream()
+        .map(UserResponseDto::new)
+        .toList();
+}
+
 
     @GetMapping("/users/by-role/{role}")
     public List<UserResponseDto> getUsersByRole(@PathVariable String role) {
