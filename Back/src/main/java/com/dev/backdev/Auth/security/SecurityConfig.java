@@ -46,15 +46,18 @@ public class SecurityConfig {
                         .requestMatchers("/api/even/**").permitAll()
                         .requestMatchers("/api/partners/**").permitAll()
                         .requestMatchers("/api/partners").permitAll()
-                        .requestMatchers("/api/event-requests/**").permitAll() 
+                        .requestMatchers("/api/event-requests/**").permitAll()
                         .requestMatchers("/api/demandes").permitAll()
-                        .requestMatchers("/api/demandes/**").hasRole("ADMIN")
+                        .requestMatchers("/api/demandes/**").permitAll()
+
                         .requestMatchers("/api/club-request/").hasRole("MEMBER")
                         .requestMatchers("/api/events").hasRole("ADMIN")
-                      
+
                         .requestMatchers("/api/member/**").hasRole("MEMBER")
                         .requestMatchers("/api/manager/**").hasRole("MANAGER")
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/entretiens").permitAll()
+                        .requestMatchers("/api/entretiens/**").permitAll()
                         .anyRequest().authenticated())
 
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -12,6 +12,7 @@ interface DemandeClub {
   email: string;
   nomClub: string;
   description: string;
+  logoBase64: string; // Champ pour stocker l'image en base64
   etat: 'ACCEPTE' | 'REJETE' | 'EN_ATTENTE';
 }
 
@@ -108,6 +109,7 @@ export class DemandeclubadminComponent implements OnInit {
       name: demande.nomClub,
       specialty: demande.description,
       status: "active",
+      logo: demande.logoBase64, // Assurez-vous que le champ logo est bien défini dans l'API
       responsibleMember: null,
       members: []
     };

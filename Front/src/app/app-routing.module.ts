@@ -50,6 +50,11 @@ const routes: Routes = [
           .then(c => c.PartnershipListComponent)
       },
       {
+        path: 'entretiens',
+        loadComponent: () => import('./entretiens/entretiens.component')
+          .then(c => c.EntretiensComponent)
+      },
+      {
         path: 'partnerships',
         loadComponent: () => import('./features/partnerships/partnerships.component')
           .then(c => c.PartnershipsComponent)
