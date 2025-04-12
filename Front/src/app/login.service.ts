@@ -1,12 +1,17 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router'; // Add this import
 import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LoginService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router // Inject Router
+
+  ) {}
 
   login(username: string, password: string) {
     return this.http.post<{ token: string }>(
@@ -22,5 +27,6 @@ export class LoginService {
 
   logout() {
     localStorage.removeItem('token');
+    this.router.navigate(['/login']);
   }
 }
