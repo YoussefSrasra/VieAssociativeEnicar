@@ -23,11 +23,12 @@ export class FeedbackService {
 
   // Envoyer un feedback
   submitFeedback(feedback: Feedback): Observable<Feedback> {
-    return this.http.post<Feedback>(this.apiUrl, feedback).pipe(
+    return this.http.post<Feedback>(this.apiUrl, feedback, {
+      withCredentials: true // <- Ajoutez cette ligne
+    }).pipe(
       catchError(this.handleError)
     );
   }
-
   // Récupérer tous les feedbacks (optionnel)
   getAllFeedbacks(): Observable<Feedback[]> {
     return this.http.get<Feedback[]>(this.apiUrl).pipe(

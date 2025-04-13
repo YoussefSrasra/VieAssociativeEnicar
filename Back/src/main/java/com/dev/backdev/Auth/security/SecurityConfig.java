@@ -45,6 +45,12 @@ public class SecurityConfig {
                 .requestMatchers("/api/even/**").permitAll()   
                 .requestMatchers("/api/partners/**").permitAll()      
    
+
+
+                .requestMatchers("/api/feedbacks/**").permitAll()   
+
+
+
                 .requestMatchers("/api/event-requests/**").permitAll()
                 .requestMatchers("/api/enrollments").permitAll()
                 .requestMatchers("/api/demandes").permitAll()

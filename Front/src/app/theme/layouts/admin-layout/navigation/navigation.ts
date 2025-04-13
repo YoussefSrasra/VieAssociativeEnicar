@@ -143,6 +143,14 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'bg-colors'
       },
       {
+        id: 'feedback-list  ',
+        title: 'feedback-list ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/feedbacks',
+        icon: 'bg-colors'
+      },
+      {
         id: 'tabler',
         title: 'Tabler',
         type: 'item',

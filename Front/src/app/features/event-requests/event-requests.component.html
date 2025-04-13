@@ -15,6 +15,18 @@
   <!-- Formulaire de demande -->
   <div class="col-md-12 col-xl-8 mb-4">
     <app-card headerTitle="Nouvelle Demande d'Événement">
+      <div class="col-md-12 col-xl-8 mb-4" *ngIf="alert">
+        <app-card>
+          <div class="alert alert-{{ alert.type }} mb-0" role="alert">
+            <i class="fas" [ngClass]="{
+              'fa-check-circle': alert.type === 'success',
+              'fa-exclamation-circle': alert.type === 'danger',
+              'fa-info-circle': alert.type === 'info'
+            }"></i>
+            <span class="ms-2">{{ alert.message }}</span>
+          </div>
+        </app-card>
+      </div>
       <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
         <div class="row">
           <!-- Colonne gauche -->
@@ -164,3 +176,4 @@
     </app-card>
   </div>
 </div>
+

@@ -54,6 +54,11 @@ const routes: Routes = [
         loadComponent: () => import('./feedback-evenement//feedback-evenement.component')
           .then(c => c.FeedbackEvenementComponent)
       },
+      {
+        path: 'feedbacks',
+        loadComponent: () => import('./feedback-list/feedback-list.component')
+          .then(c => c.FeedbackListComponent)
+      },
 
 
       {

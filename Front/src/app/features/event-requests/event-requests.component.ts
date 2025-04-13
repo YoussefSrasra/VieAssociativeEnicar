@@ -48,6 +48,7 @@ export class EventRequestsComponent implements OnInit {
   recentRequests: any[] = [];
   isLoading = false;
   isSubmitting = false;
+  alert: { type: 'success' | 'danger' | 'info', message: string } | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -123,22 +124,24 @@ export class EventRequestsComponent implements OnInit {
     console.log('Données envoyées:', formData);
 
     this.clubRequestService.createEventRequest(formData).subscribe({
-        next: (response) => {
-            console.log('Réponse du serveur:', response);
-            this.eventForm.reset({
-                financial_request: false,
-                requested_amount: 0,
-                attendees: 0,
-                need_equipment: false,
-                equipment_description: ''
-            });
-            this.loadEventRequests();
-            this.isSubmitting = false;
-        },
-        error: (err) => {
-            console.error('Erreur lors de la soumission:', err);
-            this.isSubmitting = false;
-        }
+      next: (response) => {
+        this.showAlert('success', 'Demande envoyée avec succès.');
+        this.eventForm.reset({
+          financial_request: false,
+          requested_amount: 0,
+          attendees: 0,
+          need_equipment: false,
+          equipment_description: ''
+        });
+        this.loadEventRequests();
+        this.isSubmitting = false;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la soumission:', err);
+        this.showAlert('danger', 'Erreur lors de l\'envoi de la demande.');
+        this.isSubmitting = false;
+      }
+
     });
 }
 
@@ -159,4 +162,9 @@ export class EventRequestsComponent implements OnInit {
   trackByRequest(index: number, request: any): number {
     return request.id || index;
   }
+  showAlert(type: 'success' | 'danger' | 'info', message: string): void {
+    this.alert = { type, message };
+    setTimeout(() => this.alert = null, 5000); // Disparaît après 5 secondes
+  }
+
 }

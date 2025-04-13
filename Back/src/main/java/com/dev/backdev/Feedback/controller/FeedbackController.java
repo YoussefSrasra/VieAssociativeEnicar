@@ -1,5 +1,6 @@
 package com.dev.backdev.Feedback.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,18 @@ public class FeedbackController {
         return ResponseEntity.ok(savedFeedback);
     }
 
+
     @GetMapping
     public ResponseEntity<List<Feedback>> getAllFeedbacks() {
-        return ResponseEntity.ok(feedbackService.getAllFeedback());
+        try {
+            List<Feedback> feedbackList = feedbackService.getAllFeedback();
+            return ResponseEntity.ok(feedbackList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body(null); // Retourne un code 500 avec un message d'erreur
+        }
     }
+    
+    
+    
 }

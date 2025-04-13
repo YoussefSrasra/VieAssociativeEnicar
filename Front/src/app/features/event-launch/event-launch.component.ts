@@ -15,6 +15,8 @@ import { EventLaunchService } from '../../services/event-launch.service';
 })
 export class EventLaunchComponent {
   max_participants?: number | string;  // Accept both types
+  successMessage = '';
+  errorMessage = '';
 
   committeeTypes = [
     'Comité Organisation',
@@ -74,18 +76,22 @@ export class EventLaunchComponent {
   get committeesArray() {
     return this.eventForm.get('committees') as FormArray;
   }
-  private showSuccessAlert(): void {
-    alert('Événement créé avec succès!');
-  }
-
-  private showErrorAlert(error: any): void {
-    alert(`Erreur: ${error.message || 'Une erreur est survenue'}`);
-  }
 
   private resetForm(): void {
     this.eventForm.reset();
     this.committeesArray.controls.forEach(control => control.setValue(false));
   }
 
+  private showSuccessAlert(): void {
+    this.successMessage = 'Événement créé avec succès ! 🎉';
+    this.errorMessage = '';
+    setTimeout(() => this.successMessage = '', 3000); // Disparaît après 3s
+  }
+
+  private showErrorAlert(error: any): void {
+    this.errorMessage = error.message || 'Une erreur est survenue ❌';
+    this.successMessage = '';
+    setTimeout(() => this.errorMessage = '', 4000);
+  }
 
 }

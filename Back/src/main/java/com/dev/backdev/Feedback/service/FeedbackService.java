@@ -23,6 +23,8 @@ public class FeedbackService {
     }
 
     public List<Feedback> getAllFeedback() {
-        return feedbackRepository.findAll();
+        return feedbackRepository.findAllFeedbacks(); // Utilisation de la méthode personnalisée
     }
+    
+    
 }
