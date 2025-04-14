@@ -184,7 +184,7 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ant-design',
         target: true,
         external: true
-      }
+      }//commentaire 
 
     ]
   },
