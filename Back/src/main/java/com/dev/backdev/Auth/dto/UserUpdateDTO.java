@@ -1,13 +1,22 @@
 package com.dev.backdev.Auth.dto;
 
+import com.dev.backdev.Auth.model.User;
 import com.dev.backdev.Enums.Filiere;
 import com.dev.backdev.Enums.Formation;
 import com.dev.backdev.Enums.Niveau;
 import com.dev.backdev.Enums.Sexe;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserUpdateDTO {
     private String username;
     private String nom;
+    private String currentPassword;
+    private String password; 
     private String prenom;
     private String email;
     private String role;
@@ -19,9 +28,31 @@ public class UserUpdateDTO {
     private String photo;
     private String clubName; // Only club name (optional update)
 
+
+    public UserUpdateDTO(User user) {
+        this.username = user.getUsername();
+        this.nom = user.getNom();
+        this.prenom = user.getPrenom();
+        this.email = user.getEmail();
+        this.role = user.getRole();
+        this.cin = user.getCin();
+        this.filiere = user.getFiliere();
+        this.niveau = user.getNiveau();
+        this.sexe = user.getSexe();
+        this.formation = user.getFormation();
+        this.photo = user.getPhoto();
+        this.clubName = user.getClub().getName(); // Only club name (optional update)
+        this.currentPassword = user.getPassword(); // Store the current password for verification
+    }
     // Getters and setters
     public String getUsername() {
         return username;
+    }
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
     }
     public void setUsername(String username) {
         this.username = username;
@@ -92,4 +123,11 @@ public class UserUpdateDTO {
     public String getPhoto() {
         return photo;
     }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;}
+
+        
 }

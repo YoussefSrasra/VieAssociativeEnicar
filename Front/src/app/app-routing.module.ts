@@ -5,7 +5,7 @@ import { EventLaunchComponent } from './features/event-launch/event-launch.compo
 import { MemberRegistrationComponent } from './features/member-registration/member-registration.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { authGuard } from './auth.guard';
-
+import { FormsModule} from '@angular/forms';
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
@@ -50,6 +50,18 @@ const routes: Routes = [
           .then(c => c.PartnershipListComponent)
       },
       {
+        path: 'feedback-evenement',
+        loadComponent: () => import('./feedback-evenement//feedback-evenement.component')
+          .then(c => c.FeedbackEvenementComponent)
+      },
+      {
+        path: 'feedbacks',
+        loadComponent: () => import('./feedback-list/feedback-list.component')
+          .then(c => c.FeedbackListComponent)
+      },
+
+
+      {
         path: 'entretiens',
         loadComponent: () => import('./entretiens/entretiens.component')
           .then(c => c.EntretiensComponent)
@@ -59,6 +71,7 @@ const routes: Routes = [
         loadComponent: () => import('./features/partnerships/partnerships.component')
           .then(c => c.PartnershipsComponent)
       },
+
       {
         path: 'event-requests',
         loadComponent: () => import('./features/event-requests/event-requests.component')
@@ -69,6 +82,11 @@ const routes: Routes = [
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
         canActivate: [authGuard]
         
+      },
+      {
+        path: 'contacts-urgence',
+        loadComponent: () => import('./gestion-contacts-urgence/gestion-contacts-urgence.component').then((c) => c.GestionContactsUrgenceComponent),
+        canActivate: [authGuard]
       },
       {
         path: 'demandeclubadmin',
@@ -105,6 +123,11 @@ const routes: Routes = [
         path: 'register',
         loadComponent: () =>
           import('./demo/pages/authentication/auth-register/auth-register.component').then((c) => c.AuthRegisterComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>  
+          import ('./profile/profile.component').then((c) => c.ProfileComponent)
       }
     ]
   }
@@ -113,7 +136,8 @@ const routes: Routes = [
 @NgModule({
   imports:
   [RouterModule.forRoot(routes),
-    ReactiveFormsModule ,
+    FormsModule,
+    ReactiveFormsModule 
   ],
   exports: [RouterModule]
 })

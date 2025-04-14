@@ -67,5 +67,7 @@ public void rejectParticipant(Long id) {
     participantRepository.save(participant);
 }
 
-
+public List<String> getDistinctEventNames() {
+    return participantRepository.findDistinctEventNames();
+}
 }

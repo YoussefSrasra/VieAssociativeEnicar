@@ -89,4 +89,10 @@ getParticipantsByEvent(eventName: string): Observable<Participant[]> {
     );
   }
 
+  getDistinctEventNames(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/distinct-events`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
 }

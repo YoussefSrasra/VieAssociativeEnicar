@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-12">
+    <app-card headerTitle="Donner votre Feedback sur l'Événement">
+      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" class="p-3">
+
+        <!-- Nom -->
+        <div class="mb-3">
+          <label class="form-label">Nom *</label>
+          <input type="text" class="form-control" formControlName="lastName"
+                 [class.is-invalid]="feedbackForm.get('lastName')?.invalid && feedbackForm.get('lastName')?.touched">
+          <div class="invalid-feedback" *ngIf="feedbackForm.get('lastName')?.invalid && feedbackForm.get('lastName')?.touched">
+            Le nom est requis
+          </div>
+        </div>
+
+        <!-- Prénom -->
+        <div class="mb-3">
+          <label class="form-label">Prénom *</label>
+          <input type="text" class="form-control" formControlName="firstName"
+                 [class.is-invalid]="feedbackForm.get('firstName')?.invalid && feedbackForm.get('firstName')?.touched">
+          <div class="invalid-feedback" *ngIf="feedbackForm.get('firstName')?.invalid && feedbackForm.get('firstName')?.touched">
+            Le prénom est requis
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label">Email *</label>
+          <input type="email" class="form-control" formControlName="email"
+                 [class.is-invalid]="feedbackForm.get('email')?.invalid && feedbackForm.get('email')?.touched">
+          <div class="invalid-feedback" *ngIf="feedbackForm.get('email')?.invalid && feedbackForm.get('email')?.touched">
+            Veuillez saisir un email valide
+          </div>
+        </div>
+
+        <!-- Événement -->
+        <div class="mb-3">
+          <label class="form-label">Événement *</label>
+          <select class="form-select" formControlName="eventName" required required aria-label="Type d'événement">
+            <option value="">Sélectionnez un événement</option>
+            <option *ngFor="let event of eventList" [value]="event">{{ event }}</option>
+          </select>
+        </div>
+
+        <!-- Commentaire -->
+        <div class="mb-3">
+          <label class="form-label">Votre commentaire *</label>
+          <textarea class="form-control" formControlName="comment" rows="3"
+                    placeholder="Exprimez votre expérience..."></textarea>
+        </div>
+
+        <!-- Note -->
+        <div class="mb-3">
+          <label class="form-label">Note sur 5 *</label>
+          <input type="number" min="1" max="5" class="form-control" formControlName="rating">
+        </div>
+
+        <!-- Images -->
+        <div class="mb-3">
+          <label class="form-label">Ajouter des photos</label>
+          <input type="file" multiple accept="image/*" class="form-control" (change)="onImageUpload($event)">
+        </div>
+
+        <!-- Aperçu des images -->
+        <div class="row mb-3">
+          <div class="col-md-3 mb-2" *ngFor="let img of uploadedImages">
+            <img [src]="img" class="img-fluid rounded shadow-sm" alt="Uploaded image">
+          </div>
+        </div>
+
+        <!-- Boutons -->
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary" type="submit" [disabled]="!feedbackForm.valid">Envoyer Feedback</button>
+        </div>
+
+      </form>
+    </app-card>
+  </div>
+</div>

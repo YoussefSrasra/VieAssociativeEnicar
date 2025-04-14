@@ -74,7 +74,9 @@ public class EventRequestService {
     public EventRequest saveEventRequest(EventRequest eventRequest) {
         return eventRequestRepository.save(eventRequest);
     }
+   
     public List<Map<String, Object>> getAllEventRequestsForDisplay() {
         return eventRequestRepository.findAllForDisplay();
     }
+    
 }

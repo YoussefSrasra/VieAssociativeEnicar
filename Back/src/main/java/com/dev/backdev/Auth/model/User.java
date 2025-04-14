@@ -50,6 +50,9 @@ public class User {
     @JoinColumn(name = "club_id")
     private Club club;
 
+
+    @Column(nullable = false)
+    private boolean firstLogin = true; // Add this field
     
     // Constructors, Getters, and Setters
 
