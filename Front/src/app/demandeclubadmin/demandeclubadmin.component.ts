@@ -12,6 +12,7 @@ interface DemandeClub {
   email: string;
   nomClub: string;
   description: string;
+  logoBase64: string; // Champ pour stocker l'image en base64
   etat: 'ACCEPTE' | 'REJETE' | 'EN_ATTENTE';
 }
 
@@ -102,33 +103,22 @@ export class DemandeclubadminComponent implements OnInit {
     }
   }
 
-  genererCompte(demande: DemandeClub): void {
-    if (confirm(`Générer un compte pour ${demande.prenom} ${demande.nom} (${demande.email}) ?`)) {
-      this.http.post(`${environment.apiUrl}/api/comptes/generer`, {
-        email: demande.email,
-        nom: demande.nom,
-        prenom: demande.prenom,
-        club: demande.nomClub
-      }).subscribe({
-        next: () => {
-          alert('Compte généré avec succès');
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Échec de la génération du compte');
-        }
-      });
-    }
-  }
-
   creerClub(demande: DemandeClub): void {
-    if (confirm(`Créer le club "${demande.nomClub}" ?`)) {
-      this.http.post(`${environment.apiUrl}/api/clubs`, {
-        nom: demande.nomClub,
-        description: demande.description,
-        createurEmail: demande.email
-      }).subscribe({
+  if (confirm(`Créer le club "${demande.nomClub}" ?`)) {
+    const nouveauClub = {
+      name: demande.nomClub,
+      specialty: demande.description,
+      status: "active",
+      logo: demande.logoBase64, // Assurez-vous que le champ logo est bien défini dans l'API
+      responsibleMember: null,
+      members: []
+    };
+
+    this.http.post(`${environment.apiUrl}/api/clubs`, nouveauClub)
+      .subscribe({
         next: () => {
+          // Mettre à jour l'état de la demande localement
+          
           alert('Club créé avec succès');
         },
         error: (err) => {
@@ -136,6 +126,25 @@ export class DemandeclubadminComponent implements OnInit {
           alert('Échec de la création du club');
         }
       });
-    }
+  }
+}
+  
+  // Version modifiée de genererCompte pour accepter un callback
+  genererCompte(demande: DemandeClub, callback?: () => void): void {
+    this.http.post(`${environment.apiUrl}/api/comptes/generer`, {
+      email: demande.email,
+      nom: demande.nom,
+      prenom: demande.prenom,
+      club: demande.nomClub
+    }).subscribe({
+      next: () => {
+        alert('Compte généré avec succès');
+        if (callback) callback();
+      },
+      error: (err) => {
+        console.error(err);
+        alert('Échec de la génération du compte');
+      }
+    });
   }
 }

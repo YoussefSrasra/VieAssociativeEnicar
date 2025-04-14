@@ -4,5 +4,6 @@ public enum Etat {
 
     ACCEPTE,
     REJETE,
-    EN_ATTENTE
+    EN_ATTENTE,
+    ARCHIVE
 }

@@ -1,0 +1,157 @@
+<section class="profile-section">
+  <div class="profile-header">
+    <button (click)="checkUnsavedChanges()" class="back-button">
+      <i class="bi bi-arrow-left"></i>
+    </button>
+    <h2>Votre Profil</h2>
+    <p class="file-formats">Formats: JPG, PNG, GIF - Max 7MB</p>
+  </div>
+
+  <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading" class="vertical-form">
+    <!-- Photo Upload -->
+    <div class="photo-upload">
+      <img [src]="userProfile?.photo ? 'data:image/jpeg;base64,' + userProfile.photo : 'assets/images/default-profile.png'" 
+           class="profile-photo">
+      <label class="upload-btn">
+        <input type="file" accept=".jpg,.jpeg,.png,.gif" (change)="onFileChange($event)" hidden>
+        Changer la photo
+      </label>
+    </div>
+
+    <!-- Informations Personnelles -->
+    <div class="form-section">
+      <h3 class="section-title">
+        <i class="bi bi-person-badge"></i> Informations Personnelles
+      </h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nom</label>
+          <input type="text" class="form-control" formControlName="nom">
+        </div>
+        
+        <div class="form-group">
+          <label>Prénom</label>
+          <input type="text" class="form-control" formControlName="prenom">
+        </div>
+        
+        <div class="form-group">
+          <label>CIN</label>
+          <input type="text" class="form-control" formControlName="cin">
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" class="form-control" formControlName="email">
+        </div>
+
+        <div class="form-group">
+          <label>Sexe</label>
+          <select class="form-select" formControlName="sexe">
+            <option [ngValue]="null" disabled>Sélectionnez</option>
+            <option *ngFor="let sexe of sexeOptions" [value]="sexe">{{sexe}}</option>
+          </select>
+        </div>
+      </div>
+    </div>  
+
+    <!-- Informations Académiques -->
+    <div class="form-section">
+      <h3 class="section-title">
+        <i class="bi bi-book"></i> Informations Académiques
+      </h3>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Filière</label>
+          <select class="form-select" formControlName="filiere">
+            <option [ngValue]="null" disabled>Sélectionnez</option>
+            <option *ngFor="let filiere of filiereOptions" [value]="filiere">{{filiere}}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Niveau</label>
+          <select class="form-select" formControlName="niveau">
+            <option [ngValue]="null" disabled>Sélectionnez</option>
+            <option *ngFor="let niveau of niveauOptions" [value]="niveau">{{niveau}}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Formation</label>
+          <select class="form-select" formControlName="formation">
+            <option [ngValue]="null" disabled>Sélectionnez</option>
+            <option *ngFor="let formation of formationOptions" [value]="formation">{{formation}}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sécurité -->
+    <div class="form-section">
+      <h3 class="section-title">
+        <i class="bi bi-shield-lock"></i> Sécurité
+      </h3>
+      
+      <div *ngIf="!isFirstLogin" class="form-group">
+        <label>Mot de passe actuel</label>
+        <div class="input-group">
+          <input [type]="showCurrentPassword ? 'text' : 'password'" 
+                 class="form-control" 
+                 formControlName="currentPassword"
+                 placeholder="Obligatoire pour modifier">
+          <button class="btn btn-outline-secondary" type="button" 
+                  (click)="togglePasswordVisibility('currentPassword')">
+            <i class="bi bi-eye{{showCurrentPassword ? '-slash' : ''}}"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Nouveau mot de passe</label>
+        <div class="input-group">
+          <input [type]="showPassword ? 'text' : 'password'" 
+                 class="form-control" 
+                 formControlName="password"
+                 [required]="isFirstLogin"
+                 placeholder="Laissez vide pour ne pas changer">
+          <button class="btn btn-outline-secondary" type="button" 
+                  (click)="togglePasswordVisibility('password')">
+            <i class="bi bi-eye{{showPassword ? '-slash' : ''}}"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label>Confirmer le mot de passe</label>
+        <div class="input-group">
+          <input [type]="showConfirmPassword ? 'text' : 'password'" 
+                 class="form-control" 
+                 formControlName="confirmPassword"
+                 [required]="isFirstLogin">
+          <button class="btn btn-outline-secondary" type="button" 
+                  (click)="togglePasswordVisibility('confirmPassword')">
+            <i class="bi bi-eye{{showConfirmPassword ? '-slash' : ''}}"></i>
+          </button>
+        </div>
+        <small class="text-danger" *ngIf="profileForm.hasError('mismatch')">
+          Les mots de passe ne correspondent pas
+        </small>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="isSubmitting">
+        <span *ngIf="isSubmitting" class="spinner-border spinner-border-sm"></span>
+        {{isFirstLogin ? 'Compléter le profil' : 'Mettre à jour'}}
+      </button>
+    </div>
+  </form>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+</section>

@@ -57,6 +57,7 @@ public class ClubService {
                 club.getName(),
                 club.getSpecialty(),
                 club.getStatus(),
+                club.getLogo(),
                 responsibleMemberUsername,
                 memberUsernames
         );

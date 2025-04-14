@@ -3,11 +3,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PartnerService } from '../../services/partner.service'; // Assure-toi du chemin correct vers ton service
-
+import { CommonModule } from '@angular/common'; // Importation de CommonModule si nécessaire
 @Component({
   selector: 'app-partnerships',
   standalone: true,
-  imports: [CardComponent, ReactiveFormsModule],
+  imports: [CardComponent, ReactiveFormsModule,CommonModule],
   templateUrl: './partnerships.component.html',
   styleUrls: ['./partnerships.component.scss']
 })
