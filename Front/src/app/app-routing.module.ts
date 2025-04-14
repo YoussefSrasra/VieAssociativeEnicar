@@ -81,6 +81,7 @@ const routes: Routes = [
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
         canActivate: [authGuard]
+        
       },
       {
         path: 'contacts-urgence',

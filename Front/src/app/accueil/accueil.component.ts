@@ -1,14 +1,14 @@
 
-import { RouterOutlet } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { LoginService } from 'src/app/login.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ParticipantService } from '../services/participant.service';
 import { NgForm } from '@angular/forms';
-
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { CreationClubComponent } from "../creationclub/creationclub.component";
 import { EventLaunchService } from '../services/event-launch.service';
 import {ClubAccueilComponent} from 'src/app/clubaccueil/clubaccueil.component';
@@ -17,7 +17,7 @@ import {ClubAccueilComponent} from 'src/app/clubaccueil/clubaccueil.component';
 
 @Component({
   selector: 'app-accueil',
-  imports: [RouterModule, CreationClubComponent, FormsModule,CommonModule,ClubAccueilComponent,FormsModule],
+  imports: [RouterModule, CreationClubComponent, FormsModule,CommonModule,ClubAccueilComponent,FormsModule,MatToolbarModule,MatButtonModule,MatIconModule,MatMenuModule],
   templateUrl: './accueil.component.html',
   styleUrl: './accueil.component.scss'
 })
