@@ -1,6 +1,6 @@
 package com.dev.backdev.enrollment.model;
 
-import com.dev.backdev.Club.Model.Club;
+
 import com.dev.backdev.EvenementClub.model.EvenementClb;
 
 import jakarta.persistence.Column;

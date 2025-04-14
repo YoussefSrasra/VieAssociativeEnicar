@@ -16,6 +16,7 @@ export interface NavigationItem {
   link?: string;
   description?: string;
   path?: string;
+  roles?: string[];
 }
 
 export const NavigationItems: NavigationItem[] = [
@@ -32,7 +33,8 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/dashboard/default',
         icon: 'dashboard',
-        breadcrumbs: false
+        breadcrumbs: false,
+        roles: ['ADMIN','MANAGER','MEMBER']
       }
     ]
   },
@@ -42,22 +44,24 @@ export const NavigationItems: NavigationItem[] = [
     title: 'UI Components',
     type: 'group',
     icon: 'icon-navigation',
+   
     children: [
       {
         id: 'typography',
-        title: 'Typography',
+        title: 'Liste des membres ',
         type: 'item',
         classes: 'nav-item',
         url: '/typography',
-        icon: 'font-size'
+        
+        roles: ['MANAGER']
       },
       {
         id: 'enrollment',
-        title: 'demandes inscription',
+        title: 'Demandes inscription',
         type: 'item',
         classes: 'nav-item',
         url: '/enrollment',
-
+        roles: ['MANAGER']
       },
 
       {
@@ -66,7 +70,8 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/entretiens',
-        icon: 'font-size'
+       
+        roles: ['MANAGER']  
       },
       
       /*{
@@ -81,59 +86,67 @@ export const NavigationItems: NavigationItem[] = [
 
       {
         id: 'color',
-        title: 'creation de club',
+        title: 'Creation de club',
         type: 'item',
         classes: 'nav-item',
         url: '/demandeclubadmin',
-        icon: 'bg-colors'
+        //icon: 'bg-colors',
+        roles: ['ADMIN']
+      
       },
       {
         id: 'event launcher ',
-        title: 'lancer event ',
+        title: 'Lancer un evenement ',
         type: 'item',
         classes: 'nav-item',
         url: '/event-launch',
-        icon: 'bg-colors'
+        //icon: 'bg-colors',
+        roles: ['ADMIN']
       },
       {
         id: 'event suivi ',
-        title: 'suivi event ',
+        title: 'Suivi evenement ',
         type: 'item',
         classes: 'nav-item',
         url: '/admin/event-registrations',
-        icon: 'bg-colors'
+        //icon: 'bg-colors',
+        roles: ['ADMIN']
       },
       {
         id: 'demande evenet  ',
-        title: 'demande event club ',
+        title: 'demandes evenement ',
         type: 'item',
         classes: 'nav-item',
         url: '/event-requests',
-        icon: 'bg-colors'
+       // icon: 'bg-colors',
+        roles: ['MANAGER']
       },
       {
         id: 'suivi demande evenet  ',
-        title: 'suivi demande event club ',
+        title: 'Suivi des demandes ',
         type: 'item',
         classes: 'nav-item',
         url: '/admin/event-requests',
-        icon: 'bg-colors'
+       // icon: 'bg-colors',
+        roles: ['ADMIN']
       },
       {
         id: 'partnerships  ',
-        title: 'partnerships ',
+        title: 'Partnerships ',
         type: 'item',
         classes: 'nav-item',
         url: '/partnerships',
-        icon: 'bg-colors'
+        //icon: 'bg-colors',
+        roles: ['ADMIN']  
       },
       {
         id: 'list partnerships  ',
-        title: 'list partnerships ',
+        title: 'liste des partneraires ',
         type: 'item',
         classes: 'nav-item',
         url: '/partnership-list',
-        icon: 'bg-colors'
+        //icon: 'bg-colors',
+        roles: ['ADMIN']
       },
       {
         id: 'contacts-urgence  ',
@@ -141,15 +154,17 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/contacts-urgence',
-        icon: 'bg-colors'
+        //icon: 'bg-colors',
+        roles: ['ADMIN']
       },
       {
         id: 'feedback-evenement  ',
-        title: 'feedback-evenement ',
+        title: 'Feedback-evenement ',
         type: 'item',
         classes: 'nav-item',
         url: '/feedback-evenement',
-        icon: 'bg-colors'
+        //icon: 'bg-colors',
+        roles: ['MANAGER','MEMBER']
       },
       {
         id: 'feedback-list  ',
@@ -157,7 +172,8 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/feedbacks',
-        icon: 'bg-colors'
+        
+        roles: ['ADMIN','MANAGER'],
       },
       {
         id: 'tabler',
@@ -168,7 +184,7 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ant-design',
         target: true,
         external: true
-      }
+      }//commentaire 
 
     ]
   },

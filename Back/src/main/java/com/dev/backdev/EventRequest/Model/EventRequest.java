@@ -4,7 +4,6 @@ import com.dev.backdev.Club.Model.Club;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
