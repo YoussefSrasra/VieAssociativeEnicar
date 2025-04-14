@@ -209,7 +209,7 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: 'https://codedthemes.gitbook.io/mantis-angular/',
-        icon: 'question',
+        //icon: 'question',
         target: true,
         external: true
       }
