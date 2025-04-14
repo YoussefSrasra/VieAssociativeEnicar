@@ -20,7 +20,7 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final EntretienService entretienService;
 
-    @Autowired
+  
     public EnrollmentService(EnrollmentRepository enrollmentRepository, EntretienService entretienService) {
         this.enrollmentRepository = enrollmentRepository;
         this.entretienService = entretienService;
