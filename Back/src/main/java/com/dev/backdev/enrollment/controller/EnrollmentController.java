@@ -1,7 +1,6 @@
 package com.dev.backdev.enrollment.controller;
 
 import java.util.List;
-
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev.backdev.enrollment.model.Enrollment;
-
+//commenntaire 
 import com.dev.backdev.enrollment.service.EnrollmentService;
 
 @RestController
@@ -40,11 +39,6 @@ public class EnrollmentController {
     @GetMapping
     public ResponseEntity<List<Enrollment>> getAllEnrollments() {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
-        return ResponseEntity.ok(enrollments);}
-  
-
-
-
         return ResponseEntity.ok(enrollments);
     }
     @GetMapping("/{id}")
