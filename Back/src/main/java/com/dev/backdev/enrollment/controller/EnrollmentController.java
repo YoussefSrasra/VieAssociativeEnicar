@@ -40,13 +40,13 @@ public class EnrollmentController {
     @GetMapping
     public ResponseEntity<List<Enrollment>> getAllEnrollments() {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
-        return ResponseEntity.ok(enrollments);}
+        return ResponseEntity.ok(enrollments);
+    }
   
 
 
 
-        return ResponseEntity.ok(enrollments);
-    }
+    
     @GetMapping("/{id}")
     public ResponseEntity<Enrollment> getEnrollmentById(@PathVariable Long id) {
         Optional<Enrollment> enrollment = enrollmentService.getEnrollmentById(id);
@@ -57,3 +57,4 @@ public class EnrollmentController {
 
     // Suppression de la méthode getEnrollmentsByEvent qui n'est plus nécessaire
 }
+
