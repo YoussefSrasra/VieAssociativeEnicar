@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class EmergencyService {
-  private apiUrl = 'http://localhost:8081/api/public/managers'; // À adapter selon ton backend
+  private apiUrl = 'http://localhost:8080/api/public/managers'; // À adapter selon ton backend
 
   constructor(private http: HttpClient) {}
 

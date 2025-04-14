@@ -41,14 +41,13 @@ public class EnrollmentController {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(enrollments);
     }
-<<<<<<< HEAD
-=======
+
   
 
 
 
     
->>>>>>> 06b83511c162c6d0cf7875678fa63a5a56d80995
+
     @GetMapping("/{id}")
     public ResponseEntity<Enrollment> getEnrollmentById(@PathVariable Long id) {
         Optional<Enrollment> enrollment = enrollmentService.getEnrollmentById(id);
