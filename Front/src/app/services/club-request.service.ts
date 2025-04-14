@@ -23,7 +23,7 @@ interface EventRequest {
   providedIn: 'root'
 })
 export class ClubRequestService {
-  private apiUrl = 'http://localhost:8081/api/event-requests';
+  private apiUrl = 'http://localhost:8080/api/event-requests';
 
   constructor(private http: HttpClient) { }
 

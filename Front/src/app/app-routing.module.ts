@@ -5,7 +5,7 @@ import { EventLaunchComponent } from './features/event-launch/event-launch.compo
 import { MemberRegistrationComponent } from './features/member-registration/member-registration.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { authGuard } from './auth.guard';
-
+import { FormsModule} from '@angular/forms';
 // Project import
 import { AdminComponent } from './theme/layouts/admin-layout/admin-layout.component';
 import { GuestLayoutComponent } from './theme/layouts/guest-layout/guest-layout.component';
@@ -62,6 +62,11 @@ const routes: Routes = [
 
 
       {
+        path: 'entretiens',
+        loadComponent: () => import('./entretiens/entretiens.component')
+          .then(c => c.EntretiensComponent)
+      },
+      {
         path: 'partnerships',
         loadComponent: () => import('./features/partnerships/partnerships.component')
           .then(c => c.PartnershipsComponent)
@@ -117,6 +122,11 @@ const routes: Routes = [
         path: 'register',
         loadComponent: () =>
           import('./demo/pages/authentication/auth-register/auth-register.component').then((c) => c.AuthRegisterComponent)
+      },
+      {
+        path: 'profile',
+        loadComponent: () =>  
+          import ('./profile/profile.component').then((c) => c.ProfileComponent)
       }
     ]
   }
@@ -125,7 +135,8 @@ const routes: Routes = [
 @NgModule({
   imports:
   [RouterModule.forRoot(routes),
-    ReactiveFormsModule ,
+    FormsModule,
+    ReactiveFormsModule 
   ],
   exports: [RouterModule]
 })

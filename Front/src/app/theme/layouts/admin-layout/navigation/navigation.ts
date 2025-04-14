@@ -60,6 +60,15 @@ export const NavigationItems: NavigationItem[] = [
 
       },
 
+      {
+        id: 'entretiens',
+        title: 'Entretiens',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/entretiens',
+        icon: 'font-size'
+      },
+      
       /*{
         id: 'color',
         title: 'Colors',
