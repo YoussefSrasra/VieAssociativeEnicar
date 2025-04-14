@@ -1,6 +1,14 @@
 <div class="row">
   <div class="col-12">
     <app-card headerTitle="Lancer un Nouvel Événement">
+      <div *ngIf="successMessage" class="custom-alert success-alert">
+        ✅ {{ successMessage }}
+      </div>
+
+      <div *ngIf="errorMessage" class="custom-alert error-alert">
+        ❌ {{ errorMessage }}
+      </div>
+
       <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="p-3">
 
         <!-- Nom de l'événement -->

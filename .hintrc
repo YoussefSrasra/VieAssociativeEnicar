@@ -17,6 +17,12 @@
           "-webkit-text-size-adjust"
         ]
       }
+    ],
+    "axe/name-role-value": [
+      "default",
+      {
+        "link-name": "off"
+      }
     ]
   }
 }

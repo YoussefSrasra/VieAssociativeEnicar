@@ -57,8 +57,9 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/enrollment',
-       
+
       },
+
       {
         id: 'entretiens',
         title: 'Entretiens',
@@ -76,8 +77,8 @@ export const NavigationItems: NavigationItem[] = [
         url: '/color',
         icon: 'bg-colors'
       },*/
-      
-    
+
+
       {
         id: 'color',
         title: 'creation de club',
@@ -132,6 +133,30 @@ export const NavigationItems: NavigationItem[] = [
         type: 'item',
         classes: 'nav-item',
         url: '/partnership-list',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'contacts-urgence  ',
+        title: 'contacts-urgence ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/contacts-urgence',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'feedback-evenement  ',
+        title: 'feedback-evenement ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/feedback-evenement',
+        icon: 'bg-colors'
+      },
+      {
+        id: 'feedback-list  ',
+        title: 'feedback-list ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/feedbacks',
         icon: 'bg-colors'
       },
       {

@@ -1,0 +1,78 @@
+/* Style général pour le container */
+:host {
+  display: block;
+  padding: 1rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Table styling */
+.table {
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+/* Header de la table */
+.table thead.table-dark th {
+  background-color: #2e3b55;
+  color: #fff;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Lignes et cellules */
+.table tbody td {
+  font-size: 0.95rem;
+  vertical-align: middle;
+  color: #333;
+}
+
+/* Hover des lignes */
+.table-hover tbody tr:hover {
+  background-color: #f1f1f1;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Texte lorsqu’il n’y a pas de données */
+.text-muted {
+  font-style: italic;
+  color: #888 !important;
+  font-size: 0.9rem;
+}
+
+/* Petite touche décorative sur le card */
+app-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+/* Adaptation mobile si besoin */
+@media (max-width: 768px) {
+  .table thead {
+    display: none;
+  }
+
+  .table tbody td {
+    display: block;
+    text-align: right;
+    position: relative;
+    padding-left: 50%;
+    white-space: pre-wrap;
+  }
+
+  .table tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    font-weight: bold;
+    color: #2e3b55;
+  }
+
+  .table tbody tr {
+    margin-bottom: 1rem;
+    display: block;
+    border-bottom: 2px solid #ccc;
+  }
+}

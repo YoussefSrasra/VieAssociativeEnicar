@@ -33,6 +33,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+
+        
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activer CORS
                 .authorizeHttpRequests(authorize -> authorize
@@ -49,6 +51,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/event-requests/**").permitAll()
                         .requestMatchers("/api/demandes").permitAll()
                         .requestMatchers("/api/demandes/**").permitAll()
+                .requestMatchers("/api/feedbacks/**").permitAll()   
+                .requestMatchers("/api/events").hasRole("ADMIN")
 
                         .requestMatchers("/api/club-request/").hasRole("MEMBER")
                         .requestMatchers("/api/events").hasRole("ADMIN")
