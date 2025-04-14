@@ -8,6 +8,9 @@
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
+  <div *ngIf="!isLoading && enrollments.length === 0" class="alert alert-info">
+    Pas de demandes d'inscriptions
+  </div>
   
   <table class="table" *ngIf="!isLoading && enrollments.length > 0">
     <thead>

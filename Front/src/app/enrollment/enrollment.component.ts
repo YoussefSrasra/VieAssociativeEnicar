@@ -33,7 +33,7 @@ export class EnrollmentComponent implements OnInit {
     this.isLoading = true;
     this.enrollmentService.getAllEnrollments().subscribe({
       next: (data) => {
-        this.enrollments = data;
+        this.enrollments = data.filter(demande => demande.etat === 'EN_ATTENTE');
         this.isLoading = false;
       },
       error: (err) => {
