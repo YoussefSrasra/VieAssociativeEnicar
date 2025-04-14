@@ -1,55 +1,257 @@
+<section id="club-creation" class="club-creation-section">
+  <div class="section-header">
+    <h2 class="section-title">
+      <span class="title-icon">✨</span>
+      <span>Demande de création de club</span>
+    </h2>
+    <p class="section-description">
+      Les étudiants souhaitant ouvrir un nouveau club doivent remplir ce formulaire.<br>
+      Merci de fournir des informations précises pour faciliter le traitement de votre demande.
+    </p>
+    <div class="title-underline"></div>
+  </div>
 
-<section id="forum-enicarthage" class="appointment section">
-    <div class="container section-title">
-        <h2>Demande de création de club</h2>
-        <p>Les étudiants souhaitant ouvrir un nouveau club doivent remplir ce formulaire. 
-            Merci de fournir des informations précises pour faciliter le traitement de votre demande.</p>
-    </div>
-    
-    <div class="container">
-        <form (ngSubmit)="soumettreDemande()" #demandeForm="ngForm">
-            <!-- Informations personnelles -->
-            <div class="row">
-                <div class="col-md-6 form-group">
-                    <input type="text" class="form-control" id="nom" placeholder="Nom" required 
-                           [(ngModel)]="demande.nom" name="nom">
-                </div>
-                <div class="col-md-6 form-group">
-                    <input type="text" class="form-control" id="prenom" placeholder="Prénom" required
-                           [(ngModel)]="demande.prenom" name="prenom">
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6 form-group mt-3">
-                    <input type="email" class="form-control" id="email" placeholder="Email" required
-                           [(ngModel)]="demande.email" name="email">
-                </div>
-                <div class="col-md-6 form-group mt-3">
-                    <select id="niveau" class="form-select" required [(ngModel)]="demande.niveau" name="niveau">
-                        <option value="">Niveau d'études</option>
-                        <option value="1A">1ère année</option>
-                        <option value="2A">2ème année</option>
-                        <option value="3A">3ème année</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- Informations sur le club -->
-            <div class="form-group mt-3">
-                <input type="text" class="form-control" id="club" placeholder="Nom du Club" required
-                       [(ngModel)]="demande.nomClub" name="nomClub">
-            </div>
-            
-            <div class="form-group mt-3">
-                <textarea class="form-control" rows="5" placeholder="Description du club" required
-                          [(ngModel)]="demande.description" name="description"></textarea>
-            </div>
-            
-            <!-- Bouton de soumission -->
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary">Envoyer</button>
-            </div>
-        </form>
-    </div>
+  <div class="form-container">
+    <form (ngSubmit)="soumettreDemande()" #demandeForm="ngForm" class="creation-form">
+      <!-- Informations personnelles -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="bi bi-person-circle"></i>
+          Informations personnelles
+        </h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" placeholder="Votre nom" required
+                   [(ngModel)]="demande.nom" name="nom" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" placeholder="Votre prénom" required
+                   [(ngModel)]="demande.prenom" name="prenom" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Votre email ENICarthage" required
+                   [(ngModel)]="demande.email" name="email" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="niveau">Niveau d'études</label>
+            <select id="niveau" required [(ngModel)]="demande.niveau" name="niveau" class="form-select">
+              <option value="" disabled selected>Sélectionnez votre niveau</option>
+              <option value="1A">1ère année</option>
+              <option value="2A">2ème année</option>
+              <option value="3A">3ème année</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations sur le club -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="bi bi-people-fill"></i>
+          Informations sur le club
+        </h3>
+        <div class="form-group">
+          <label for="club">Nom du Club</label>
+          <input type="text" id="club" placeholder="Nom officiel du club" required
+                 [(ngModel)]="demande.nomClub" name="nomClub" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description du club</label>
+          <textarea id="description" rows="5" placeholder="Décrivez les objectifs et activités du club..." required
+                    [(ngModel)]="demande.description" name="description" class="form-textarea"></textarea>
+        </div>
+      </div>
+
+      <!-- Bouton de soumission -->
+      <div class="form-submit">
+        <button type="submit" class="submit-button" [disabled]="demandeForm.invalid">
+          <i class="bi bi-send-fill"></i>
+          Envoyer la demande
+        </button>
+      </div>
+    </form>
+  </div>
 </section>
+
+<style>
+/* Club Creation Section - Style harmonisé */
+.club-creation-section {
+  padding: 80px 20px;
+  background-color: #f8f9fa;
+}
+
+.section-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 40px;
+}
+
+.section-title {
+  font-size: 2.3rem;
+  color: #2c3e50;
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.title-icon {
+  font-size: 1.8rem;
+}
+
+.section-description {
+  color: #7f8c8d;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.title-underline {
+  width: 80px;
+  height: 4px;
+  background: #3498db;
+  margin: 0 auto;
+  border-radius: 2px;
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.creation-form {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.form-section {
+  margin-bottom: 40px;
+}
+
+.form-section-title {
+  color: #2c3e50;
+  font-size: 1.3rem;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bi {
+  color: #3498db;
+  font-size: 1.2rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s;
+  background-color: #f8fafc;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.form-textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%232c3e50' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 12px;
+}
+
+.form-submit {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.submit-button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.submit-button:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(41, 128, 185, 0.3);
+}
+
+.submit-button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .club-creation-section {
+    padding: 60px 15px;
+  }
+
+  .creation-form {
+    padding: 30px 20px;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-section-title {
+    font-size: 1.1rem;
+  }
+}
+</style>
