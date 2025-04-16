@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.dev.backdev.enrollment.model.Enrollment;
-
+//commenntaire 
 import com.dev.backdev.enrollment.service.EnrollmentService;
 
 @RestController
@@ -41,6 +41,13 @@ public class EnrollmentController {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(enrollments);
     }
+
+  
+
+
+
+    
+
     @GetMapping("/{id}")
     public ResponseEntity<Enrollment> getEnrollmentById(@PathVariable Long id) {
         Optional<Enrollment> enrollment = enrollmentService.getEnrollmentById(id);
@@ -51,3 +58,4 @@ public class EnrollmentController {
 
     // Suppression de la méthode getEnrollmentsByEvent qui n'est plus nécessaire
 }
+

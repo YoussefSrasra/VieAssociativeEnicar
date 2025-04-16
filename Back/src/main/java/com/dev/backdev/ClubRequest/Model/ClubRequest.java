@@ -1,6 +1,5 @@
 package com.dev.backdev.ClubRequest.Model;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -38,7 +37,11 @@ public class ClubRequest {
 
     private Double requestedAmount;
         private String status; // Pending, Approved, Rejected
+        private boolean needEquipment;
 
+        @ElementCollection
+        private List<String> requestedEquipment; // Remplace equipmentDescription
+        
     @ManyToOne
     @JoinColumn(name = "club_id")
     private Club club;
@@ -98,5 +101,20 @@ public class ClubRequest {
 
     public Club getClub() { return club; }
     public void setClub(Club club) { this.club = club; }
+    public boolean isNeedEquipment() {
+        return needEquipment;
+    }
+    
+    public void setNeedEquipment(boolean needEquipment) {
+        this.needEquipment = needEquipment;
+    }
+    
+    public List<String> getRequestedEquipment() {
+        return requestedEquipment;
+    }
+    
+    public void setRequestedEquipment(List<String> requestedEquipment) {
+        this.requestedEquipment = requestedEquipment;
+    }
     
 }

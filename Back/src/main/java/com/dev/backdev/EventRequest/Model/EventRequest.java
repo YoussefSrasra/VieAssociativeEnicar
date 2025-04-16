@@ -37,7 +37,13 @@ public class EventRequest {
     private Integer estimatedAttendees;
     private Boolean financialRequest = false;
     private Double requestedAmount;
+    private boolean needEquipment;
+
+    @Column(columnDefinition = "TEXT")
+    private String equipmentDescription;
     
+   
+
     @Enumerated(EnumType.STRING)
     private RequestStatus status = RequestStatus.PENDING;
 

@@ -1,62 +1,90 @@
-<section id="forum-enicarthage" class="appointment section">
-    <div class="container section-title">
-        <h2>Demande de création de club</h2>
-        <p>Les étudiants souhaitant ouvrir un nouveau club doivent remplir ce formulaire. 
-            Merci de fournir des informations précises pour faciliter le traitement de votre demande.</p>
-    </div>
-    
-    <div class="container">
-        <form (ngSubmit)="soumettreDemande()" #demandeForm="ngForm">
-            <!-- Informations personnelles -->
-            <div class="row">
-                <div class="col-md-6 form-group">
-                    <input type="text" class="form-control" id="nom" placeholder="Nom" required 
-                           [(ngModel)]="demande.nom" name="nom">
-                </div>
-                <div class="col-md-6 form-group">
-                    <input type="text" class="form-control" id="prenom" placeholder="Prénom" required
-                           [(ngModel)]="demande.prenom" name="prenom">
-                </div>
-            </div>
-            
-            <div class="row">
-                <div class="col-md-6 form-group mt-3">
-                    <input type="email" class="form-control" id="email" placeholder="Email" required
-                           [(ngModel)]="demande.email" name="email">
-                </div>
-                <div class="col-md-6 form-group mt-3">
-                    <select id="niveau" class="form-select" required [(ngModel)]="demande.niveau" name="niveau">
-                        <option value="">Niveau d'études</option>
-                        <option value="1A">1ère année</option>
-                        <option value="2A">2ème année</option>
-                        <option value="3A">3ème année</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- Informations sur le club -->
-            <div class="form-group mt-3">
-                <input type="text" class="form-control" id="club" placeholder="Nom du Club" required
-                       [(ngModel)]="demande.nomClub" name="nomClub">
-            </div>
-            
-            <div class="form-group mt-3">
-                <textarea class="form-control" rows="5" placeholder="Description du club" required
-                          [(ngModel)]="demande.description" name="description"></textarea>
-            </div>
-            
-            <!-- Nouveau champ pour le logo du club -->
-            <div class="form-group mt-3">
-                <label for="logo" class="form-label">Logo du club (optionnel)</label>
-                <input type="file" class="form-control" id="logo" accept="image/*"
-                       (change)="onFileSelected($event)">
-                <small class="text-muted">Taille maximale recommandée: 1MB</small>
-            </div>
-            
-            <!-- Bouton de soumission -->
-            <div class="text-center mt-4">
-                <button type="submit" class="btn btn-primary">Envoyer</button>
-            </div>
-        </form>
-    </div>
+<section id="club-creation" class="club-creation-section">
+  <div class="section-header">
+    <h2 class="section-title">
+      <span class="title-icon">✨</span>
+      <span>Demande de création de club</span>
+    </h2>
+    <p class="section-description">
+      Les étudiants souhaitant ouvrir un nouveau club doivent remplir ce formulaire.<br>
+      Merci de fournir des informations précises pour faciliter le traitement de votre demande.
+    </p>
+    <div class="title-underline"></div>
+  </div>
+
+  <div class="form-container">
+    <form (ngSubmit)="soumettreDemande()" #demandeForm="ngForm" class="creation-form">
+
+      <!-- Informations personnelles -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="bi bi-person-circle"></i>
+          Informations personnelles
+        </h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom" placeholder="Votre nom" required
+                   [(ngModel)]="demande.nom" name="nom" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom" placeholder="Votre prénom" required
+                   [(ngModel)]="demande.prenom" name="prenom" class="form-input">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Votre email ENICarthage" required
+                   [(ngModel)]="demande.email" name="email" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="niveau">Niveau d'études</label>
+            <select id="niveau" required [(ngModel)]="demande.niveau" name="niveau" class="form-select">
+              <option value="" disabled selected>Sélectionnez votre niveau</option>
+              <option value="1A">1ère année</option>
+              <option value="2A">2ème année</option>
+              <option value="3A">3ème année</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informations sur le club -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="bi bi-people-fill"></i>
+          Informations sur le club
+        </h3>
+        <div class="form-group">
+          <label for="club">Nom du Club</label>
+          <input type="text" id="club" placeholder="Nom officiel du club" required
+                 [(ngModel)]="demande.nomClub" name="nomClub" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description du club</label>
+          <textarea id="description" rows="5" placeholder="Décrivez les objectifs et activités du club..." required
+                    [(ngModel)]="demande.description" name="description" class="form-textarea"></textarea>
+        </div>
+
+        <!-- Champ pour logo -->
+        <div class="form-group">
+          <label for="logo">Logo du club (optionnel)</label>
+          <input type="file" id="logo" accept="image/*"
+                 (change)="onFileSelected($event)" class="form-input">
+          <small class="text-muted">Taille maximale recommandée : 1MB (formats: JPG, PNG, etc.)</small>
+        </div>
+      </div>
+
+      <!-- Bouton de soumission -->
+      <div class="form-submit">
+        <button type="submit" class="submit-button" [disabled]="demandeForm.invalid">
+          <i class="bi bi-send-fill"></i>
+          Envoyer la demande
+        </button>
+      </div>
+    </form>
+  </div>
 </section>

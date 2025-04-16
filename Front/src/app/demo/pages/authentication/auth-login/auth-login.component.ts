@@ -37,7 +37,7 @@ export class AuthLoginComponent {
           this.errorMessage = error.error?.message || 'Échec de la connexion';
           return of(null);
         })
-      )
+      )//ljjl
       .subscribe(() => {
         this.isLoading = false;
       });

@@ -23,9 +23,21 @@ export class EventRequestsComponent implements OnInit {
     end_date: ['', Validators.required],
     financial_request: [false],
     requested_amount: [0, [Validators.min(0)]],
-    attendees: [0, [Validators.min(0)]]
+    attendees: [0, [Validators.min(0)]],
+    need_equipment: [false],
+    equipment_description: [''] // Pour stocker plusieurs équipements
   });
-
+  equipmentOptions = [
+    'Projecteur',
+    'Écran',
+    'Microphone',
+    'Enceintes',
+    'Table',
+    'Chaise',
+    'Multiprise',
+    'Câbles HDMI',
+    'Ordinateur portable'
+];
   eventTypes = ['CONFERENCE', 'WORKSHOP', 'SEMINAR', 'COMPETITION', 'SOCIAL_EVENT'];
   statusCards = [
     { title: 'En attente', value: 0, icon: 'hourglass', color: 'bg-warning' },
@@ -36,6 +48,7 @@ export class EventRequestsComponent implements OnInit {
   recentRequests: any[] = [];
   isLoading = false;
   isSubmitting = false;
+  alert: { type: 'success' | 'danger' | 'info', message: string } | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -87,41 +100,50 @@ export class EventRequestsComponent implements OnInit {
 
   onSubmit(): void {
     if (this.eventForm.invalid || this.isSubmitting) {
-      this.eventForm.markAllAsTouched();
-      return;
+        this.eventForm.markAllAsTouched();
+        return;
     }
 
     this.isSubmitting = true;
     const formData = {
-      eventName: this.eventForm.value.event_name,
-      type: this.eventForm.value.type,
-      description: this.eventForm.value.description,
-      location: this.eventForm.value.location,
-      startDate: new Date(this.eventForm.value.start_date!).toISOString(),
-      endDate: new Date(this.eventForm.value.end_date!).toISOString(),
-      financialRequest: this.eventForm.value.financial_request,
-      requestedAmount: this.eventForm.value.requested_amount || 0,
-      estimatedAttendees: this.eventForm.value.attendees || 0,
-      status: 'PENDING',
-      club: { id: Number(this.eventForm.value.club_id) }
+        eventName: this.eventForm.value.event_name,
+        type: this.eventForm.value.type,
+        description: this.eventForm.value.description,
+        location: this.eventForm.value.location,
+        startDate: new Date(this.eventForm.value.start_date!).toISOString(),
+        endDate: new Date(this.eventForm.value.end_date!).toISOString(),
+        financialRequest: this.eventForm.value.financial_request,
+        requestedAmount: this.eventForm.value.requested_amount || 0,
+        estimatedAttendees: this.eventForm.value.attendees || 0,
+        needEquipment: this.eventForm.value.need_equipment,
+        equipmentDescription: this.eventForm.value.equipment_description, // Champ texte simple
+        status: 'PENDING',
+        club: { id: Number(this.eventForm.value.club_id) } // Supprimez les champs inutiles ici
     };
 
+    console.log('Données envoyées:', formData);
+
     this.clubRequestService.createEventRequest(formData).subscribe({
-      next: () => {
+      next: (response) => {
+        this.showAlert('success', 'Demande envoyée avec succès.');
         this.eventForm.reset({
           financial_request: false,
           requested_amount: 0,
-          attendees: 0
+          attendees: 0,
+          need_equipment: false,
+          equipment_description: ''
         });
         this.loadEventRequests();
         this.isSubmitting = false;
       },
       error: (err) => {
         console.error('Erreur lors de la soumission:', err);
+        this.showAlert('danger', 'Erreur lors de l\'envoi de la demande.');
         this.isSubmitting = false;
       }
+
     });
-  }
+}
 
   approveRequest(id: number): void {
     this.clubRequestService.approveEventRequest(id).subscribe({
@@ -140,4 +162,9 @@ export class EventRequestsComponent implements OnInit {
   trackByRequest(index: number, request: any): number {
     return request.id || index;
   }
+  showAlert(type: 'success' | 'danger' | 'info', message: string): void {
+    this.alert = { type, message };
+    setTimeout(() => this.alert = null, 5000); // Disparaît après 5 secondes
+  }
+
 }

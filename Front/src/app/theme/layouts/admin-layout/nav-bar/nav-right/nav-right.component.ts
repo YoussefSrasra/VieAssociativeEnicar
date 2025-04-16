@@ -24,14 +24,14 @@ import {
   GithubOutline
 } from '@ant-design/icons-angular/icons';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
-import { NgScrollbarModule } from 'ngx-scrollbar';
+
 import { RouterModule } from '@angular/router';
 import { Component, inject, input, output } from '@angular/core';
 
 
 @Component({
   selector: 'app-nav-right',
-  imports: [CommonModule, IconDirective, RouterModule, NgScrollbarModule, NgbNavModule, NgbDropdownModule],
+  imports: [CommonModule, IconDirective, RouterModule, NgbNavModule, NgbDropdownModule],
   templateUrl: './nav-right.component.html',
   styleUrls: ['./nav-right.component.scss']
 })
@@ -86,11 +86,11 @@ export class NavRightComponent {
       }
     });
   }
-  
+
   logout(): void {
     this.loginService.logout()
   }
 
-  
+
   // ... rest of existing code
 }

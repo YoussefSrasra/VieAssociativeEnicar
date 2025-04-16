@@ -2,5 +2,6 @@
     "java.compile.nullAnalysis.mode": "automatic",
     "java.project.sourcePaths": [
         "Front/src/app/entretiens"
-    ]
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

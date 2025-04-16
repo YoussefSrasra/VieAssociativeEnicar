@@ -1,184 +1,204 @@
-<div class="container">
+<div class="clubs-container">
   <!-- Error message -->
-  <div *ngIf="error" class="alert alert-danger alert-dismissible fade show py-1" role="alert">
-    <small>{{ error }}</small>
-    <button type="button" class="btn-close btn-close-xs" data-bs-dismiss="alert" aria-label="Close"></button>
+  <div *ngIf="error" class="error-message">
+    <div class="error-icon">⚠️</div>
+    <div class="error-text">{{ error }}</div>
+    <button type="button" class="error-close" (click)="error = null">&times;</button>
   </div>
 
   <!-- Loading indicator -->
-  <div *ngIf="loading" class="text-center py-3">
-    <div class="spinner-border text-primary" role="status">
-      <span class="visually-hidden">Loading...</span>
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <span>Chargement en cours...</span>
+  </div>
+
+  <!-- Search and sort controls -->
+  <div *ngIf="!loading" class="controls">
+    <div class="search-box">
+      <input type="text" [(ngModel)]="searchTerm" 
+             (input)="onSearchChange()" 
+             placeholder="Rechercher un club...">
     </div>
+    
+   
   </div>
 
   <!-- Clubs grid -->
-  <div *ngIf="!loading" class="row g-2">
-    <div *ngFor="let club of clubs" class="col-md-4">
-      <div class="card h-100 border-0 ultra-compact-card">
-        <!-- TINY blue header -->
-        <div class="card-img-top bg-gradient-primary"></div>
-        
-        <div class="card-body text-center pt-0 px-2 pb-2">
-          <!-- BIGGER icon -->
-          <div class="club-icon-lg rounded-circle d-inline-flex align-items-center justify-content-center mb-1">
-            <ng-container *ngIf="club.logo; else defaultIcon">
-              <img [src]="getSafeLogoUrl(club.logo)" alt="Logo {{club.name}}" class="club-logo-img">
-            </ng-container>
-            <ng-template #defaultIcon>
-              <i class="fas fa-users text-primary"></i>
-            </ng-template>
-          </div>
-          
-          <!-- Club name -->
-          <h3 class="h6 card-title mb-1">{{ club.name }}</h3>
-          
-          <!-- SPECIALTY -->
-          <div class="specialty-container mb-2 py-1">
-            <span class="club-badge">{{ club.specialty }}</span>
-          </div>
-          
-          <button (click)="openEnrollmentModal(club)" class="btn btn-xs btn-outline-primary rounded-pill px-2">
-            Enroll
-          </button>
+  <div *ngIf="!loading" class="clubs-grid">
+    <div *ngFor="let club of filteredClubs" class="club-card">
+      <div class="club-header"></div>
+
+      <div class="club-content">
+        <div class="club-icon">
+          <ng-container *ngIf="club.logo; else defaultIcon">
+            <img [src]="getSanitizedLogo(club.logo)" alt="Logo {{club.name}}" class="club-logo">
+          </ng-container>
+          <ng-template #defaultIcon>
+            <i class="bi bi-people-fill"></i>
+          </ng-template>
         </div>
+
+        <h3 class="club-name">{{ club.name }}</h3>
+        <div class="club-specialty">{{ club.specialty }}</div>
+        
+        <div *ngIf="club.description" class="club-description">
+          {{ club.description }}
+        </div>
+
+        <div class="club-meta">
+          <span *ngIf="club.creationDate">
+            <i class="bi bi-calendar"></i> {{ formatDate(club.creationDate) }}
+          </span>
+          <span *ngIf="club.membersCount !== undefined">
+            <i class="bi bi-people"></i> {{ club.membersCount }} membres
+          </span>
+        </div>
+
+        <button (click)="openEnrollmentModal(club)" class="club-button">
+          S'inscrire
+        </button>
       </div>
     </div>
+  </div>
+
+  <!-- No clubs message -->
+  <div *ngIf="!loading && filteredClubs.length === 0 && !error" class="no-clubs">
+    <div class="no-clubs-icon">🏛️</div>
+    <h3>Aucun club disponible pour le moment</h3>
+    <p *ngIf="searchTerm">Aucun résultat pour "{{ searchTerm }}"</p>
   </div>
 </div>
 
 <!-- Enrollment Modal -->
-<div *ngIf="showEnrollmentModal" class="modal-backdrop fade show"></div>
-<div *ngIf="showEnrollmentModal" class="modal fade show d-block">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Inscription à {{selectedClub?.name}}</h5>
-        <button type="button" class="btn-close" (click)="showEnrollmentModal = false"></button>
+<div *ngIf="showEnrollmentModal" class="modal-overlay" (click)="showEnrollmentModal = false"></div>
+<div *ngIf="showEnrollmentModal" class="modal-container">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3 class="modal-title">Inscription à {{selectedClub?.name}}</h3>
+      <button class="modal-close" (click)="showEnrollmentModal = false">&times;</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="formSubmissionError" class="error-message">
+        {{ formSubmissionError }}
       </div>
-      
-      <div class="modal-body">
-        <div *ngIf="formSubmissionError" class="alert alert-danger mb-3">
-          {{ formSubmissionError }}
-        </div>
-        
-        <form #enrollmentForm="ngForm" (ngSubmit)="submitEnrollment(enrollmentForm)">
-          <input type="hidden" [(ngModel)]="enrollmentData.clubId" name="clubId">
-          
-          <div class="row g-3">
-            <div class="col-md-6">
-              <label for="nom" class="form-label">Nom</label>
-              <input type="text" class="form-control" id="nom"
-                     [(ngModel)]="enrollmentData.nom" 
-                     name="nom"
-                     #nom="ngModel"
-                     required>
-              <div *ngIf="nom.invalid && (nom.dirty || nom.touched)" class="text-danger small">
-                Le nom est requis
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <label for="prenom" class="form-label">Prénom</label>
-              <input type="text" class="form-control" id="prenom"
-                     [(ngModel)]="enrollmentData.prenom"
-                     name="prenom"
-                     #prenom="ngModel"
-                     required>
-              <div *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)" class="text-danger small">
-                Le prénom est requis
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <label for="dateNaissance" class="form-label">Date de naissance</label>
-              <input type="date" class="form-control" id="dateNaissance"
-                     [(ngModel)]="enrollmentData.dateNaissance"
-                     name="dateNaissance"
-                     #dateNaissance="ngModel"
-                     required>
-              <div *ngIf="dateNaissance.invalid && (dateNaissance.dirty || dateNaissance.touched)" class="text-danger small">
-                La date de naissance est requise
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email"
-                     [(ngModel)]="enrollmentData.email"
-                     name="email"
-                     #email="ngModel"
-                     required email>
-              <div *ngIf="email.invalid && (email.dirty || email.touched)" class="text-danger small">
-                Un email valide est requis
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <label for="numeroTelephone" class="form-label">Téléphone</label>
-              <input type="tel" class="form-control" id="numeroTelephone"
-                     [(ngModel)]="enrollmentData.numeroTelephone"
-                     name="numeroTelephone"
-                     #phone="ngModel"
-                     required>
-              <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="text-danger small">
-                Le numéro de téléphone est requis
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <label for="niveauEtude" class="form-label">Niveau d'étude</label>
-              <select id="niveauEtude" class="form-select"
-                      [(ngModel)]="enrollmentData.niveauEtude"
-                      name="niveauEtude"
-                      #niveauEtude="ngModel"
-                      required>
-                <option value="" disabled selected>Sélectionnez votre niveau</option>
-                <option value="1ere">1ère année</option>
-                <option value="2eme">2ème année</option>
-                <option value="3eme">3ème année</option>
-              </select>
-              <div *ngIf="niveauEtude.invalid && (niveauEtude.dirty || niveauEtude.touched)" class="text-danger small">
-                Le niveau d'étude est requis
-              </div>
-            </div>
-            
-            <div class="col-md-6">
-              <label for="departementEtude" class="form-label">Département d'étude</label>
-              <select id="departementEtude" class="form-select"
-                      [(ngModel)]="enrollmentData.departementEtude"
-                      name="departementEtude"
-                      #departementEtude="ngModel"
-                      required>
-                <option value="" disabled selected>Sélectionnez votre département</option>
-                <option value="informatique">Informatique</option>
-                <option value="mecatronique">Mécatronique</option>
-                <option value="industriel">Industriel</option>
-              </select>
-              <div *ngIf="departementEtude.invalid && (departementEtude.dirty || departementEtude.touched)" class="text-danger small">
-                Le département d'étude est requis
-              </div>
-            </div>
-            
-            <div class="col-12">
-              <label for="messageMotivation" class="form-label">Motivation (optionnel)</label>
-              <textarea id="messageMotivation" class="form-control"
-                        [(ngModel)]="enrollmentData.messageMotivation"
-                        name="messageMotivation"
-                        rows="4"></textarea>
+
+      <form #enrollmentForm="ngForm" (ngSubmit)="submitEnrollment(enrollmentForm)">
+        <input type="hidden" [(ngModel)]="enrollmentData.clubId" name="clubId">
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" id="nom"
+                   [(ngModel)]="enrollmentData.nom"
+                   name="nom"
+                   #nom="ngModel"
+                   required>
+            <div *ngIf="nom.invalid && (nom.dirty || nom.touched)" class="error-text">
+              Le nom est requis
             </div>
           </div>
 
-          <div class="modal-footer mt-4">
-            <button type="button" class="btn btn-outline-secondary" (click)="showEnrollmentModal = false">
-              Annuler
-            </button>
-            <button type="submit" class="btn btn-primary" [disabled]="enrollmentForm.invalid">
-              Soumettre l'inscription
-            </button>
+          <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" id="prenom"
+                   [(ngModel)]="enrollmentData.prenom"
+                   name="prenom"
+                   #prenom="ngModel"
+                   required>
+            <div *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)" class="error-text">
+              Le prénom est requis
+            </div>
           </div>
-        </form>
-      </div>
+
+          <div class="form-group">
+            <label for="dateNaissance">Date de naissance</label>
+            <input type="date" id="dateNaissance"
+                   [(ngModel)]="enrollmentData.dateNaissance"
+                   name="dateNaissance"
+                   #dateNaissance="ngModel"
+                   required>
+            <div *ngIf="dateNaissance.invalid && (dateNaissance.dirty || dateNaissance.touched)" class="error-text">
+              La date de naissance est requise
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email"
+                   [(ngModel)]="enrollmentData.email"
+                   name="email"
+                   #email="ngModel"
+                   required email>
+            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-text">
+              Un email valide est requis
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="numeroTelephone">Téléphone</label>
+            <input type="tel" id="numeroTelephone"
+                   [(ngModel)]="enrollmentData.numeroTelephone"
+                   name="numeroTelephone"
+                   #phone="ngModel"
+                   required>
+            <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="error-text">
+              Le numéro de téléphone est requis
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="niveauEtude">Niveau d'étude</label>
+            <select id="niveauEtude"
+                    [(ngModel)]="enrollmentData.niveauEtude"
+                    name="niveauEtude"
+                    #niveauEtude="ngModel"
+                    required>
+              <option value="" disabled selected>Sélectionnez votre niveau</option>
+              <option value="1ere">1ère année</option>
+              <option value="2eme">2ème année</option>
+              <option value="3eme">3ème année</option>
+            </select>
+            <div *ngIf="niveauEtude.invalid && (niveauEtude.dirty || niveauEtude.touched)" class="error-text">
+              Le niveau d'étude est requis
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="departementEtude">Département d'étude</label>
+            <select id="departementEtude"
+                    [(ngModel)]="enrollmentData.departementEtude"
+                    name="departementEtude"
+                    #departementEtude="ngModel"
+                    required>
+              <option value="" disabled selected>Sélectionnez votre département</option>
+              <option value="informatique">Informatique</option>
+              <option value="mecatronique">Mécatronique</option>
+              <option value="industriel">Industriel</option>
+            </select>
+            <div *ngIf="departementEtude.invalid && (departementEtude.dirty || departementEtude.touched)" class="error-text">
+              Le département d'étude est requis
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="messageMotivation">Motivation (optionnel)</label>
+            <textarea id="messageMotivation"
+                      [(ngModel)]="enrollmentData.messageMotivation"
+                      name="messageMotivation"
+                      rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="cancel-button" (click)="showEnrollmentModal = false">
+            Annuler
+          </button>
+          <button type="submit" class="submit-button" [disabled]="enrollmentForm.invalid">
+            Soumettre l'inscription
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

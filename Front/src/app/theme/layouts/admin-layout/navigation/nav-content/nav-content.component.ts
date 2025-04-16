@@ -2,6 +2,7 @@
 import { Component, OnInit, inject, output } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { filterNavigationByRole } from '../navigation-filter';
 
 // project import
 import { NavigationItem, NavigationItems } from '../navigation';
@@ -22,11 +23,10 @@ import {
   BgColorsOutline,
   AntDesignOutline
 } from '@ant-design/icons-angular/icons';
-import { NgScrollbarModule } from 'ngx-scrollbar';
 
 @Component({
   selector: 'app-nav-content',
-  imports: [CommonModule, RouterModule, NavGroupComponent, NgScrollbarModule],
+  imports: [CommonModule, RouterModule, NavGroupComponent],
   templateUrl: './nav-content.component.html',
   styleUrls: ['./nav-content.component.scss']
 })
@@ -67,10 +67,20 @@ export class NavContentComponent implements OnInit {
 
   // Life cycle events
   ngOnInit() {
-    if (this.windowWidth < 1025) {
-      (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+   
+    
+      // 1. Récupérer le rôle depuis le localStorage
+      const userRole = this.getUserRoleFromStorage();
+      
+      // 2. Filtrer les items de navigation
+      this.navigations = filterNavigationByRole(NavigationItems, [userRole]);
+      
+      // 3. Gestion responsive
+      if (this.windowWidth < 1025) {
+        (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+      }
     }
-  }
+  
 
   fireOutClick() {
     let current_url = this.location.path();
@@ -96,6 +106,13 @@ export class NavContentComponent implements OnInit {
       }
     }
   }
+  private getUserRoleFromStorage(): string {
+    // Méthode 1: Si le rôle est stocké directement
+    const role = localStorage.getItem('role');
+    
+      return role.toUpperCase(); // Standardise en majuscules
+    }
+  
 
   navMob() {
     if (this.windowWidth < 1025 && document.querySelector('app-navigation.coded-navbar').classList.contains('mob-open')) {

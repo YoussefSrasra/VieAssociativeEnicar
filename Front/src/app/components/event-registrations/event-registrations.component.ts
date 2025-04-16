@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { FormsModule } from '@angular/forms';
 import { ParticipantService } from '../../services/participant.service';
+import { MailService } from '../../services/mail.service';
 
 @Component({
   selector: 'app-event-registrations',
@@ -21,8 +22,14 @@ export class EventRegistrationsComponent implements OnInit {
   participants: any[] = []; // Ajout de cette propriété
    filteredMembers: any[] = [];  // Membres uniquement
   filteredResponsibles: any[] = [];  // Responsables uniquement
-
-  constructor(private participantService: ParticipantService) {}
+  formVisible = false;
+  formData = {
+    nom: '',
+    prenom: '',
+    comite: ''
+  };
+  availableComites: string[] = ['Comité A', 'Comité B', 'Comité C']; // Liste de comités disponibles
+  constructor(private participantService: ParticipantService , private mailService: MailService) {}
 
   ngOnInit(): void {
     this.loadEvents();
@@ -41,7 +48,16 @@ export class EventRegistrationsComponent implements OnInit {
       }
     });
   }
-
+  generateFormForParticipant(participant: any): void {
+    if (participant.participationType === 'Responsable') {
+      // Logique pour générer un formulaire pour le responsable
+      console.log(`Générer le formulaire pour ${participant.nom} ${participant.prenom}`);
+      // Vous pouvez ouvrir un modal ou une nouvelle page avec un formulaire
+      // par exemple : this.openFormModal(participant);
+    } else {
+      alert('Seuls les responsables peuvent générer un formulaire');
+    }
+  }
   selectEvent(event: any): void {
     this.selectedEvent = event;
     this.isLoading = true;
@@ -155,4 +171,19 @@ export class EventRegistrationsComponent implements OnInit {
       this.selectEvent(this.selectedEvent);
     }
   }
+
+  generateFormForResponsible(participant: any): void {
+    if (participant.participationType === 'Responsable') {
+      this.formVisible = true;
+      this.formData.nom = participant.nom;
+      this.formData.prenom = participant.prenom;
+    }
+  }
+  submitForm(): void {
+    const formDetails = {
+      ...this.formData,
+      email: 'email@responsable.com' // L'email doit être pris dynamiquement
+
+  }
+}
 }
