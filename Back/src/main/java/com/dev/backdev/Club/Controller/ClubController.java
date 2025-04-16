@@ -2,6 +2,7 @@ package com.dev.backdev.Club.Controller;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class ClubController {
     private ClubService clubService;
 
     @PostMapping
-    public Club createClub(@RequestBody Club club) {
+    public ClubDTO createClub(@RequestBody Club club) {
         return clubService.createClub(club);
     }
 
@@ -58,4 +59,26 @@ public class ClubController {
         Optional<ClubDTO> club = clubService.getClubByName(name);
         return club.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping("/{name}/members")
+    public ResponseEntity<ClubDTO> assignMembersToClub(
+            @PathVariable String name,
+            @RequestBody Set<String> usernames) {
+        ClubDTO updatedClub = clubService.assignMembersToClub(name, usernames);
+        return ResponseEntity.ok(updatedClub);
+    }
+
+    @DeleteMapping("/{name}/members")
+    public ResponseEntity<ClubDTO> removeMembersFromClub(
+            @PathVariable String  name,
+            @RequestBody Set<String> usernames) {
+        ClubDTO updatedClub = clubService.removeMembersFromClub(name, usernames);
+        return ResponseEntity.ok(updatedClub);
+    }
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<ClubDTO>> getClubsByUser(@PathVariable String username) {
+        List<ClubDTO> clubs = clubService.getClubsByUserName(username);
+        return ResponseEntity.ok(clubs);
+}
 }

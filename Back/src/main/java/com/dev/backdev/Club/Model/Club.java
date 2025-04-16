@@ -1,19 +1,19 @@
 package com.dev.backdev.Club.Model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.dev.backdev.Auth.model.User;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
 import jakarta.persistence.Lob;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -34,8 +34,13 @@ public class Club {
     @JoinColumn(name = "responsible_member_id", referencedColumnName = "id")
     private User responsibleMember;
 
-    @OneToMany(mappedBy = "club", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> members = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(
+        name = "club_members",
+        joinColumns = @JoinColumn(name = "club_id"),
+        inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> members = new HashSet<>(); // Regular members
 
     
 
@@ -95,16 +100,35 @@ public class Club {
         return responsibleMember;
     }
 
-    public void setResponsibleMember(User responsibleMember) {
-        this.responsibleMember = responsibleMember;
+    public void setResponsibleMember(User user) {
+        this.responsibleMember = user;
+        // Automatically add as member if not already
+        if (!this.members.contains(user)) {
+            this.members.add(user);
+            user.getMemberClubs().add(this);
+        }
     }
 
-    public List<User> getMembers() {
+    // Helper method to add member
+    public void addMember(User user) {
+        if (!this.members.contains(user)) {
+            this.members.add(user);
+            user.getMemberClubs().add(this);
+        }
+    }
+
+    // Helper method to remove member
+    public void removeMember(User user) {
+        // Can't remove if they're the manager
+        if (this.responsibleMember != null && 
+            this.responsibleMember.getId().equals(user.getId())) {
+            throw new IllegalStateException("Cannot remove club manager. Change manager first.");
+        }
+        this.members.remove(user);
+        user.getMemberClubs().remove(this);
+    }
+    public Set<User> getMembers() {
         return members;
-    }
-
-    public void setMembers(List<User> members) {
-        this.members = members;
     }
     
 
