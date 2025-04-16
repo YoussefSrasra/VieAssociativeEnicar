@@ -41,7 +41,7 @@ export const NavigationItems: NavigationItem[] = [
 
   {
     id: 'utilities',
-    title: 'UI Components',
+    title: '',
     type: 'group',
     icon: 'icon-navigation',
    
@@ -114,7 +114,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'demande evenet  ',
-        title: 'demandes evenement ',
+        title: 'Demandes evenement ',
         type: 'item',
         classes: 'nav-item',
         url: '/event-requests',
@@ -141,7 +141,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'list partnerships  ',
-        title: 'liste des partneraires ',
+        title: 'Liste des partneraires ',
         type: 'item',
         classes: 'nav-item',
         url: '/partnership-list',
@@ -150,7 +150,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'contacts-urgence  ',
-        title: 'contacts-urgence ',
+        title: 'Contacts-urgence ',
         type: 'item',
         classes: 'nav-item',
         url: '/contacts-urgence',
@@ -168,7 +168,7 @@ export const NavigationItems: NavigationItem[] = [
       },
       {
         id: 'feedback-list  ',
-        title: 'feedback-list ',
+        title: 'Feedback-list ',
         type: 'item',
         classes: 'nav-item',
         url: '/feedbacks',
