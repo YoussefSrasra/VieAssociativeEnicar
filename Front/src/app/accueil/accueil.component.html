@@ -18,13 +18,13 @@
                     <img class="imglogo" src="assets/images/logo.png" alt="ClubSphere Logo" />
                 </a>
 
-                <nav id="navmenu" class="navmenu">
-                    <ul>
-                        <li><a href="#hero" class="active">Accueil</a></li>
-                        <li><a href="#about">À propos</a></li>
-                        <li><a href="#services">Clubs</a></li>
-                        <li><a routerLink="/login">Connexion</a></li>
-                    </ul>
+                <nav class="navmenu">
+                  <ul>
+                    <li><a (click)="scrollTo('hero')" [class.active]="activeSection === 'hero'">Accueil</a></li>
+                    <li><a (click)="scrollTo('about')" [class.active]="activeSection === 'about'">À propos</a></li>
+                    <li><a (click)="scrollTo('services')" [class.active]="activeSection === 'services'">Clubs</a></li>
+                    <li><a routerLink="/login">Connexion</a></li>
+                  </ul>
                 </nav>
             </div>
         </div>
@@ -47,119 +47,7 @@
   </div>
 </section>
 
-<style>
-/* Styles pour la section Hero améliorée */
 
-
-.hero {
-  position: relative;
-  height: 80vh;
-  min-height: 500px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
-}
-
-.hero-image-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.hero-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  padding: 20px;
-}
-
-.welcome h2 {
-  /* ... autres propriétés ... */
-  background: linear-gradient(to right, #ffffff, #c9e6ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: none; /* A supprimer si on utilise le dégradé */
-}
-
-/* Option : Ajouter un effet de surlignage bleu */
-.welcome h2::after {
-  content: '';
-  position: absolute;
-  bottom: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 4px;
-  background: #3498db; /* Bleu ClubSphere */
-  border-radius: 2px;
-}
-
-.hero-subtitle {
-  font-size: 1.5rem;
-  margin-bottom: 30px;
-  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-  color: rgba(255, 255, 255, 0.9); /* Nouvelle propriété ajoutée */
-  font-weight: 300; /* Style plus léger pour le sous-titre */
-  letter-spacing: 0.5px; /* Espacement des lettres subtil */
-}
-.hero-button {
-  display: inline-block;
-  padding: 12px 30px;
-  background-color: #3498db;
-  color: white;
-  border-radius: 50px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  transition: all 0.3s ease;
-  border: 2px solid #3498db;
-}
-
-.hero-button:hover {
-  background-color: transparent;
-  color: white;
-  border-color: white;
-  transform: translateY(-3px);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .hero {
-      height: 60vh;
-  }
-
-  .welcome h2 {
-      font-size: 2.5rem;
-  }
-
-  .hero-subtitle {
-      font-size: 1.2rem;
-  }
-}
-</style>
         <!-- About Section -->
         <section id="about" class="about-section">
           <div class="container">

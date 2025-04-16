@@ -17,18 +17,31 @@ export class CreationClubComponent {
     niveau: '',
     nomClub: '',
     description: '',
-    logoBase64: '' // Nouveau champ pour stocker l'image en base64
+    logoBase64: '' 
   };
 
   constructor(private demandeClubService: DemandeClubService) {}
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
+    
     if (file) {
+      // Vérification de la taille (1MB max)
+      if (file.size > 1048576) {
+        alert('Le fichier est trop volumineux (max 1MB)');
+        return;
+      }
+      
+      // Vérification du type (image seulement)
+      if (!file.type.match(/image\/*/)) {
+        alert('Seules les images sont acceptées');
+        return;
+      }
+
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        // Lorsque la lecture est terminée, stocker le résultat en base64
-        this.demande.logoBase64 = e.target.result;
+      reader.onload = () => {
+        // Le résultat est une string base64
+        this.demande.logoBase64 = reader.result as string;
       };
       reader.readAsDataURL(file);
     }

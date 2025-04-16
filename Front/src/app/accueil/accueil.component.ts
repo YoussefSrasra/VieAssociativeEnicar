@@ -1,5 +1,5 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , HostListener  } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -17,11 +17,13 @@ import {ClubAccueilComponent} from 'src/app/clubaccueil/clubaccueil.component';
 
 @Component({
   selector: 'app-accueil',
-  imports: [RouterModule, CreationClubComponent, FormsModule,CommonModule,ClubAccueilComponent,FormsModule,MatToolbarModule,MatButtonModule,MatIconModule,MatMenuModule],
+  imports: [RouterModule, CreationClubComponent  , FormsModule,CommonModule,ClubAccueilComponent,FormsModule,MatToolbarModule,MatButtonModule,MatIconModule,MatMenuModule],
   templateUrl: './accueil.component.html',
   styleUrl: './accueil.component.scss'
 })
 export class AccueilComponent implements OnInit {
+  activeSection: string = 'hero'; // Section active par défaut
+
   latestEvent: any = null; // Remplacez upcomingEvents
   isLoading = true;
   formData: any = {};
@@ -31,6 +33,25 @@ export class AccueilComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadLatestEvent();
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    const sections = ['hero', 'about', 'services'];
+    const scrollPosition = window.scrollY + 100; // Ajustez (+100px pour la hauteur de la navbar)
+
+    for (const section of sections) {
+      const element = document.getElementById(section);
+      if (element) {
+        const offsetTop = element.offsetTop;
+        const offsetHeight = element.offsetHeight;
+
+        if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+          this.activeSection = section;
+          break;
+        }
+      }
+    }
   }
 
   loadLatestEvent(): void {
@@ -59,5 +80,12 @@ export class AccueilComponent implements OnInit {
       });
     }
   }
+  scrollTo(sectionId: string) {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
 
 }
