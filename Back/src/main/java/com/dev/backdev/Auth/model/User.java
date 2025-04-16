@@ -1,5 +1,8 @@
 package com.dev.backdev.Auth.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Enums.Filiere;
 import com.dev.backdev.Enums.Formation;
@@ -11,8 +14,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -46,9 +48,8 @@ public class User {
     @OneToOne(mappedBy = "responsibleMember")
     private Club responsibleClub;
 
-    @ManyToOne
-    @JoinColumn(name = "club_id")
-    private Club club;
+    @ManyToMany(mappedBy = "members")  // Inverse side of the relationship
+    private Set<Club> memberClubs = new HashSet<>();
 
 
     @Column(nullable = false)
@@ -99,12 +100,15 @@ public class User {
         this.responsibleClub = responsibleClub;
     }
 
-    public Club getClub() {
-        return club;
+    public void addMemberClub(Club club) {
+        this.memberClubs.add(club);
+        club.getMembers().add(this);
     }
 
-    public void setClub(Club club) {
-        this.club = club;
+    // Helper method to remove membership
+    public void removeMemberClub(Club club) {
+        this.memberClubs.remove(club);
+        club.getMembers().remove(this);
     }
     public String getNom() {
         return nom;
