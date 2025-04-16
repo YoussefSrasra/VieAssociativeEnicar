@@ -11,7 +11,7 @@ interface Club {
   name: string;
   specialty: string;
   description?: string;
-  status?: string;
+  status: string;
   logo?: string;
   creationDate?: Date;
   membersCount?: number;
@@ -87,36 +87,24 @@ export class ClubAccueilComponent implements OnInit {
     ).subscribe({
       next: (data) => {
         this.clubs = data as Club[];
-        // Option: Transformez les logos si nécessaire
-        // this.clubs = this.clubs.map(club => ({
-        //   ...club,
-        //   logo: this.processLogo(club.logo)
-        // }));
       }
     });
   }
 
-  processLogo(logo: string | undefined): string | undefined {
-    if (!logo) return undefined;
-    
-    // Si le logo ne commence pas par 'data:image', on ajoute le préfixe
-    if (logo && !logo.startsWith('data:image')) {
-      return `data:image/jpeg;base64,${logo}`;
-    }
-    return logo;
-  }
-
   filterAndSortClubs(): void {
-    // Filtrage
-    this.filteredClubs = this.searchTerm 
-      ? this.clubs.filter(club => 
-          club.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          (club.specialty && club.specialty.toLowerCase().includes(this.searchTerm.toLowerCase()))
-        )
-      : [...this.clubs];
+    // Filtrage initial par statut "active"
+    let filtered = this.clubs.filter(club => club.status === 'active');
+
+    // Filtrage par recherche si terme saisi
+    if (this.searchTerm) {
+      filtered = filtered.filter(club => 
+        club.name.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+        (club.specialty && club.specialty.toLowerCase().includes(this.searchTerm.toLowerCase()))
+      );
+    }
 
     // Tri
-    this.filteredClubs.sort((a, b) => {
+    filtered.sort((a, b) => {
       let comparison = 0;
       const valA = a[this.currentSort as keyof Club];
       const valB = b[this.currentSort as keyof Club];
@@ -131,6 +119,8 @@ export class ClubAccueilComponent implements OnInit {
 
       return this.sortDirection === 'asc' ? comparison : -comparison;
     });
+
+    this.filteredClubs = filtered;
   }
 
   onSearchChange(): void {
@@ -171,9 +161,6 @@ export class ClubAccueilComponent implements OnInit {
           console.log('Inscription réussie:', response);
           this.showEnrollmentModal = false;
           form.resetForm();
-          
-          // Option: Afficher un message de succès
-          // this.showSuccessMessage('Inscription réussie!');
         },
         error: (err) => {
           console.error('Erreur lors de l\'inscription:', err);
@@ -197,7 +184,6 @@ export class ClubAccueilComponent implements OnInit {
     return this.sanitizer.bypassSecurityTrustUrl(logo);
   }
 
-  // Méthode pour formater la date si nécessaire
   formatDate(date: Date | string | undefined): string {
     if (!date) return '';
     

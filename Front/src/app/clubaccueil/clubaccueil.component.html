@@ -3,7 +3,7 @@
   <div *ngIf="error" class="error-message">
     <div class="error-icon">⚠️</div>
     <div class="error-text">{{ error }}</div>
-    <button type="button" class="error-close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
+    <button type="button" class="error-close" (click)="error = null">&times;</button>
   </div>
 
   <!-- Loading indicator -->
@@ -12,26 +12,47 @@
     <span>Chargement en cours...</span>
   </div>
 
+  <!-- Search and sort controls -->
+  <div *ngIf="!loading" class="controls">
+    <div class="search-box">
+      <input type="text" [(ngModel)]="searchTerm" 
+             (input)="onSearchChange()" 
+             placeholder="Rechercher un club...">
+    </div>
+    
+   
+  </div>
+
   <!-- Clubs grid -->
   <div *ngIf="!loading" class="clubs-grid">
-    <div *ngFor="let club of clubs" class="club-card">
-      <!-- Club header with accent color -->
+    <div *ngFor="let club of filteredClubs" class="club-card">
       <div class="club-header"></div>
 
       <div class="club-content">
-        <!-- Club icon -->
         <div class="club-icon">
           <ng-container *ngIf="club.logo; else defaultIcon">
-            <img [src]="club.logo" alt="Logo {{club.name}}" class="club-logo">
+            <img [src]="getSanitizedLogo(club.logo)" alt="Logo {{club.name}}" class="club-logo">
           </ng-container>
           <ng-template #defaultIcon>
             <i class="bi bi-people-fill"></i>
           </ng-template>
         </div>
 
-        <!-- Club info -->
         <h3 class="club-name">{{ club.name }}</h3>
         <div class="club-specialty">{{ club.specialty }}</div>
+        
+        <div *ngIf="club.description" class="club-description">
+          {{ club.description }}
+        </div>
+
+        <div class="club-meta">
+          <span *ngIf="club.creationDate">
+            <i class="bi bi-calendar"></i> {{ formatDate(club.creationDate) }}
+          </span>
+          <span *ngIf="club.membersCount !== undefined">
+            <i class="bi bi-people"></i> {{ club.membersCount }} membres
+          </span>
+        </div>
 
         <button (click)="openEnrollmentModal(club)" class="club-button">
           S'inscrire
@@ -41,14 +62,15 @@
   </div>
 
   <!-- No clubs message -->
-  <div *ngIf="!loading && clubs.length === 0 && !error" class="no-clubs">
+  <div *ngIf="!loading && filteredClubs.length === 0 && !error" class="no-clubs">
     <div class="no-clubs-icon">🏛️</div>
     <h3>Aucun club disponible pour le moment</h3>
+    <p *ngIf="searchTerm">Aucun résultat pour "{{ searchTerm }}"</p>
   </div>
 </div>
 
 <!-- Enrollment Modal -->
-<div *ngIf="showEnrollmentModal" class="modal-overlay"></div>
+<div *ngIf="showEnrollmentModal" class="modal-overlay" (click)="showEnrollmentModal = false"></div>
 <div *ngIf="showEnrollmentModal" class="modal-container">
   <div class="modal-content">
     <div class="modal-header">
@@ -180,4 +202,3 @@
     </div>
   </div>
 </div>
-
