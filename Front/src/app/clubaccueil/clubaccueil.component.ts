@@ -37,6 +37,9 @@ interface EnrollmentData {
   imports: [CommonModule, FormsModule]
 })
 export class ClubAccueilComponent implements OnInit {
+  showSuccessMessage = false;
+  successMessage = '';
+
   clubs: Club[] = [];
   filteredClubs: Club[] = [];
   loading = true;
