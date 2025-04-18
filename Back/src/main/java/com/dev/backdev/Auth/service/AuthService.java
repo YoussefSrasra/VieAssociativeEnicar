@@ -1,8 +1,10 @@
     package com.dev.backdev.Auth.service;
 
+    import java.util.HashSet;
     import java.util.List;
     import java.util.Optional;
-    import java.util.stream.Collectors;
+import java.util.Set;
+import java.util.stream.Collectors;
 
     import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
@@ -36,11 +38,14 @@
         }
 
         public User registerUser(UserRegistrationDTO userDto) {
-            // 1. Find the club by name
-            Club club = clubRepository.findByName(userDto.getClub().getName())
-                .orElseThrow(() -> new RuntimeException("Club not found"));
-
-            // 2. Create and save the user
+            // Find all clubs the user should be member of
+            Set<Club> memberClubs = userDto.getMemberClubNames().stream()
+                .map(clubName -> clubRepository.findByName(clubName))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toSet());
+            
+            // Create and save the user
             User user = new User();
             user.setUsername(userDto.getUsername());
             user.setPassword(passwordEncoder.encode("changeme"));
@@ -54,39 +59,51 @@
             user.setSexe(userDto.getSexe());
             user.setFormation(userDto.getFormation());
             user.setPhoto(userDto.getPhoto());
-            user.setClub(club); // Assign the fetched club
-
+            
+            // Set club memberships
+            memberClubs.forEach(user::addMemberClub);
+    
             emailService.sendCredentials(
                 user.getEmail(),
                 userDto.getUsername(),
-                user.getPassword() // Raw password (will be sent via email)
+                "changeme" // Send the initial password
             );
-
+    
             return userRepository.save(user);
         }
         public void deleteUser(Long userId) {
             User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            // Handle club relationships if needed
-            if (user.getResponsibleClub() != null) {
-                throw new RuntimeException("Cannot delete a club manager. Reassign club first.");
+            // Check if user is responsible for any club
+            Optional<Club> managedClub = clubRepository.findByResponsibleMember(user);
+            if (managedClub.isPresent()) {
+                throw new IllegalStateException(
+                    "Cannot delete user because they are responsible for club: " + 
+                    managedClub.get().getName() + 
+                    ". Please reassign a new manager first."
+                );
             }
             
             userRepository.delete(user);
         }
+        
         public void deleteUser(String username) {
             User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            // Handle club relationships if needed
-            if (user.getResponsibleClub() != null) {
-                throw new RuntimeException("Cannot delete a club manager. Reassign club first.");
+            // Check if user is responsible for any club
+            Optional<Club> managedClub = clubRepository.findByResponsibleMember(user);
+            if (managedClub.isPresent()) {
+                throw new IllegalStateException(
+                    "Cannot delete user because they are responsible for club: " + 
+                    managedClub.get().getName() + 
+                    ". Please reassign a new manager first."
+                );
             }
             
             userRepository.delete(user);
         }
-
         public List<UserResponseDto> getAllUsers() {
             List<User> users = userRepository.findAll();
             return users.stream()
@@ -104,10 +121,18 @@
 
         // 3. Get users by club name
         public List<UserResponseDto> getUsersByClubName(String clubName) {
-            List<User> users = userRepository.findByClub_Name(clubName);
-            return users.stream()
-                .map(this::convertToUserResponseDTO)
-                .collect(Collectors.toList());
+            Club club = clubRepository.findByName(clubName)
+            .orElseThrow(() -> new RuntimeException("Club not found"));
+        
+        // Get both members and manager (if exists)
+        Set<User> clubUsers = new HashSet<>(club.getMembers());
+        if (club.getResponsibleMember() != null) {
+            clubUsers.add(club.getResponsibleMember());
+        }
+        
+        return clubUsers.stream()
+            .map(this::convertToUserResponseDTO)
+            .collect(Collectors.toList());
         }
 
         // 4. Get user by username
@@ -117,7 +142,6 @@
         }
 
         private UserResponseDto convertToUserResponseDTO(User user) {
-            String clubName = (user.getClub() != null) ? user.getClub().getName() : null;
             
             return new UserResponseDto(user);
         }
@@ -164,15 +188,36 @@
             
 
             // Update club (if provided)
-            if (updateDTO.getClubName() != null) {
-                Club club = clubRepository.findByName(updateDTO.getClubName())
-                    .orElseThrow(() -> new RuntimeException("Club not found"));
-                user.setClub(club);
+            if (updateDTO.getMemberClubNames() != null) {
+                updateClubMemberships(user, updateDTO.getMemberClubNames());
             }
 
             User savedUser = userRepository.save(user);
             return new UserResponseDto(savedUser); // Converts to DTO
         }
+
+        private void updateClubMemberships(User user, Set<String> newClubNames) {
+            // Get current clubs
+            Set<Club> currentClubs = user.getMemberClubs();
+            
+            // Find clubs to add
+            Set<Club> clubsToAdd = newClubNames.stream()
+                .map(clubName -> clubRepository.findByName(clubName))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(club -> !currentClubs.contains(club))
+                .collect(Collectors.toSet());
+            
+            // Find clubs to remove
+            Set<Club> clubsToRemove = currentClubs.stream()
+                .filter(club -> !newClubNames.contains(club.getName()))
+                .collect(Collectors.toSet());
+            
+            // Apply changes
+            clubsToAdd.forEach(user::addMemberClub);
+            clubsToRemove.forEach(user::removeMemberClub);
+        }
+    
 
         public User completeProfile(String username, ProfileCompletionDTO dto) {
             // 1. Find user
