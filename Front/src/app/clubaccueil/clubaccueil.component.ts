@@ -158,11 +158,16 @@ export class ClubAccueilComponent implements OnInit {
   }
 
   submitEnrollment(form: NgForm): void {
-    if (form.valid) {
+    if (form.valid ) {
       this.enrollService.createEnrollment(this.enrollmentData).subscribe({
         next: (response) => {
           console.log('Inscription réussie:', response);
-          this.showEnrollmentModal = false;
+          this.showSuccessMessage = true;
+          this.successMessage = 'Candidature envoyée avec succès!';
+          setTimeout(() => {
+            this.showSuccessMessage = false;
+            this.showEnrollmentModal = false;
+          }, 3000);
           form.resetForm();
         },
         error: (err) => {

@@ -188,6 +188,49 @@ export const NavigationItems: NavigationItem[] = [
 
     ]
   },
+  {
+    id: 'club',
+    title: 'Club',
+    type: 'collapse', // Utilisez 'collapse' pour permettre l'expansion/contraction
+    icon: 'icon-star', // Choisissez une icône appropriée
+    children: [
+      {
+        id: 'club-management',
+        title: 'Gestion du Club',
+        type: 'item',
+        url: '/club/management',
+        roles: ['MANAGER', 'ADMIN']
+      },
+      {
+        id: 'club-events',
+        title: 'Événements du Club',
+        type: 'item',
+        url: '/club/events',
+        roles: ['MANAGER', 'MEMBER']
+      },
+      {
+        id: 'club-members',
+        title: 'Membres du Club',
+        type: 'item',
+        url: '/club/members',
+        roles: ['MANAGER']
+      },
+      {
+        id: 'club-activities',
+        title: 'Activités',
+        type: 'item',
+        url: '/club/activities',
+        roles: ['MANAGER', 'MEMBER']
+      },
+      {
+        id: 'club-settings',
+        title: 'Paramètres',
+        type: 'item',
+        url: '/club/settings',
+        roles: ['MANAGER']
+      }
+    ]
+  },
 
   {
     id: 'other',

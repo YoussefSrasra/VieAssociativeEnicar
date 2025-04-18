@@ -198,6 +198,11 @@
             Soumettre l'inscription
           </button>
         </div>
+        <!-- Success message -->
+<div *ngIf="showSuccessMessage" class="success-message">
+  <div class="success-icon">✓</div>
+  <div class="success-text">{{ successMessage }}</div>
+</div>
       </form>
     </div>
   </div>

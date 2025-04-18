@@ -1,12 +1,9 @@
-// Angular import
-import { Component, Input, output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-// project import
 import { NavigationItem } from '../../navigation';
-
 import { NavItemComponent } from '../nav-item/nav-item.component';
 import { IconDirective } from '@ant-design/icons-angular';
 
@@ -26,22 +23,17 @@ import { IconDirective } from '@ant-design/icons-angular';
   ]
 })
 export class NavCollapseComponent {
-  // public props
-
-  // Compact Menu in use For Sub Child Open in sidebar menu
-  showCollapseItem = output();
-
-  // all Version Get Item(Component Name Take)
+  // Public properties
   @Input() item!: NavigationItem;
+  @Output() showCollapseItem: EventEmitter<void> = new EventEmitter();  // Corrected Output
 
   windowWidth: number;
 
-  // Constructor
   constructor() {
     this.windowWidth = window.innerWidth;
   }
 
-  // public method
+  // Toggle collapse
   navCollapse(e: MouseEvent) {
     let parent = e.target as HTMLElement;
 
@@ -74,8 +66,8 @@ export class NavCollapseComponent {
     parent.classList.toggle('coded-trigger');
   }
 
-  // for Compact Menu
+  // For Compact Menu (emit event when collapse occurs)
   subMenuCollapse(item: void) {
-    this.showCollapseItem.emit(item);
+    this.showCollapseItem.emit(item);  // Emit event when collapse happens
   }
 }
