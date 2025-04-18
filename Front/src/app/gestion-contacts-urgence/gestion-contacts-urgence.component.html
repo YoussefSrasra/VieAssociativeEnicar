@@ -8,6 +8,7 @@
               <th scope="col">Nom du Manager</th>
               <th scope="col">Email</th>
               <th scope="col">Club</th>
+              <th scope="col">Statut du Club</th>
             </tr>
           </thead>
           <tbody>
@@ -15,6 +16,16 @@
               <td>{{ manager.username }}</td>
               <td>{{ manager.email }}</td>
               <td>{{ manager.clubName }}</td>
+              <td>
+                <span class="badge"
+                      [ngClass]="{
+                        'bg-success': manager.clubStatus === 'Actif',
+                        'bg-warning': manager.clubStatus === 'En attente',
+                        'bg-danger': manager.clubStatus === 'Inactif'
+                      }">
+                  {{ manager.clubStatus }}
+                </span>
+              </td>
             </tr>
           </tbody>
         </table>
