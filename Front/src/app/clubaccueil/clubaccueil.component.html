@@ -189,6 +189,10 @@
                       rows="4"></textarea>
           </div>
         </div>
+        <div *ngIf="showSuccessMessage" class="success-message">
+          <div class="success-icon">✓</div>
+          <div class="success-text">{{ successMessage }}</div>
+        </div>
 
         <div class="modal-footer">
           <button type="button" class="cancel-button" (click)="showEnrollmentModal = false">
@@ -199,10 +203,7 @@
           </button>
         </div>
         <!-- Success message -->
-<div *ngIf="showSuccessMessage" class="success-message">
-  <div class="success-icon">✓</div>
-  <div class="success-text">{{ successMessage }}</div>
-</div>
+
       </form>
     </div>
   </div>
