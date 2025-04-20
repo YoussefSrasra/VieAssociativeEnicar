@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { catchError, of, finalize } from 'rxjs';
+import { FormControl, Validators } from '@angular/forms';
 
 interface Club {
   id: number;
@@ -34,7 +35,7 @@ interface EnrollmentData {
   templateUrl: './clubaccueil.component.html',
   styleUrls: ['./clubaccueil.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule ]
 })
 export class ClubAccueilComponent implements OnInit {
   showSuccessMessage = false;
@@ -156,9 +157,8 @@ export class ClubAccueilComponent implements OnInit {
     this.showEnrollmentModal = true;
     this.formSubmissionError = null;
   }
-
   submitEnrollment(form: NgForm): void {
-    if (form.valid ) {
+    if (form.valid && this.isValidEnicarEmail(this.enrollmentData.email)) {
       this.enrollService.createEnrollment(this.enrollmentData).subscribe({
         next: (response) => {
           console.log('Inscription réussie:', response);
@@ -176,9 +176,16 @@ export class ClubAccueilComponent implements OnInit {
         }
       });
     } else {
-      this.formSubmissionError = 'Veuillez remplir tous les champs obligatoires correctement.';
+      this.formSubmissionError = this.enrollmentData.email && !this.isValidEnicarEmail(this.enrollmentData.email)
+        ? 'L\'email doit être de la forme nom.prenom@enicar.ucar.tn'
+        : 'Veuillez remplir tous les champs obligatoires correctement.';
       this.markFormAsTouched(form);
     }
+  }
+  
+  // Ajoutez cette méthode pour valider le domaine de l'email
+  isValidEnicarEmail(email: string): boolean {
+    return email?.endsWith('@enicar.ucar.tn') || false;
   }
 
   private markFormAsTouched(form: NgForm): void {
@@ -197,5 +204,14 @@ export class ClubAccueilComponent implements OnInit {
     
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return dateObj.toLocaleDateString('fr-FR');
+ 
   }
+  /*validateEnicarEmail(control: FormControl) {
+    const email = control.value;
+    if (email && !email.endsWith('@enicar.ucar.tn')) {
+      return { invalidEnicarEmail: true };
+    }
+    return null;
+  }*/
+  
 }

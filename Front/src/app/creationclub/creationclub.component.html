@@ -36,9 +36,12 @@
         <div class="form-row">
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Votre email ENICarthage" required
+            <input type="email" id="email" placeholder="nom.prenom@enicar.ucar.tn" required
                    [(ngModel)]="demande.email" name="email" class="form-input">
-          </div>
+                   <div *ngIf="emailError" class="error-message">
+                    {{ emailErrorMessage }}
+                  </div>
+                  </div>
           <div class="form-group">
             <label for="niveau">Niveau d'études</label>
             <select id="niveau" required [(ngModel)]="demande.niveau" name="niveau" class="form-select">
@@ -84,7 +87,19 @@
           <i class="bi bi-send-fill"></i>
           Envoyer la demande
         </button>
+
       </div>
+      <!-- Message d'erreur -->
+<div *ngIf="showError" class="alert alert-danger" role="alert">
+  {{ errorMessage }}
+  
+</div>
+
+<!-- Message de succès -->
+<div *ngIf="showSuccess" class="alert alert-success" role="alert">
+  {{ successMessage }}
+ 
+</div>
     </form>
   </div>
 </section>

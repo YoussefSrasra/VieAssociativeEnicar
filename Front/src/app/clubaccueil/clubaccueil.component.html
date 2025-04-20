@@ -129,9 +129,12 @@
                    [(ngModel)]="enrollmentData.email"
                    name="email"
                    #email="ngModel"
-                   required email>
+                   required email
+                   placeholder="nom.prenom@enicar.ucar.tn">
             <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-text">
-              Un email valide est requis
+              <span *ngIf="email.errors?.['required']">Un email est requis</span>
+             <!-- <span *ngIf="email.errors?.['email']">Format d'email invalide</span>-->
+           
             </div>
           </div>
 
@@ -175,6 +178,7 @@
               <option value="informatique">Informatique</option>
               <option value="mecatronique">Mécatronique</option>
               <option value="industriel">Industriel</option>
+              <option value="infotronique">infotronique</option>
             </select>
             <div *ngIf="departementEtude.invalid && (departementEtude.dirty || departementEtude.touched)" class="error-text">
               Le département d'étude est requis
