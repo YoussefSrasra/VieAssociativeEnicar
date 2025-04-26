@@ -194,9 +194,34 @@ export class ClubAccueilComponent implements OnInit {
     });
   }
 
-  getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
+  /*getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
     if (!logo) return undefined;
     return this.sanitizer.bypassSecurityTrustUrl(logo);
+  }*/
+    getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
+      if (!logo) return undefined;
+      
+      // Check if it's already a data URL
+      if (logo.startsWith('data:image')) {
+        return this.sanitizer.bypassSecurityTrustUrl(logo);
+      }
+      
+      // If it's a raw base64 string, construct the proper data URL
+      const mimeType = this.detectMimeType(logo);
+      const dataUrl = `data:${mimeType};base64,${logo}`;
+      return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
+  }
+  
+  private detectMimeType(base64: string): string {
+      // Simple detection - you might need to expand this based on your needs
+      const signature = base64.substring(0, 30);
+      if (signature.startsWith('/9j') || signature.includes('FFD8')) {
+          return 'image/jpeg';
+      } else if (signature.startsWith('iVBORw0KGgo')) {
+          return 'image/png';
+      }
+      // Default to png if unknown
+      return 'image/png';
   }
 
   formatDate(date: Date | string | undefined): string {
