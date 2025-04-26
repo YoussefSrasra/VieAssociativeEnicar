@@ -27,6 +27,7 @@ export class LoginService {
         // Stocke le token et le rôle
         localStorage.setItem('token', response.token);
         localStorage.setItem('role', response.role);
+        localStorage.setItem('username', username);
       })
     );
   }
@@ -34,6 +35,7 @@ export class LoginService {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('username');
     this.router.navigate(['/login']);
   }
 

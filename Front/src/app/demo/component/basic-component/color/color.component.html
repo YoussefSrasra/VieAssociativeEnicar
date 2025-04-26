@@ -1,1 +1,79 @@
-<p>works</p>
+<div class="container mt-4">
+  <h2>Membres du club</h2>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    Une erreur s'est produite lors du chargement des membres du club. Veuillez réessayer plus tard.
+  </div>
+
+  <div *ngIf="!loading && !error">
+    <div *ngIf="members.length === 0" class="alert alert-info">
+      Aucun membre trouvé dans ce club.
+    </div>
+
+    <div class="table-responsive" *ngIf="members.length > 0">
+      <table class="table table-striped table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>Photo</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let member of members">
+            <td>
+              <img *ngIf="member.photo" [src]="'data:image/jpeg;base64,' + member.photo" alt="Photo de profil" class="member-photo">
+              <div *ngIf="!member.photo" class="no-photo">
+                <i class="bi bi-person-circle"></i>
+              </div>
+            </td>
+            <td>{{ member.nom }}</td>
+            <td>{{ member.prenom }}</td>
+            <td>
+              <span class="badge" [ngClass]="{
+                'bg-primary': member.role === 'PRESIDENT',
+                'bg-secondary': member.role === 'VICE_PRESIDENT',
+                'bg-success': member.role === 'SECRETAIRE',
+                'bg-info': member.role === 'TREASORIER',
+                'bg-warning': member.role === 'MEMBRE'
+              }">
+                {{ member.role }}
+              </span>
+            </td>
+            <td class="text-end">
+              <div class="d-flex justify-content-end gap-2 position-relative">
+                <button class="btn btn-sm btn-outline-primary" (click)="toggleDropdown(member)">
+                  <i class="bi bi-pencil"></i> Modifier rôle
+                </button>
+
+                <button class="btn btn-sm btn-outline-danger" (click)="removeMember(member)">
+                  <i class="bi bi-trash"></i> Retirer
+                </button>
+
+                <!-- Menu déroulant -->
+                <div *ngIf="member.id === activeDropdownMemberId" class="dropdown-menu show p-3" style="display: block; position: absolute; top: 100%; right: 0; z-index: 1000;">
+                  <select class="form-select mb-2" [(ngModel)]="selectedRole">
+                    <option *ngFor="let roleOption of availableRoles" [value]="roleOption">{{ roleOption }}</option>
+                  </select>
+                  <div class="d-flex justify-content-end gap-2 mt-2">
+                    <button class="btn btn-sm btn-secondary" (click)="closeDropdown()">Annuler</button>
+                    <button class="btn btn-sm btn-primary" (click)="confirmRoleChange(member)">Valider</button>
+                  </div>
+                </div>
+
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,12 +1,12 @@
     package com.dev.backdev.Auth.service;
 
-    import java.util.HashSet;
     import java.util.List;
     import java.util.Optional;
-import java.util.Set;
+    import java.util.Set;
 import java.util.stream.Collectors;
 
-    import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
 
     import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
@@ -15,9 +15,15 @@ import java.util.stream.Collectors;
     import com.dev.backdev.Auth.dto.UserUpdateDTO;
     import com.dev.backdev.Auth.model.User;
     import com.dev.backdev.Auth.repository.UserRepository;
-    import com.dev.backdev.Club.Model.Club;
-    import com.dev.backdev.Club.Repository.ClubRepository;
-    import com.dev.backdev.Email.EmailService;
+import com.dev.backdev.Auth.util.JwtUtil;
+import com.dev.backdev.Club.Model.Club;
+    import com.dev.backdev.Club.Model.ClubMembership;
+import com.dev.backdev.Club.Repository.ClubMembershipRepository;
+import com.dev.backdev.Club.Repository.ClubRepository;
+import com.dev.backdev.Email.EmailService;
+    import com.dev.backdev.Enums.ClubRole;
+
+import jakarta.transaction.Transactional;
 
 
     @Service
@@ -26,10 +32,14 @@ import java.util.stream.Collectors;
         private final UserRepository userRepository;
         private final PasswordEncoder passwordEncoder;
         private final ClubRepository clubRepository;
+        private final ClubMembershipRepository clubMembershipRepository;
+        private final JwtUtil jwtUtil;
         private final EmailService emailService;
 
 
-        public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,ClubRepository clubRepository, EmailService emailService) {
+        public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,ClubRepository clubRepository, EmailService emailService, ClubMembershipRepository clubMembershipRepository, JwtUtil jwtUtil) {
+            this.jwtUtil = jwtUtil;
+            this.clubMembershipRepository = clubMembershipRepository;
             this.userRepository = userRepository;
             this.passwordEncoder = passwordEncoder;
             this.clubRepository = clubRepository;
@@ -38,14 +48,7 @@ import java.util.stream.Collectors;
         }
 
         public User registerUser(UserRegistrationDTO userDto) {
-            // Find all clubs the user should be member of
-            Set<Club> memberClubs = userDto.getMemberClubNames().stream()
-                .map(clubName -> clubRepository.findByName(clubName))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .collect(Collectors.toSet());
             
-            // Create and save the user
             User user = new User();
             user.setUsername(userDto.getUsername());
             user.setPassword(passwordEncoder.encode("changeme"));
@@ -60,9 +63,17 @@ import java.util.stream.Collectors;
             user.setFormation(userDto.getFormation());
             user.setPhoto(userDto.getPhoto());
             
-            // Set club memberships
-            memberClubs.forEach(user::addMemberClub);
-    
+            /*if (userDto.getMemberClubNames() != null) {
+                userDto.getMemberClubNames().forEach(clubName -> {
+                    clubRepository.findByName(clubName).ifPresent(club -> {
+                        ClubMembership membership = new ClubMembership();
+                        membership.setUser(user);
+                        membership.setClub(club);
+                        membership.setRole(ClubRole.MEMBER); // Rôle par défaut
+                        user.getClubMemberships().add(membership);
+                    });
+                });
+            }*/
             emailService.sendCredentials(
                 user.getEmail(),
                 userDto.getUsername(),
@@ -71,6 +82,34 @@ import java.util.stream.Collectors;
     
             return userRepository.save(user);
         }
+
+        public User createVisitorAccount(String nom, String prenom, String email, Club club, ClubRole role) {
+            String baseUsername = prenom.toLowerCase() + capitalizeFirstLetter(nom);
+            String username = baseUsername;
+            int suffix = 0;
+        
+            // Vérifier l'unicité du username
+            while (userRepository.findByUsername(username).isPresent()) {
+                username = baseUsername + suffix;
+                suffix++;
+            }
+        
+            User user = new User();
+            user.setNom(nom);
+            user.setPrenom(prenom);
+            user.setEmail(email);
+            user.setUsername(username);
+            user.setPassword(passwordEncoder.encode("changeme"));
+            user.setRole("MEMBER");
+            user.setFirstLogin(true);
+            user.joinClub(club, role); 
+        
+            emailService.sendCredentials(email, username, "changeme");
+        
+            return userRepository.save(user);
+        }
+
+
         public void deleteUser(Long userId) {
             User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -86,6 +125,42 @@ import java.util.stream.Collectors;
             }
             
             userRepository.delete(user);
+        }
+
+        @Transactional
+        public String switchToManagerAccount(String memberUsername, String clubName) {
+            // 1. Trouver l'utilisateur et le club
+            User member = userRepository.findByUsername(memberUsername)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            Club club = clubRepository.findByName(clubName)
+                .orElseThrow(() -> new RuntimeException("Club not found"));
+
+            // 2. Vérifier les droits via les membreships
+            boolean hasRights = member.getClubMemberships().stream()
+                .anyMatch(m -> 
+                    m.getClub().equals(club) && 
+                    m.getRole() != ClubRole.MEMBER
+                );
+            
+            if (!hasRights) {
+                throw new RuntimeException("Access denied - insufficient privileges");
+            }
+
+            // 3. Récupérer le compte manager
+            User managerAccount = club.getResponsibleMember();
+            if (managerAccount == null) {
+                throw new RuntimeException("Manager account not configured for this club");
+            }
+
+            // 4. Générer le token
+            UserDetails managerDetails = org.springframework.security.core.userdetails.User.builder()
+                .username(managerAccount.getUsername())
+                .password(managerAccount.getPassword())
+                .authorities("ROLE_" + managerAccount.getRole())
+                .build();
+
+            return jwtUtil.generateToken(managerDetails);
         }
         
         public void deleteUser(String username) {
@@ -122,17 +197,18 @@ import java.util.stream.Collectors;
         // 3. Get users by club name
         public List<UserResponseDto> getUsersByClubName(String clubName) {
             Club club = clubRepository.findByName(clubName)
-            .orElseThrow(() -> new RuntimeException("Club not found"));
-        
-        // Get both members and manager (if exists)
-        Set<User> clubUsers = new HashSet<>(club.getMembers());
-        if (club.getResponsibleMember() != null) {
-            clubUsers.add(club.getResponsibleMember());
-        }
-        
-        return clubUsers.stream()
-            .map(this::convertToUserResponseDTO)
-            .collect(Collectors.toList());
+        .orElseThrow(() -> new RuntimeException("Club not found"));
+            
+            Set<User> clubUsers = club.getMemberships().stream()
+                .map(ClubMembership::getUser)
+                .collect(Collectors.toSet());
+            if (club.getResponsibleMember() != null) {
+                clubUsers.add(club.getResponsibleMember());
+            }
+            
+            return clubUsers.stream()
+                .map(this::convertToUserResponseDTO)
+                .collect(Collectors.toList());
         }
 
         // 4. Get user by username
@@ -140,6 +216,17 @@ import java.util.stream.Collectors;
             return userRepository.findByUsername(username)
                 .map(this::convertToUserResponseDTO);
         }
+
+        public Optional<UserResponseDto> getUserById(Long id) {
+            return userRepository.findById(id)
+                .map(this::convertToUserResponseDTO);
+        }
+
+        public Optional<UserResponseDto> getUserByEmail(String email) {
+            return userRepository.findByEmail(email)
+                .map(this::convertToUserResponseDTO);
+        }
+        
 
         private UserResponseDto convertToUserResponseDTO(User user) {
             
@@ -188,36 +275,34 @@ import java.util.stream.Collectors;
             
 
             // Update club (if provided)
-            if (updateDTO.getMemberClubNames() != null) {
+            /*if (updateDTO.getMemberClubNames() != null) {
                 updateClubMemberships(user, updateDTO.getMemberClubNames());
-            }
+            }*/
 
             User savedUser = userRepository.save(user);
             return new UserResponseDto(savedUser); // Converts to DTO
         }
 
         private void updateClubMemberships(User user, Set<String> newClubNames) {
-            // Get current clubs
-            Set<Club> currentClubs = user.getMemberClubs();
+            user.getClubMemberships().removeIf(membership -> 
+            !newClubNames.contains(membership.getClub().getName())
+            );
             
-            // Find clubs to add
-            Set<Club> clubsToAdd = newClubNames.stream()
-                .map(clubName -> clubRepository.findByName(clubName))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .filter(club -> !currentClubs.contains(club))
-                .collect(Collectors.toSet());
-            
-            // Find clubs to remove
-            Set<Club> clubsToRemove = currentClubs.stream()
-                .filter(club -> !newClubNames.contains(club.getName()))
-                .collect(Collectors.toSet());
-            
-            // Apply changes
-            clubsToAdd.forEach(user::addMemberClub);
-            clubsToRemove.forEach(user::removeMemberClub);
+            // Ajouter les nouveaux membreships
+            newClubNames.forEach(clubName -> {
+                if (user.getClubMemberships().stream()
+                    .noneMatch(m -> m.getClub().getName().equals(clubName))) {
+                    
+                    clubRepository.findByName(clubName).ifPresent(club -> {
+                        ClubMembership membership = new ClubMembership();
+                        membership.setUser(user);
+                        membership.setClub(club);
+                        membership.setRole(ClubRole.MEMBER);
+                        user.getClubMemberships().add(membership);
+                    });
+                }
+            });
         }
-    
 
         public User completeProfile(String username, ProfileCompletionDTO dto) {
             // 1. Find user
@@ -273,5 +358,9 @@ import java.util.stream.Collectors;
             if (dto.getFormation() == null) {
                 throw new IllegalArgumentException("Formation is required");
             }
+        }
+        private String capitalizeFirstLetter(String str) {
+            if (str == null || str.isEmpty()) return str;
+            return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
         }
     }

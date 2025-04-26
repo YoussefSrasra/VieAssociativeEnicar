@@ -90,21 +90,21 @@
   <li class="dropdown pc-h-item header-user-profile" ngbDropdown>
     <a class="pc-head-link dropdown-toggle arrow-none me-0" ngbDropdownToggle>
       <div class="flex-shrink-1">
-      <img [src]="currentUser?.photo ? 'data:image/jpeg;base64,' + currentUser.photo : 'assets/images/user/avatar-2.jpg'" 
+      <img [src]="formatImage(currentUser)" 
            alt="user-image" class="user-avatar-1" />
       </div>
       
-      <span class="f-w-600" style="margin-left:10% ;">{{currentUser?.nom +" " + currentUser?.prenom }}</span>
+      <span class="f-w-600" style="margin-left:10% ;">{{ currentUser?.role === 'MANAGER' ? currentUser?.username : (currentUser?.nom + " " + currentUser?.prenom) }}</span>
     </a>
     <div class="dropdown-menu dropdown-user-profile dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
       <div class="dropdown-header">
         <div class="d-flex mb-1">
           <div class="flex-shrink-0">
-            <img [src]="currentUser?.photo ? 'data:image/jpeg;base64,' + currentUser.photo : 'assets/images/user/avatar-2.jpg'" 
+            <img [src]="formatImage(currentUser)" 
                  alt="user-image" class="user-avatar wid-35" />
           </div>
           <div class="flex-grow-1 ms-3 text-start">
-            <h6 class="mb-0">{{currentUser?.nom +" " + currentUser?.prenom  || 'Utilisateur' }}</h6>
+            <h6 class="mb-0">{{ currentUser?.role === 'MANAGER' ? currentUser?.username : (currentUser?.nom + " " + currentUser?.prenom) || 'Utilisateur' }}</h6>
             <span>{{ currentUser?.role || 'Membre' }}</span>
           </div>
         </div>
