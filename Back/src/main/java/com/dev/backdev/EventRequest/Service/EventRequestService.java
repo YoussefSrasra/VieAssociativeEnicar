@@ -79,4 +79,8 @@ public class EventRequestService {
         return eventRequestRepository.findAllForDisplay();
     }
     
+    public List<Map<String, Object>> getAllEventRequestsWithClubNames() {
+        return eventRequestRepository.findAllForDisplay(); // Utilise la requête JOIN existante
+    }
+    
 }

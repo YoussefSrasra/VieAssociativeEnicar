@@ -2,12 +2,14 @@ package com.dev.backdev.Club.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dev.backdev.Auth.model.User;
+import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Repository.ClubRepository;
 import com.dev.backdev.Club.dto.ClubDTO;
@@ -17,9 +19,12 @@ public class ClubService {
 
     @Autowired
     private ClubRepository clubRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-    public Club createClub(Club club) {
-        return clubRepository.save(club);
+    public ClubDTO createClub(Club club) {
+        clubRepository.save(club);
+        return convertToDTO(club);
     }
 
     public List<ClubDTO> getAllClubs() {
@@ -31,6 +36,22 @@ public class ClubService {
         return clubRepository.findById(id).map(this::convertToDTO);
     }
 
+    public List<ClubDTO> getClubsByUserId(Long userId) {
+        return userRepository.findById(userId)
+                .map(user -> user.getMemberClubs().stream()
+                        .map(this::convertToDTO)
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    }
+
+    public List<ClubDTO> getClubsByUserName(String userName) {
+        return userRepository.findByUsername(userName)
+                .map(user -> user.getMemberClubs().stream()
+                        .map(this::convertToDTO)
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + userName));
+    }
+
     public Club updateClub(Long id, Club clubDetails) {
         return clubRepository.findById(id).map(club -> {
             club.setName(clubDetails.getName());
@@ -38,6 +59,39 @@ public class ClubService {
             club.setStatus(clubDetails.getStatus());
             return clubRepository.save(club);
         }).orElseThrow(() -> new RuntimeException("Club not found"));
+    }
+
+    
+    public ClubDTO assignMembersToClub(String name, Set<String> usernames) {
+        Club club = clubRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Club not found"));
+
+        List<User> users = userRepository.findByUsernameIn(usernames);
+
+        for (User user : users) {
+            club.addMember(user); // Uses the entity helper method
+        }
+
+        clubRepository.save(club);
+        return convertToDTO(club);
+    }
+
+    public ClubDTO removeMembersFromClub(String name, Set<String> usernames) {
+        Club club = clubRepository.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Club not found"));
+
+        List<User> users = userRepository.findByUsernameIn(usernames);
+
+        for (User user : users) {
+            try {
+                club.removeMember(user); // May throw if trying to remove the manager
+            } catch (IllegalStateException e) {
+                // Optional: log or skip, or collect errors to return
+            }
+        }
+
+        clubRepository.save(club);
+        return convertToDTO(club);
     }
 
     public void deleteClub(Long id) {

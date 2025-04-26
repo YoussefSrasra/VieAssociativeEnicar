@@ -1,24 +1,24 @@
 <div class="row">
   <div class="col-12">
-    <app-card headerTitle="Liste des Feedbacks sur les Événements">
-      <div class="p-3">
-        <div *ngIf="feedbacks.length === 0" class="text-center text-muted">
+    <app-card headerTitle="Liste des Feedbacks sur les Événements" class="card">
+      <div class="feedback-container">
+        <div *ngIf="feedbacks.length === 0" class="no-feedback-message">
           Aucun feedback pour le moment.
         </div>
 
-        <div *ngFor="let feedback of feedbacks" class="mb-4 border rounded p-3 shadow-sm">
-          <h5 class="mb-2">{{ feedback.firstName }} {{ feedback.lastName }}</h5>
-          <p class="mb-1"><strong>Email :</strong> {{ feedback.email }}</p>
-          <p class="mb-1"><strong>Événement :</strong> {{ feedback.eventName }}</p>
-          <p class="mb-1"><strong>Note :</strong> {{ feedback.rating }} / 5</p>
-          <p class="mb-2"><strong>Commentaire :</strong><br>{{ feedback.comment }}</p>
+        <div *ngFor="let feedback of feedbacks" class="feedback-card">
+          <h5 class="feedback-title">{{ feedback.firstName }} {{ feedback.lastName }}</h5>
+          <p class="feedback-detail"><strong>Email :</strong> {{ feedback.email }}</p>
+          <p class="feedback-detail"><strong>Événement :</strong> {{ feedback.eventName }}</p>
+          <p class="feedback-detail">
+            <strong>Note :</strong>
+            {{ feedback.rating }} / 5
+            <span class="rating-stars">★★★★★</span>
+          </p>
+          <p class="feedback-comment">{{ feedback.comment }}</p>
 
           <!-- Images -->
-          <div class="row" *ngIf="feedback.images?.length">
-            <div class="col-md-3 mb-2" *ngFor="let image of feedback.images">
-              <img [src]="image" class="img-fluid rounded shadow-sm" alt="Feedback image">
-            </div>
-          </div>
+          
         </div>
       </div>
     </app-card>

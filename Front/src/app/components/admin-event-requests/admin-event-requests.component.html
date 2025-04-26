@@ -1,4 +1,3 @@
-
 <div class="row">
   <!-- Cartes de statut -->
   @for (card of statusCards; track card) {
@@ -46,86 +45,86 @@
         </div>
       } @else {
         <div class="table-responsive">
-        <!-- ... (contenu existant avant le tableau) ... -->
-
-<table class="table table-hover">
-  <thead>
-    <tr>
-      <th>ID Demande</th> <!-- Ajouté -->
-      <th>ID Club</th>
-      <th>Événement</th>
-      <th>Montant</th>
-      <th>Type</th>
-      <th>Date Début</th> <!-- Nouvelle colonne -->
-      <th>Date Fin</th> <!-- Nouvelle colonne -->
-      <th>Participants</th>
-      <th>Équipements</th>
-      <th>Statut</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (request of filteredRequests; track request.id) {
-      <tr>
-        <td>{{ request.id }}</td> <!-- 👈 Voici l'ID de la demande -->
-        <td>{{ request.clubId }}</td>
-        <td>{{ request.eventName }}</td>
-        <td>{{ request.financialRequest ? (request.requestedAmount | currency:'EUR':'symbol':'1.2-2') : '-' }}</td>
-        <td>{{ request.type }}</td>
-        <td>{{ request.startDate | date:'dd/MM/yyyy HH:mm' }}</td> <!-- Date de début formatée -->
-        <td>{{ request.endDate | date:'dd/MM/yyyy HH:mm' }}</td> <!-- Date de fin formatée -->
-        <td class="text-center">
-          {{ request.estimatedAttendees || '-' }}
-        </td>
-        <td>
-          @if (request.needEquipment) {
-            <span class="badge bg-light text-dark">
-              {{ request.equipmentDescription }}
-            </span>
-          } @else {
-            <span class="text-muted">-</span>
-          }
-
-        <td>
-          <span class="badge"
-                [ngClass]="{
-                  'bg-warning': request.status === 'PENDING',
-                  'bg-success': request.status === 'APPROVED',
-                  'bg-danger': request.status === 'REJECTED'
-                }">
-            {{ getStatusText(request.status) }}
-          </span>
-        </td>
-        <td>
-          @if (request.status === 'PENDING') {
-            <div class="btn-group btn-group-sm">
-              <button (click)="approveRequest(request.id)" class="btn btn-success" title="Approuver">
-                <i class="fas fa-check"></i> Approuver
-              </button>
-              <button (click)="rejectRequest(request.id)" class="btn btn-danger" title="Rejeter">
-                <i class="fas fa-times"></i> Rejeter
-              </button>
-            </div>
-          } @else if (request.status === 'APPROVED') {
-            <button (click)="generateReport(request)" class="btn btn-outline-primary btn-sm" title="Générer un rapport PDF">
-              <i class="fas fa-file-pdf"></i> PDF
-            </button>
-          } @else {
-            <span class="text-muted">Aucune action</span>
-          }
-        </td>
-      </tr>
-    } @empty {
-      <tr>
-        <td colspan="9" class="text-center py-4 text-muted">
-          Aucune demande d'événement trouvée
-        </td>
-      </tr>
-    }
-  </tbody>
-</table>
-
-<!-- ... (contenu existant après le tableau) ... -->
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>ID Demande</th>
+                <th>Nom de Club</th>
+                <th>Événement</th>
+                <th>Montant</th>
+                <th>Type</th>
+                <th>Date Début</th>
+                <th>Date Fin</th>
+                <th>Participants</th>
+                <th>Équipements</th>
+                <th>Statut</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (request of filteredRequests; track request.id) {
+                <tr>
+                  <td>{{ request.id }}</td>
+                  <td>{{ request.clubName }}</td>
+                  <td>{{ request.eventName }}</td>
+                  <td>{{ request.financialRequest ? (request.requestedAmount | currency:'EUR':'symbol':'1.2-2') : '-' }}</td>
+                  <td>{{ request.type }}</td>
+                  <td>{{ request.startDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td>{{ request.endDate | date:'dd/MM/yyyy HH:mm' }}</td>
+                  <td class="text-center">
+                    {{ request.estimatedAttendees || '-' }}
+                  </td>
+                  <td>
+                    @if (request.needEquipment) {
+                      <span class="badge bg-light text-dark">
+                        {{ request.equipmentDescription }}
+                      </span>
+                    } @else {
+                      <span class="text-muted">-</span>
+                    }
+                  </td>
+                  <td>
+                    <span class="badge"
+                          [ngClass]="{
+                            'bg-warning': request.status === 'PENDING',
+                            'bg-success': request.status === 'APPROVED',
+                            'bg-danger': request.status === 'REJECTED'
+                          }">
+                      {{ getStatusText(request.status) }}
+                    </span>
+                  </td>
+                  <td>
+                    @if (request.status === 'PENDING') {
+                      <div class="btn-group btn-group-sm">
+                        <button (click)="approveRequest(request.id)" class="btn btn-success" title="Approuver">
+                          <i class="fas fa-check"></i> Approuver
+                        </button>
+                        <button (click)="rejectRequest(request.id)" class="btn btn-danger" title="Rejeter">
+                          <i class="fas fa-times"></i> Rejeter
+                        </button>
+                      </div>
+                    } @else if (request.status === 'APPROVED') {
+                      <button (click)="generateReport(request)" class="btn btn-outline-primary btn-sm" title="Générer un rapport PDF">
+                        <i class="fas fa-file-pdf"></i> PDF
+                      </button>
+                    } @else {
+                      <div class="btn-group btn-group-sm">
+                        <button (click)="deleteEventRequest(request.id)" class="btn btn-outline-danger btn-sm" title="Supprimer">
+                          <i class="fas fa-trash-alt"></i> Supprimer
+                        </button>
+                      </div>
+                    }
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="11" class="text-center py-4 text-muted">
+                    Aucune demande d'événement trouvée
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
         </div>
       }
     </app-card>

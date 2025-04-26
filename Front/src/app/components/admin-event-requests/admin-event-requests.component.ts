@@ -156,6 +156,24 @@ export class AdminEventRequestsComponent implements OnInit {
     }
   }
 
+
+  deleteEventRequest(id: number): void {
+    if (confirm('Êtes-vous sûr de vouloir supprimer définitivement cette demande rejetée ?')) {
+      this.requestService.deleteEventRequest(id).subscribe({
+        next: () => {
+          // Suppression locale pour éviter de recharger toute la liste
+          this.eventRequests = this.eventRequests.filter(r => r.id !== id);
+          this.filteredRequests = this.filteredRequests.filter(r => r.id !== id);
+          this.updateStatusCards(this.eventRequests);
+        },
+        error: (err) => {
+          console.error('Erreur lors de la suppression:', err);
+          alert('Erreur lors de la suppression de la demande');
+        }
+      });
+    }
+  }
+
 }
 
 

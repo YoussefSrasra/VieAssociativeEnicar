@@ -23,7 +23,7 @@ public class FeedbackService {
     }
 
     public List<Feedback> getAllFeedback() {
-        return feedbackRepository.findAllFeedbacks(); // Utilisation de la méthode personnalisée
+        return feedbackRepository.findAll(); // Use the default JPA method
     }
     
     

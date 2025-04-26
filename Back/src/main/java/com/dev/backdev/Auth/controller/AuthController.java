@@ -28,6 +28,7 @@ import com.dev.backdev.Auth.model.User;
 import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Auth.service.AuthService;
 import com.dev.backdev.Auth.util.JwtUtil;
+import com.dev.backdev.Club.Model.Club;
 
 @RestController
 @RequestMapping("/api/public")
@@ -106,30 +107,12 @@ public class AuthController {
         return authService.getAllUsers();
     }
 // UserController.java
+
 @GetMapping("/managers-with-clubs")
 public List<ManagerWithClubDto> getAllManagersWithClubs() {
-    return userRepository.findByRole("MANAGER").stream()
-        .map(manager -> {
-            ManagerWithClubDto dto = new ManagerWithClubDto();
-            dto.setUsername(manager.getUsername());
-            dto.setEmail(manager.getEmail());
-            
-            // Vérifie les deux relations possibles
-            if (manager.getClub() != null) {
-                dto.setClubName(manager.getClub().getName());
-                dto.setClubStatus(manager.getClub().getStatus());
-            } else if (manager.getResponsibleClub() != null) {
-                dto.setClubName(manager.getResponsibleClub().getName());
-                dto.setClubStatus(manager.getResponsibleClub().getStatus());
-            } else {
-                dto.setClubName("Non assigné");
-                dto.setClubStatus("Inactif");
-            }
-            
-            return dto;
-        })
-        .collect(Collectors.toList());
+    return authService.getAllManagersWithClubs();
 }
+
 
     @GetMapping("/users/by-role/{role}")
     public List<UserResponseDto> getUsersByRole(@PathVariable String role) {

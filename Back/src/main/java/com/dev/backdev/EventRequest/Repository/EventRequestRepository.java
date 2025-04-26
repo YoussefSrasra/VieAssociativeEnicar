@@ -24,8 +24,8 @@ public interface EventRequestRepository extends JpaRepository<EventRequest, Long
     "er.needEquipment as needEquipment, " +
     "er.equipmentDescription as equipmentDescription, " +
     "c.id as clubId, " +
-    "c.name as clubName) " +
+    "c.name as clubName) " + // Ajouté
     "FROM EventRequest er JOIN er.club c " +
-    "ORDER BY er.createdAt DESC")  // Tri par date de création
+    "ORDER BY er.createdAt DESC")
 List<Map<String, Object>> findAllForDisplay();
 }
