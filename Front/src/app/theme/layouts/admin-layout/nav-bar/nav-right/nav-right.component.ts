@@ -91,6 +91,21 @@ export class NavRightComponent {
     this.loginService.logout()
   }
 
+  formatImage(user: UserProfile | null): string {
+    if (!user || !user.photo) {
+      return 'assets/images/default-profile.png';
+    }
+  
+    // Check if the photo already starts with "data:image/"
+    if (user.photo.startsWith('data:image/')) {
+      return user.photo; // Already has the header, return directly
+    }
+  
+    // Otherwise, add the header manually
+    return 'data:image/jpeg;base64,' + user.photo;
+  }
+  
+
 
   // ... rest of existing code
 }

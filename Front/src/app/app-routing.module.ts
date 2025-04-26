@@ -97,11 +97,11 @@ const routes: Routes = [
         loadComponent: () => import('./enrollment/enrollment.component').then((c) => c.EnrollmentComponent)
       },
       {
-        path: 'typography',
+        path: 'color',
         loadComponent: () => import('./demo/component/basic-component/color/color.component').then((c) => c.ColorComponent)
       },
       {
-        path: 'color',
+        path: 'typography',
         loadComponent: () => import('./demo/component/basic-component/typography/typography.component').then((c) => c.TypographyComponent)
       },
       {
