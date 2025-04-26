@@ -47,11 +47,11 @@ export const NavigationItems: NavigationItem[] = [
    
     children: [
       {
-        id: 'typography',
+        id: 'color',
         title: 'Liste des membres ',
         type: 'item',
         classes: 'nav-item',
-        url: '/typography',
+        url: '/color',
         
         roles: ['MANAGER']
       },

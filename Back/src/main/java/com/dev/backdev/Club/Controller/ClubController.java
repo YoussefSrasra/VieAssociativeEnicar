@@ -28,7 +28,9 @@ public class ClubController {
 
     @PostMapping
     public ClubDTO createClub(@RequestBody Club club) {
-        return clubService.createClub(club);
+        Club clubCree = clubService.createClub(club);
+        ClubDTO dto = new ClubDTO(clubCree);
+        return dto;
     }
 
     @GetMapping

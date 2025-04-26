@@ -4,17 +4,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.dev.backdev.Club.Model.Club;
+import com.dev.backdev.Club.Model.ClubMembership;
+import com.dev.backdev.Enums.ClubRole;
 import com.dev.backdev.Enums.Filiere;
 import com.dev.backdev.Enums.Formation;
 import com.dev.backdev.Enums.Niveau;
 import com.dev.backdev.Enums.Sexe;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -45,11 +48,11 @@ public class User {
     private String photo;
 
     private String role; // ROLE_MEMBER, ROLE_MANAGER, ROLE_ADMIN
-    @OneToOne(mappedBy = "responsibleMember")
+    @OneToOne(mappedBy = "responsibleMember", cascade = CascadeType.ALL)
     private Club responsibleClub;
 
-    @ManyToMany(mappedBy = "members")  // Inverse side of the relationship
-    private Set<Club> memberClubs = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ClubMembership> clubMemberships = new HashSet<>();
 
 
     @Column(nullable = false)
@@ -64,102 +67,37 @@ public class User {
         this.role = role;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getPassword() {
-        return password;
-    }   
-    public String getRole() {
-        return role;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-    public void setRole(String role) {
-        this.role = role;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public void setEmail(String email) {
-        this.email = email;
+    public void setResponsibleClub(Club responsibleClub) {
+        if (this.responsibleClub == responsibleClub) {
+            return; // Already linked, stop the loop
+        }
+    
+        if (this.responsibleClub != null) {
+            this.responsibleClub.setResponsibleMember(null);
+        }
+        this.responsibleClub = responsibleClub;
+    
+        if (responsibleClub != null && responsibleClub.getResponsibleMember() != this) {
+            responsibleClub.setResponsibleMember(this);
+        }
     }
     public Club getResponsibleClub() {
         return responsibleClub;
+    } 
+    public boolean isManagerAccount() {
+        return this.responsibleClub != null && this.username.equals(this.responsibleClub.getName());
     }
-
-    public void setResponsibleClub(Club responsibleClub) {
-        this.responsibleClub = responsibleClub;
+    public void setUsername(String username) {
+        if (this.responsibleClub != null && !username.equals(this.responsibleClub.getName())) {
+            throw new IllegalStateException("Le username d'un manager doit correspondre au nom de son club.");
+        }
+        this.username = username;
     }
-
-    public void addMemberClub(Club club) {
-        this.memberClubs.add(club);
-        club.getMembers().add(this);
+    public void joinClub(Club club, ClubRole role) {
+        ClubMembership membership = new ClubMembership(this, club,role);
+        this.clubMemberships.add(membership);
+        club.getMemberships().add(membership); // Assuming Club has a Set<ClubMembership> members
     }
-
-    // Helper method to remove membership
-    public void removeMemberClub(Club club) {
-        this.memberClubs.remove(club);
-        club.getMembers().remove(this);
-    }
-    public String getNom() {
-        return nom;
-    }
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-    public String getPrenom() {
-        return prenom;
-    }
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setCin(Integer cin) {
-        this.cin = cin;
-    }
-    public Integer getCin() {
-        return cin;
-    }
-    public void setFiliere(Filiere filiere) {
-        this.filiere = filiere;
-    }
-    public Filiere getFiliere() {
-        return filiere;
-    }
-    public void setNiveau(Niveau niveau) {
-        this.niveau = niveau;
-    }
-    public Niveau getNiveau() {
-        return niveau;
-    }
-    public void setSexe(Sexe sexe) {
-        this.sexe = sexe;
-    }
-    public Sexe getSexe() {
-        return sexe;
-    }
-    public void setFormation(Formation formation) {
-        this.formation = formation;
-    }
-    public Formation getFormation() {
-        return formation;
-    }
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-    public String getPhoto() {
-        return photo;
-    }
+    
     
 }   

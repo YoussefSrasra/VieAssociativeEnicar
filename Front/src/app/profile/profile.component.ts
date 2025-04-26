@@ -6,10 +6,9 @@ import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } 
 import { Router } from '@angular/router';
 import { HostListener } from '@angular/core';
 
-
 @Component({
-  standalone: true,  // <-- Add this
-  imports: [CommonModule, FormsModule, ReactiveFormsModule], 
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule],
   selector: 'app-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
@@ -17,6 +16,7 @@ import { HostListener } from '@angular/core';
 export class ProfileComponent implements OnInit {
   profileForm: FormGroup;
   userProfile: UserProfile;
+  currentRole: string;
   isFirstLogin: boolean;
   isLoading = true;
   showCurrentPassword = false;
@@ -49,14 +49,14 @@ export class ProfileComponent implements OnInit {
       nom: [''],
       prenom: [''],
       username: [{value: '', disabled: true}],
-      email: [''],
+      email: ['', [Validators.required, Validators.email]],
       cin: [null],
       filiere: [null],
       niveau: [null],
       sexe: [null],
       formation: [null],
       photo: [null],
-      currentPassword: [''],  // Add this for password change verification
+      currentPassword: [''],
       password: [''],
       confirmPassword: ['']
     }, {validator: this.passwordMatchValidator});
@@ -76,20 +76,9 @@ export class ProfileComponent implements OnInit {
     this.profileService.getCurrentUser().subscribe(
       (profile) => {
         this.userProfile = profile;
+        this.currentRole = profile.role;
         this.isFirstLogin = profile.firstLogin;
-        this.profileForm.patchValue({
-          nom: profile.nom,
-          prenom: profile.prenom,
-          username: profile.username,
-          email: profile.email,
-          cin: profile.cin,
-          filiere: profile.filiere,
-          niveau: profile.niveau,
-          sexe: profile.sexe,
-          formation: profile.formation,
-          photo: profile.photo
-          // DO NOT patch password fields
-      });
+        this.initializeFormBasedOnRole(profile);
         this.isLoading = false;
       },
       (error) => {
@@ -99,23 +88,44 @@ export class ProfileComponent implements OnInit {
     );
   }
 
+  private initializeFormBasedOnRole(profile: UserProfile): void {
+    const formValues: any = {
+      username: profile.username,
+      email: profile.email,
+      photo: profile.photo
+    };
+
+    if (this.currentRole === 'MEMBER') {
+      formValues.nom = profile.nom;
+      formValues.prenom = profile.prenom;
+      formValues.cin = profile.cin;
+      formValues.filiere = profile.filiere;
+      formValues.niveau = profile.niveau;
+      formValues.sexe = profile.sexe;
+      formValues.formation = profile.formation;
+    } 
+    else if (this.currentRole === 'ADMIN') {
+      formValues.nom = profile.nom;
+      formValues.prenom = profile.prenom;
+      formValues.cin = profile.cin;
+      formValues.sexe = profile.sexe;
+    }
+
+    this.profileForm.patchValue(formValues);
+  }
+
   onFileChange(event): void {
     const file = event.target.files[0];
     if (file) {
       if (file.size > 7 * 1024 * 1024) {
-        alert('File size exceeds 7MB limit');
+        alert('La taille du fichier dépasse 7MB');
         return;
       }
       
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        // Update both the form value AND the displayed image
         const base64Image = e.target.result.split(',')[1];
-        this.profileForm.patchValue({
-          photo: base64Image
-        });
-        
-        // Directly update the displayed image
+        this.profileForm.patchValue({ photo: base64Image });
         this.userProfile.photo = base64Image;
       };
       reader.readAsDataURL(file);
@@ -123,49 +133,36 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    // First login validation (all fields required)
-    if (this.isFirstLogin) {
+    if (this.isFirstLogin && this.currentRole === 'ROLE_MEMBER') {
       const requiredFields = ['nom', 'prenom', 'email', 'cin', 'filiere', 'niveau', 'sexe', 'formation', 'password'];
       for (const field of requiredFields) {
         if (!this.profileForm.get(field).value) {
-          alert(`${field} is required for first login`);
+          alert(`${field} est obligatoire pour la première connexion`);
           return;
         }
       }
     }
 
     this.isSubmitting = true;
-    const formData = this.profileForm.getRawValue();
+    const formData = this.filterDataByRole(this.profileForm.getRawValue());
 
-    // Password handling for existing users
     if (!this.isFirstLogin) {
       const { currentPassword, password, confirmPassword } = formData;
 
-
-      // If password fields are empty, remove them (keep existing password)
-      if (!password && !confirmPassword) {
-        delete formData.password;
-        delete formData.confirmPassword;
-        delete formData.currentPassword;
-      } 
       if (password || confirmPassword) {
-        /*if (!currentPassword) {
-          alert('Vous devez entrer votre mot de passe actuel pour le changer');
-          return;
-        }*/
-          
         if (password !== confirmPassword) {
-          alert('Les nouveaux mots de passe ne correspondent pas');
+          alert('Les mots de passe ne correspondent pas');
+          this.isSubmitting = false;
           return;
         }
         if (currentPassword === password) {
-          alert('Le nouveau mot de passe doit être différent de l\'ancien mot de passe');
+          alert('Le nouveau mot de passe doit être différent');
+          this.isSubmitting = false;
           return;
         }
       }
     }
 
-    // Remove confirmPassword before sending
     const {confirmPassword: _, ...profileData} = formData;
 
     const update$ = this.isFirstLogin 
@@ -177,49 +174,74 @@ export class ProfileComponent implements OnInit {
         this.userProfile = updatedProfile;
         this.isFirstLogin = false;
         this.isSubmitting = false;
-        alert('Profile updated successfully!');
+        alert('Profil mis à jour avec succès!');
         this.router.navigate(['dashboard/default']);
       },
       error: (error) => {
-        console.error('Update error:', error);
+        console.error('Erreur de mise à jour:', error);
         this.isSubmitting = false;
-        alert('Update failed: ' + (error.error?.message || error.message));
+        alert('Erreur: ' + (error.error?.message || error.message));
       }
     });
-}
-
-togglePasswordVisibility(field: string): void {
-  if (field === 'currentPassword') {
-    this.showCurrentPassword = !this.showCurrentPassword;
-  } else if (field === 'password') {
-    this.showPassword = !this.showPassword;
-  } else if (field === 'confirmPassword') {
-    this.showConfirmPassword = !this.showConfirmPassword;
   }
-}
 
-  // Add this method to validate fields
-  validateFields(): boolean {
-    if (this.isFirstLogin) {
-      const requiredFields = ['nom', 'prenom', 'email', 'cin', 'filiere', 'niveau', 'sexe', 'formation', 'password'];
-      return requiredFields.every(field => !!this.profileForm.get(field).value);
+  private filterDataByRole(formData: any): any {
+    const filteredData = { ...formData };
+    
+    if (this.currentRole !== 'ROLE_MEMBER') {
+      delete filteredData.filiere;
+      delete filteredData.niveau;
+      delete filteredData.formation;
     }
-    return true;
+    
+    if (this.currentRole === 'ROLE_MANAGER') {
+      delete filteredData.nom;
+      delete filteredData.prenom;
+      delete filteredData.cin;
+      delete filteredData.sexe;
+    }
+    
+    return filteredData;
   }
+
+  togglePasswordVisibility(field: string): void {
+    if (field === 'currentPassword') {
+      this.showCurrentPassword = !this.showCurrentPassword;
+    } else if (field === 'password') {
+      this.showPassword = !this.showPassword;
+    } else if (field === 'confirmPassword') {
+      this.showConfirmPassword = !this.showConfirmPassword;
+    }
+  }
+
   checkUnsavedChanges(): void {
     if (this.formModified) {
-      if (confirm('Vous avez des modifications non enregistrées. Voulez-vous vraiment quitter ?')) {
-        this.router.navigate(['dashboard/default']); // Or use Location.back()
+      if (confirm('Vous avez des modifications non enregistrées. Quitter quand même ?')) {
+        this.router.navigate(['dashboard/default']);
       }
     } else {
-      this.router.navigate(['dashboard/default']); // Or use Location.back()
+      this.router.navigate(['dashboard/default']);
     }
   }
-    @HostListener('window:beforeunload', ['$event'])
+
+  @HostListener('window:beforeunload', ['$event'])
   handleBeforeUnload(event: BeforeUnloadEvent): void {
     if (this.formModified) {
       event.preventDefault();
-      event.returnValue = 'You have unsaved changes!';
+      event.returnValue = 'Vous avez des modifications non enregistrées';
     }
+  }
+  formatImage(user: UserProfile | null): string {
+    if (!user || !user.photo) {
+      return 'assets/images/default-profile.png';
+    }
+  
+    // Check if the photo already starts with "data:image/"
+    if (user.photo.startsWith('data:image/')) {
+      return user.photo; // Already has the header, return directly
+    }
+  
+    // Otherwise, add the header manually
+    return 'data:image/jpeg;base64,' + user.photo;
   }
 }
