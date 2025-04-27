@@ -22,34 +22,53 @@
         </h3>
         <div class="form-row">
           <div class="form-group">
-            <label for="nom">Nom</label>
+            <label for="nom">Nom *</label>
             <input type="text" id="nom" placeholder="Votre nom" required
-                   [(ngModel)]="demande.nom" name="nom" class="form-input">
+                   [(ngModel)]="demande.nom" name="nom" #nom="ngModel"
+                   class="form-input"
+                   [class.invalid]="(nom.invalid && (nom.dirty || nom.touched)) || formSubmitted">
+            <div *ngIf="nom.invalid && (nom.dirty || nom.touched || formSubmitted)" class="error-text">
+              Le nom est requis
+            </div>
           </div>
           <div class="form-group">
-            <label for="prenom">Prénom</label>
+            <label for="prenom">Prénom *</label>
             <input type="text" id="prenom" placeholder="Votre prénom" required
-                   [(ngModel)]="demande.prenom" name="prenom" class="form-input">
+                   [(ngModel)]="demande.prenom" name="prenom" #prenom="ngModel"
+                   class="form-input"
+                   [class.invalid]="(prenom.invalid && (prenom.dirty || prenom.touched)) || formSubmitted">
+            <div *ngIf="prenom.invalid && (prenom.dirty || prenom.touched || formSubmitted)" class="error-text">
+              Le prénom est requis
+            </div>
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">Email *</label>
             <input type="email" id="email" placeholder="nom.prenom@enicar.ucar.tn" required
-                   [(ngModel)]="demande.email" name="email" class="form-input">
-                   <div *ngIf="emailError" class="error-message">
-                    {{ emailErrorMessage }}
-                  </div>
-                  </div>
+                   [(ngModel)]="demande.email" name="email" #email="ngModel"
+                   pattern="^[a-zA-Z0-9._-]+&#64;enicar\.ucar\.tn$"
+                   class="form-input"
+                   [class.invalid]="(email.invalid && (email.dirty || email.touched)) || formSubmitted">
+            <div *ngIf="email.invalid && (email.dirty || email.touched || formSubmitted)" class="error-text">
+              <span *ngIf="email.errors?.['required']">Un email est requis</span>
+              <span *ngIf="email.errors?.['pattern']">Format d'email invalide (doit être .nom&#64;enicar.ucar.tn)</span>
+            </div>
+          </div>
           <div class="form-group">
-            <label for="niveau">Niveau d'études</label>
-            <select id="niveau" required [(ngModel)]="demande.niveau" name="niveau" class="form-select">
+            <label for="niveau">Niveau d'études *</label>
+            <select id="niveau" required [(ngModel)]="demande.niveau" name="niveau" #niveau="ngModel"
+                    class="form-input"
+                    [class.invalid]="(niveau.invalid && (niveau.dirty || niveau.touched)) || formSubmitted">
               <option value="" disabled selected>Sélectionnez votre niveau</option>
               <option value="1A">1ère année</option>
               <option value="2A">2ème année</option>
               <option value="3A">3ème année</option>
             </select>
+            <div *ngIf="niveau.invalid && (niveau.dirty || niveau.touched || formSubmitted)" class="error-text">
+              Le niveau d'étude est requis
+            </div>
           </div>
         </div>
       </div>
@@ -61,15 +80,25 @@
           Informations sur le club
         </h3>
         <div class="form-group">
-          <label for="club">Nom du Club</label>
+          <label for="club">Nom du Club *</label>
           <input type="text" id="club" placeholder="Nom officiel du club" required
-                 [(ngModel)]="demande.nomClub" name="nomClub" class="form-input">
+                 [(ngModel)]="demande.nomClub" name="nomClub" #nomClub="ngModel"
+                 class="form-input"
+                 [class.invalid]="(nomClub.invalid && (nomClub.dirty || nomClub.touched)) || formSubmitted">
+          <div *ngIf="nomClub.invalid && (nomClub.dirty || nomClub.touched || formSubmitted)" class="error-text">
+            Le nom du club est requis
+          </div>
         </div>
 
         <div class="form-group">
-          <label for="description">Description du club</label>
+          <label for="description">Description du club *</label>
           <textarea id="description" rows="5" placeholder="Décrivez les objectifs et activités du club..." required
-                    [(ngModel)]="demande.description" name="description" class="form-textarea"></textarea>
+                    [(ngModel)]="demande.description" name="description" #description="ngModel"
+                    class="form-input"
+                    [class.invalid]="(description.invalid && (description.dirty || description.touched)) || formSubmitted"></textarea>
+          <div *ngIf="description.invalid && (description.dirty || description.touched || formSubmitted)" class="error-text">
+            La description est requise
+          </div>
         </div>
 
         <!-- Champ pour logo -->
@@ -81,25 +110,22 @@
         </div>
       </div>
 
+      <!-- Messages de feedback -->
+      <div *ngIf="showError" class="alert alert-danger" role="alert">
+        {{ errorMessage }}
+      </div>
+
+      <div *ngIf="showSuccess" class="alert alert-success" role="alert">
+        {{ successMessage }}
+      </div>
+
       <!-- Bouton de soumission -->
       <div class="form-submit">
-        <button type="submit" class="submit-button" [disabled]="demandeForm.invalid">
+        <button type="submit" class="submit-button">
           <i class="bi bi-send-fill"></i>
           Envoyer la demande
         </button>
-
       </div>
-      <!-- Message d'erreur -->
-<div *ngIf="showError" class="alert alert-danger" role="alert">
-  {{ errorMessage }}
-  
-</div>
-
-<!-- Message de succès -->
-<div *ngIf="showSuccess" class="alert alert-success" role="alert">
-  {{ successMessage }}
- 
-</div>
     </form>
   </div>
 </section>

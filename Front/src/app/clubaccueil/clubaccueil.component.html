@@ -55,112 +55,123 @@
     </div>
 
     <div class="modal-body">
-      <div *ngIf="formSubmissionError" class="error-message">
-        {{ formSubmissionError }}
-      </div>
-
-      <form #enrollmentForm="ngForm" (ngSubmit)="submitEnrollment(enrollmentForm)">
+      <form #enrollmentForm="ngForm" (ngSubmit)="submitEnrollment(enrollmentForm)" class="form-validate">
         <input type="hidden" [(ngModel)]="enrollmentData.clubId" name="clubId">
 
         <div class="form-grid">
+          <!-- Nom -->
           <div class="form-group">
-            <label for="nom">Nom</label>
+            <label for="nom">Nom *</label>
             <input type="text" id="nom"
                    [(ngModel)]="enrollmentData.nom"
                    name="nom"
                    #nom="ngModel"
-                   required>
-            <div *ngIf="nom.invalid && (nom.dirty || nom.touched)" class="error-text">
+                   required
+                   [class.invalid]="(nom.invalid && (nom.dirty || nom.touched)) || (nom.invalid && formSubmitted)">
+            <div *ngIf="nom.invalid && (nom.dirty || nom.touched || formSubmitted)" class="error-text">
               Le nom est requis
             </div>
           </div>
 
+          <!-- Prénom -->
           <div class="form-group">
-            <label for="prenom">Prénom</label>
+            <label for="prenom">Prénom *</label>
             <input type="text" id="prenom"
                    [(ngModel)]="enrollmentData.prenom"
                    name="prenom"
                    #prenom="ngModel"
-                   required>
-            <div *ngIf="prenom.invalid && (prenom.dirty || prenom.touched)" class="error-text">
+                   required
+                   [class.invalid]="(prenom.invalid && (prenom.dirty || prenom.touched)) || (prenom.invalid && formSubmitted)">
+            <div *ngIf="prenom.invalid && (prenom.dirty || prenom.touched || formSubmitted)" class="error-text">
               Le prénom est requis
             </div>
           </div>
 
+          <!-- Date de naissance -->
           <div class="form-group">
-            <label for="dateNaissance">Date de naissance</label>
+            <label for="dateNaissance">Date de naissance *</label>
             <input type="date" id="dateNaissance"
                    [(ngModel)]="enrollmentData.dateNaissance"
                    name="dateNaissance"
                    #dateNaissance="ngModel"
-                   required>
-            <div *ngIf="dateNaissance.invalid && (dateNaissance.dirty || dateNaissance.touched)" class="error-text">
+                   required
+                   [class.invalid]="(dateNaissance.invalid && (dateNaissance.dirty || dateNaissance.touched)) || (dateNaissance.invalid && formSubmitted)">
+            <div *ngIf="dateNaissance.invalid && (dateNaissance.dirty || dateNaissance.touched || formSubmitted)" class="error-text">
               La date de naissance est requise
             </div>
           </div>
 
+          <!-- Email -->
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email">Email *</label>
             <input type="email" id="email"
                    [(ngModel)]="enrollmentData.email"
                    name="email"
                    #email="ngModel"
-                   required email
-                   placeholder="nom.prenom@enicar.ucar.tn">
-            <div *ngIf="email.invalid && (email.dirty || email.touched)" class="error-text">
+                   required
+                   pattern="^[a-z]+\.[a-z]+@enicar\.ucar\.tn$"
+                   placeholder="nom.prenom@enicar.ucar.tn"
+                   [class.invalid]="(email.invalid && (email.dirty || email.touched)) || (email.invalid && formSubmitted)">
+            <div *ngIf="email.invalid && (email.dirty || email.touched || formSubmitted)" class="error-text">
               <span *ngIf="email.errors?.['required']">Un email est requis</span>
-             <!-- <span *ngIf="email.errors?.['email']">Format d'email invalide</span>-->
-           
+              <span *ngIf="email.errors?.['pattern']">Format d'email invalide (doit doit être .nom&#64;enicar.ucar.tn)</span>
             </div>
           </div>
 
+          <!-- Téléphone -->
           <div class="form-group">
-            <label for="numeroTelephone">Téléphone</label>
+            <label for="numeroTelephone">Téléphone *</label>
             <input type="tel" id="numeroTelephone"
                    [(ngModel)]="enrollmentData.numeroTelephone"
                    name="numeroTelephone"
                    #phone="ngModel"
-                   required>
-            <div *ngIf="phone.invalid && (phone.dirty || phone.touched)" class="error-text">
+                   required
+                   [class.invalid]="(phone.invalid && (phone.dirty || phone.touched)) || (phone.invalid && formSubmitted)">
+            <div *ngIf="phone.invalid && (phone.dirty || phone.touched || formSubmitted)" class="error-text">
               Le numéro de téléphone est requis
             </div>
           </div>
 
+          <!-- Niveau d'étude -->
           <div class="form-group">
-            <label for="niveauEtude">Niveau d'étude</label>
+            <label for="niveauEtude">Niveau d'étude *</label>
             <select id="niveauEtude"
                     [(ngModel)]="enrollmentData.niveauEtude"
                     name="niveauEtude"
                     #niveauEtude="ngModel"
-                    required>
+                    required
+                    [class.invalid]="(niveauEtude.invalid && (niveauEtude.dirty || niveauEtude.touched)) || (niveauEtude.invalid && formSubmitted)">
               <option value="" disabled selected>Sélectionnez votre niveau</option>
               <option value="1ere">1ère année</option>
               <option value="2eme">2ème année</option>
               <option value="3eme">3ème année</option>
             </select>
-            <div *ngIf="niveauEtude.invalid && (niveauEtude.dirty || niveauEtude.touched)" class="error-text">
+            <div *ngIf="niveauEtude.invalid && (niveauEtude.dirty || niveauEtude.touched || formSubmitted)" class="error-text">
               Le niveau d'étude est requis
             </div>
           </div>
 
+          <!-- Département d'étude -->
           <div class="form-group">
-            <label for="departementEtude">Département d'étude</label>
+            <label for="departementEtude">Département d'étude *</label>
             <select id="departementEtude"
                     [(ngModel)]="enrollmentData.departementEtude"
                     name="departementEtude"
                     #departementEtude="ngModel"
-                    required>
+                    required
+                    [class.invalid]="(departementEtude.invalid && (departementEtude.dirty || departementEtude.touched)) || (departementEtude.invalid && formSubmitted)">
               <option value="" disabled selected>Sélectionnez votre département</option>
               <option value="informatique">Informatique</option>
               <option value="mecatronique">Mécatronique</option>
               <option value="industriel">Industriel</option>
-              <option value="infotronique">infotronique</option>
+              <option value="infotronique">Infotronique</option>
             </select>
-            <div *ngIf="departementEtude.invalid && (departementEtude.dirty || departementEtude.touched)" class="error-text">
+            <div *ngIf="departementEtude.invalid && (departementEtude.dirty || departementEtude.touched || formSubmitted)" class="error-text">
               Le département d'étude est requis
             </div>
           </div>
 
+          <!-- Message de motivation -->
           <div class="form-group full-width">
             <label for="messageMotivation">Motivation (optionnel)</label>
             <textarea id="messageMotivation"
@@ -169,6 +180,13 @@
                       rows="4"></textarea>
           </div>
         </div>
+
+        <!-- Message d'erreur général -->
+        <div *ngIf="formSubmissionError" class="error-message">
+          {{ formSubmissionError }}
+        </div>
+
+        <!-- Message de succès -->
         <div *ngIf="showSuccessMessage" class="success-message">
           <div class="success-icon">✓</div>
           <div class="success-text">{{ successMessage }}</div>
@@ -178,12 +196,10 @@
           <button type="button" class="cancel-button" (click)="showEnrollmentModal = false">
             Annuler
           </button>
-          <button type="submit" class="submit-button" [disabled]="enrollmentForm.invalid">
+          <button type="submit" class="submit-button">
             Soumettre l'inscription
           </button>
         </div>
-        <!-- Success message -->
-
       </form>
     </div>
   </div>

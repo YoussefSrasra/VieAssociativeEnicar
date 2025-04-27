@@ -42,6 +42,7 @@ interface EnrollmentData {
   imports: [CommonModule, FormsModule ]
 })
 export class ClubAccueilComponent implements OnInit {
+  formSubmitted = false;
   showSuccessMessage = false;
   successMessage = '';
 
@@ -163,47 +164,61 @@ export class ClubAccueilComponent implements OnInit {
     this.formSubmissionError = null;
   }
   submitEnrollment(form: NgForm): void {
-    if (form.valid && this.isValidEnicarEmail(this.enrollmentData.email)) {
-      this.enrollService.createEnrollment(this.enrollmentData).subscribe({
-        next: (response) => {
-          console.log('Inscription réussie:', response);
-          this.showSuccessMessage = true;
-          this.successMessage = 'Candidature envoyée avec succès!';
-          setTimeout(() => {
-            this.showSuccessMessage = false;
-            this.showEnrollmentModal = false;
-          }, 3000);
+    this.formSubmitted = true;
+    
+    if (form.invalid) {
+      this.scrollToFirstInvalidControl(form);
+      return;
+    }
+  
+    if (!this.isValidEnicarEmail(this.enrollmentData.email)) {
+      this.formSubmissionError = 'L\'email doit être de la forme nom.prenom@enicar.ucar.tn';
+      this.scrollToControl('email');
+      return;
+    }
+  
+    this.enrollService.createEnrollment(this.enrollmentData).subscribe({
+      next: (response) => {
+        console.log('Inscription réussie:', response);
+        this.showSuccessMessage = true;
+        this.successMessage = 'Candidature envoyée avec succès!';
+        setTimeout(() => {
+          this.showSuccessMessage = false;
+          this.showEnrollmentModal = false;
+          this.formSubmitted = false;
           form.resetForm();
-        },
-        error: (err) => {
-          console.error('Erreur lors de l\'inscription:', err);
-          this.formSubmissionError = err.error?.message || 'Erreur lors de la soumission du formulaire. Veuillez réessayer.';
-        }
-      });
-    } else {
-      this.formSubmissionError = this.enrollmentData.email && !this.isValidEnicarEmail(this.enrollmentData.email)
-        ? 'L\'email doit être de la forme nom.prenom@enicar.ucar.tn'
-        : 'Veuillez remplir tous les champs obligatoires correctement.';
-      this.markFormAsTouched(form);
+        }, 3000);
+      },
+      error: (err) => {
+        console.error('Erreur lors de l\'inscription:', err);
+        this.formSubmissionError = err.error?.message || 'Erreur lors de la soumission du formulaire. Veuillez réessayer.';
+      }
+    });
+  }
+  
+  private scrollToFirstInvalidControl(form: NgForm): void {
+    for (const key of Object.keys(form.controls)) {
+      if (form.controls[key].invalid) {
+        this.scrollToControl(key);
+        break;
+      }
     }
   }
   
-  // Ajoutez cette méthode pour valider le domaine de l'email
+  private scrollToControl(controlName: string): void {
+    const controlElement = document.getElementById(controlName);
+    if (controlElement) {
+      controlElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      controlElement.focus();
+    }
+  }
+  
   isValidEnicarEmail(email: string): boolean {
     return email?.endsWith('@enicar.ucar.tn') || false;
   }
 
-  private markFormAsTouched(form: NgForm): void {
-    Object.keys(form.controls).forEach(key => {
-      form.controls[key].markAsTouched();
-    });
-  }
 
-
-  /*getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
-    if (!logo) return undefined;
-    return this.sanitizer.bypassSecurityTrustUrl(logo);
-  }*/
+ 
 
  
   getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
