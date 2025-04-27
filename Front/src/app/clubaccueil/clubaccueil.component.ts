@@ -5,11 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { catchError, of, finalize } from 'rxjs';
-<<<<<<< HEAD
+
 import { FormControl, Validators } from '@angular/forms';
-=======
+
 import { ClubStatus} from './ClubStatus';
->>>>>>> e922de39257f088c4cfb6e18983057db0eeffebd
+
 
 interface Club {
   id: number;
@@ -199,15 +199,15 @@ export class ClubAccueilComponent implements OnInit {
     });
   }
 
-<<<<<<< HEAD
+
   /*getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
     if (!logo) return undefined;
     return this.sanitizer.bypassSecurityTrustUrl(logo);
   }*/
-    getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
-=======
+
+ 
   getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
->>>>>>> e922de39257f088c4cfb6e18983057db0eeffebd
+
       if (!logo) return undefined;
       
       // Check if it's already a data URL
@@ -219,22 +219,10 @@ export class ClubAccueilComponent implements OnInit {
       const mimeType = this.detectMimeType(logo);
       const dataUrl = `data:${mimeType};base64,${logo}`;
       return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
-<<<<<<< HEAD
+
   }
   
-  private detectMimeType(base64: string): string {
-      // Simple detection - you might need to expand this based on your needs
-      const signature = base64.substring(0, 30);
-      if (signature.startsWith('/9j') || signature.includes('FFD8')) {
-          return 'image/jpeg';
-      } else if (signature.startsWith('iVBORw0KGgo')) {
-          return 'image/png';
-      }
-      // Default to png if unknown
-      return 'image/png';
-=======
->>>>>>> e922de39257f088c4cfb6e18983057db0eeffebd
-  }
+
 
   private detectMimeType(base64: string): string {
       // Simple detection - you might need to expand this based on your needs
@@ -254,15 +242,5 @@ export class ClubAccueilComponent implements OnInit {
     return dateObj.toLocaleDateString('fr-FR');
  
   }
-<<<<<<< HEAD
-  /*validateEnicarEmail(control: FormControl) {
-    const email = control.value;
-    if (email && !email.endsWith('@enicar.ucar.tn')) {
-      return { invalidEnicarEmail: true };
-    }
-    return null;
-  }*/
-=======
->>>>>>> e922de39257f088c4cfb6e18983057db0eeffebd
-  
+
 }
