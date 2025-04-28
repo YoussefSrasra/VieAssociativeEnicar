@@ -104,31 +104,23 @@ export class DemandeclubadminComponent implements OnInit {
   }
 
   creerClub(demande: DemandeClub): void {
-  if (confirm(`Créer le club "${demande.nomClub}" ?`)) {
-    const nouveauClub = {
-      name: demande.nomClub,
-      specialty: demande.description,
-      status: "active",
-      logo: demande.logoBase64, // Assurez-vous que le champ logo est bien défini dans l'API
-      responsibleMember: null,
-      members: []
-    };
-
-    this.http.post(`${environment.apiUrl}/api/clubs`, nouveauClub)
-      .subscribe({
-        next: () => {
-          // Mettre à jour l'état de la demande localement
-          
-          alert('Club créé avec succès');
-        },
-        error: (err) => {
-          console.error(err);
-          alert('Échec de la création du club');
-        }
-      });
+    if (confirm(`Créer le club "${demande.nomClub}" ?`)) {
+      this.http.post(`${environment.apiUrl}/api/demandes/creer/${demande.id}`, {})
+        .subscribe({
+          next: () => {
+            alert('Club créé avec succès');
+            // Optionnel : recharger la liste des demandes
+            this.loadDemandes();
+          },
+          error: (err) => {
+            console.error(err);
+            alert('Échec de la création du club');
+          }
+        });
+    }
   }
-}
   
+
   // Version modifiée de genererCompte pour accepter un callback
   genererCompte(demande: DemandeClub, callback?: () => void): void {
     this.http.post(`${environment.apiUrl}/api/comptes/generer`, {
