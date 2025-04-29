@@ -101,7 +101,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/event-launch',
         //icon: 'bg-colors',
-        roles: ['ADMIN']
+        roles: ['ADMIN','MANAGER']
       },
       {
         id: 'event suivi ',
@@ -110,7 +110,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/admin/event-registrations',
         //icon: 'bg-colors',
-        roles: ['ADMIN']
+        roles: ['ADMIN','MANAGER']
       },
       {
         id: 'demande evenet  ',
@@ -157,15 +157,7 @@ export const NavigationItems: NavigationItem[] = [
         //icon: 'bg-colors',
         roles: ['ADMIN']
       },
-      {
-        id: 'feedback-evenement  ',
-        title: 'Feedback-evenement ',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/feedback-evenement',
-        //icon: 'bg-colors',
-        roles: ['MANAGER','MEMBER']
-      },
+     
       {
         id: 'feedback-list  ',
         title: 'Feedback-list ',
@@ -175,7 +167,7 @@ export const NavigationItems: NavigationItem[] = [
         
         roles: ['ADMIN','MANAGER'],
       },
-      {
+      /*{
         id: 'tabler',
         title: 'Tabler',
         type: 'item',
@@ -184,15 +176,17 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ant-design',
         target: true,
         external: true
-      }//commentaire 
+      }//commentaire */
 
     ]
   },
   {
     id: 'club',
     title: 'Club',
-    type: 'collapse', // Utilisez 'collapse' pour permettre l'expansion/contraction
-    icon: 'icon-star', // Choisissez une icône appropriée
+    type: 'group', // Utilisez 'collapse' pour permettre l'expansion/contraction
+    icon: 'icon-star', 
+    roles: ['MEMBER'],// Choisissez une icône appropriée
+    
     children: [
       {
         id: 'club-management',
@@ -216,6 +210,15 @@ export const NavigationItems: NavigationItem[] = [
         roles: ['MANAGER']
       },
       {
+        id: 'feedback-evenement  ',
+        title: 'Feedback-evenement ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/feedback-evenement',
+        //icon: 'bg-colors',
+        roles: ['MEMBER']
+      },
+      {
         id: 'club-activities',
         title: 'Activités',
         type: 'item',
@@ -232,7 +235,7 @@ export const NavigationItems: NavigationItem[] = [
     ]
   },
 
-  {
+ /* {
     id: 'other',
     title: 'Other',
     type: 'group',
@@ -257,5 +260,5 @@ export const NavigationItems: NavigationItem[] = [
         external: true
       }
     ]
-  }
+  }*/
 ];

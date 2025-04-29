@@ -20,6 +20,7 @@ interface Club {
   logo?: string;
   creationDate?: Date;
   membersCount?: number;
+  enrollmentOpen: boolean;
 }
 
 interface EnrollmentData {
@@ -148,6 +149,11 @@ export class ClubAccueilComponent implements OnInit {
   }
 
   openEnrollmentModal(club: Club): void {
+    if (!club.enrollmentOpen)  {
+      this.formSubmissionError = 'Les inscriptions pour ce club ne sont pas ouvertes pour le moment.';
+      return;
+    }
+    
     this.selectedClub = club;
     this.enrollmentData = {
       nom: '',

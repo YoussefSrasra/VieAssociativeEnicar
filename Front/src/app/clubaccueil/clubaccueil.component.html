@@ -29,8 +29,8 @@
         </span>
       </div>
 
-      <button (click)="openEnrollmentModal(club)" class="join-button">
-        S'inscrire
+      <button (click)="openEnrollmentModal(club)" class="join-button" [disabled]="!club.enrollmentOpen">
+        {{ club.enrollmentOpen ? "S'inscrire" : "Inscriptions fermées" }}
       </button>
     </div>
 

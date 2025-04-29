@@ -9,65 +9,56 @@ import { IconDirective } from '@ant-design/icons-angular';
 
 @Component({
   selector: 'app-nav-collapse',
+  standalone: true,
   imports: [CommonModule, IconDirective, RouterModule, NavItemComponent],
   templateUrl: './nav-collapse.component.html',
   styleUrls: ['./nav-collapse.component.scss'],
   animations: [
     trigger('slideInOut', [
       transition(':enter', [
-        style({ transform: 'translateY(-100%)', display: 'block' }),
-        animate('250ms ease-in', style({ transform: 'translateY(0%)' }))
+        style({ height: '0', overflow: 'hidden' }),
+        animate('250ms ease-in', style({ height: '*', overflow: 'hidden' }))
       ]),
-      transition(':leave', [animate('250ms ease-in', style({ transform: 'translateY(-100%)' }))])
+      transition(':leave', [
+        style({ height: '*', overflow: 'hidden' }),
+        animate('250ms ease-out', style({ height: '0', overflow: 'hidden' }))
+      ])
     ])
   ]
 })
 export class NavCollapseComponent {
-  // Public properties
   @Input() item!: NavigationItem;
-  @Output() showCollapseItem: EventEmitter<void> = new EventEmitter();  // Corrected Output
+  @Output() showCollapseItem: EventEmitter<void> = new EventEmitter();
 
   windowWidth: number;
+  isOpen = false;
 
   constructor() {
     this.windowWidth = window.innerWidth;
   }
 
-  // Toggle collapse
-  navCollapse(e: MouseEvent) {
-    let parent = e.target as HTMLElement;
+  navCollapse(event: MouseEvent): void {
+    event.preventDefault();
+    this.isOpen = !this.isOpen;
 
-    if (parent?.tagName === 'SPAN') {
-      parent = parent.parentElement!;
-    }
+    const clickedElement = (event.target as HTMLElement);
+    const parent = clickedElement.closest('.coded-hasmenu') as HTMLElement;
 
-    parent = (parent as HTMLElement).parentElement as HTMLElement;
-
+    // Fermer tous les autres menus ouverts
     const sections = document.querySelectorAll('.coded-hasmenu');
-    for (let i = 0; i < sections.length; i++) {
-      if (sections[i] !== parent) {
-        sections[i].classList.remove('coded-trigger');
+    sections.forEach(section => {
+      if (section !== parent) {
+        section.classList.remove('coded-trigger');
       }
-    }
+    });
 
-    let first_parent = parent.parentElement;
-    let pre_parent = ((parent as HTMLElement).parentElement as HTMLElement).parentElement as HTMLElement;
-    if (first_parent?.classList.contains('coded-hasmenu')) {
-      do {
-        first_parent?.classList.add('coded-trigger');
-        first_parent = ((first_parent as HTMLElement).parentElement as HTMLElement).parentElement as HTMLElement;
-      } while (first_parent.classList.contains('coded-hasmenu'));
-    } else if (pre_parent.classList.contains('coded-submenu')) {
-      do {
-        pre_parent?.parentElement?.classList.add('coded-trigger');
-        pre_parent = (((pre_parent as HTMLElement).parentElement as HTMLElement).parentElement as HTMLElement).parentElement as HTMLElement;
-      } while (pre_parent.classList.contains('coded-submenu'));
+    // Ouvrir ou fermer le menu actuel
+    if (parent) {
+      parent.classList.toggle('coded-trigger', this.isOpen);
     }
-    parent.classList.toggle('coded-trigger');
   }
 
-  // For Compact Menu (emit event when collapse occurs)
-  subMenuCollapse(item: void) {
-    this.showCollapseItem.emit(item);  // Emit event when collapse happens
+  subMenuCollapse(): void {
+    this.showCollapseItem.emit();
   }
 }

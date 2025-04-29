@@ -11,7 +11,23 @@ export class ClubService {
 
   constructor(private http: HttpClient) { }
 
+  // Ajoutez cette méthode
   getAllClubs(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
+  }
+
+  // Ajoutez aussi les autres méthodes nécessaires
+  getClubByUsername(username: string): Observable<any> {
+    console.log("usrrnameee "+username)
+    return this.http.get<any>(`${this.apiUrl}/name/${username}`);
+  }
+
+  updateEnrollmentStatus(clubId: number, status: boolean): Observable<any> {
+    return this.http.patch(`${this.apiUrl}/${clubId}`, { 
+      openEnrollment: status 
+    });
+  }
+  toggleEnrollmentStatus(clubId: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${clubId}/toggle-enrollment`, null,{ responseType: 'text' });
   }
 }
