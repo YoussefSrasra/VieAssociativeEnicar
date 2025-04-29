@@ -37,7 +37,7 @@ export class AccueilComponent implements OnInit {
 
   @HostListener('window:scroll', ['$event'])
   onScroll() {
-    const sections = ['hero', 'about', 'services'];
+    const sections = ['hero', 'about', 'services','events'];
     const scrollPosition = window.scrollY + 100; // Ajustez (+100px pour la hauteur de la navbar)
 
     for (const section of sections) {

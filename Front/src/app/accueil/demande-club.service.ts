@@ -11,6 +11,6 @@ export class DemandeClubService {
   constructor(private http: HttpClient) {}
 
   envoyerDemande(demande: any): Observable<any> {
-    return this.http.post(this.apiUrl, demande); // Supprimé "/ajouter"
+    return this.http.post(this.apiUrl, demande); 
   }
 }

@@ -5,7 +5,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { catchError, of, finalize } from 'rxjs';
+
+import { FormControl, Validators } from '@angular/forms';
+
 import { ClubStatus} from './ClubStatus';
+
 
 interface Club {
   id: number;
@@ -16,6 +20,7 @@ interface Club {
   logo?: string;
   creationDate?: Date;
   membersCount?: number;
+  enrollmentOpen: boolean;
 }
 
 interface EnrollmentData {
@@ -35,9 +40,13 @@ interface EnrollmentData {
   templateUrl: './clubaccueil.component.html',
   styleUrls: ['./clubaccueil.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule ]
 })
 export class ClubAccueilComponent implements OnInit {
+  formSubmitted = false;
+  showSuccessMessage = false;
+  successMessage = '';
+
   clubs: Club[] = [];
   filteredClubs: Club[] = [];
   loading = true;
@@ -140,6 +149,11 @@ export class ClubAccueilComponent implements OnInit {
   }
 
   openEnrollmentModal(club: Club): void {
+    if (!club.enrollmentOpen)  {
+      this.formSubmissionError = 'Les inscriptions pour ce club ne sont pas ouvertes pour le moment.';
+      return;
+    }
+    
     this.selectedClub = club;
     this.enrollmentData = {
       nom: '',
@@ -155,33 +169,66 @@ export class ClubAccueilComponent implements OnInit {
     this.showEnrollmentModal = true;
     this.formSubmissionError = null;
   }
-
   submitEnrollment(form: NgForm): void {
-    if (form.valid) {
-      this.enrollService.createEnrollment(this.enrollmentData).subscribe({
-        next: (response) => {
-          console.log('Inscription réussie:', response);
-          this.showEnrollmentModal = false;
-          form.resetForm();
-        },
-        error: (err) => {
-          console.error('Erreur lors de l\'inscription:', err);
-          this.formSubmissionError = err.error?.message || 'Erreur lors de la soumission du formulaire. Veuillez réessayer.';
-        }
-      });
-    } else {
-      this.formSubmissionError = 'Veuillez remplir tous les champs obligatoires correctement.';
-      this.markFormAsTouched(form);
+    this.formSubmitted = true;
+    
+    if (form.invalid) {
+      this.scrollToFirstInvalidControl(form);
+      return;
     }
-  }
-
-  private markFormAsTouched(form: NgForm): void {
-    Object.keys(form.controls).forEach(key => {
-      form.controls[key].markAsTouched();
+  
+    if (!this.isValidEnicarEmail(this.enrollmentData.email)) {
+      this.formSubmissionError = 'L\'email doit être de la forme nom.prenom@enicar.ucar.tn';
+      this.scrollToControl('email');
+      return;
+    }
+  
+    this.enrollService.createEnrollment(this.enrollmentData).subscribe({
+      next: (response) => {
+        console.log('Inscription réussie:', response);
+        this.showSuccessMessage = true;
+        this.successMessage = 'Candidature envoyée avec succès!';
+        setTimeout(() => {
+          this.showSuccessMessage = false;
+          this.showEnrollmentModal = false;
+          this.formSubmitted = false;
+          form.resetForm();
+        }, 3000);
+      },
+      error: (err) => {
+        console.error('Erreur lors de l\'inscription:', err);
+        this.formSubmissionError = err.error?.message || 'Erreur lors de la soumission du formulaire. Veuillez réessayer.';
+      }
     });
   }
+  
+  private scrollToFirstInvalidControl(form: NgForm): void {
+    for (const key of Object.keys(form.controls)) {
+      if (form.controls[key].invalid) {
+        this.scrollToControl(key);
+        break;
+      }
+    }
+  }
+  
+  private scrollToControl(controlName: string): void {
+    const controlElement = document.getElementById(controlName);
+    if (controlElement) {
+      controlElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      controlElement.focus();
+    }
+  }
+  
+  isValidEnicarEmail(email: string): boolean {
+    return email?.endsWith('@enicar.ucar.tn') || false;
+  }
 
+
+ 
+
+ 
   getSanitizedLogo(logo: string | undefined): SafeUrl | undefined {
+
       if (!logo) return undefined;
       
       // Check if it's already a data URL
@@ -193,7 +240,10 @@ export class ClubAccueilComponent implements OnInit {
       const mimeType = this.detectMimeType(logo);
       const dataUrl = `data:${mimeType};base64,${logo}`;
       return this.sanitizer.bypassSecurityTrustUrl(dataUrl);
+
   }
+  
+
 
   private detectMimeType(base64: string): string {
       // Simple detection - you might need to expand this based on your needs
@@ -211,6 +261,7 @@ export class ClubAccueilComponent implements OnInit {
     
     const dateObj = typeof date === 'string' ? new Date(date) : date;
     return dateObj.toLocaleDateString('fr-FR');
+ 
   }
-  
+
 }

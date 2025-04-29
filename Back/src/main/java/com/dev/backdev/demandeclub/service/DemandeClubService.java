@@ -39,7 +39,7 @@ public class DemandeClubService {
         nouveauClub.setName(demande.getNomClub());
         nouveauClub.setSpecialty(demande.getDescription());
         nouveauClub.setLogo(demande.getLogoBase64());
-        nouveauClub.setStatus(ClubStatus.active);
+        nouveauClub.setStatus(ClubStatus.ACTIVE);
 
         Club clubCree = clubService.createClub(nouveauClub);
 

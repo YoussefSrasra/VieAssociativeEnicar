@@ -1,80 +1,121 @@
 <div class="container">
+  <!-- Section de gestion du club -->
+  <div *ngIf="userClub" class="club-management card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h3 class="mb-0">Gestion de votre club: {{userClub.name}}</h3>
+    </div>
+    <div class="card-body">
+      <div class="enrollment-toggle d-flex align-items-center">
+        <h5 class="mb-0 me-3">Statut des inscriptions :</h5>
+        <div class="form-check form-switch">
+          <input class="form-check-input" type="checkbox" role="switch" 
+                 id="enrollmentSwitch" [(ngModel)]="userClub.openEnrollment"
+                 (change)="toggleEnrollment()">
+          <label class="form-check-label" for="enrollmentSwitch">
+            {{ userClub.openEnrollment ? 'OUVERTES' : 'FERMÉES' }}
+          </label>
+        </div>
+        <span class="badge ms-3" 
+              [ngClass]="userClub.openEnrollment ? 'bg-success' : 'bg-secondary'">
+          {{ userClub.openEnrollment ? 'Actives' : 'Inactives' }}
+        </span>
+      </div>
+    </div>
+  </div>
+
   <h2>Liste des Inscriptions</h2>
   
   <div *ngIf="isLoading" class="loading">
-    Chargement en cours...
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement en cours...</span>
+    </div>
   </div>
   
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
+  
   <div *ngIf="!isLoading && enrollments.length === 0" class="alert alert-info">
-    Pas de demandes d'inscriptions
+    Aucune demande d'inscription en attente
   </div>
   
-  <table class="table" *ngIf="!isLoading && enrollments.length > 0">
-    <thead>
-      <tr>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Email</th>
-        <th>Téléphone</th>
-        <th>Département</th>
-        <th>Niveau</th>
-        <th>Motivation</th>
-        <th>Statut</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let enrollment of enrollments">
-        <td>{{ enrollment.nom }}</td>
-        <td>{{ enrollment.prenom }}</td>
-        <td>{{ enrollment.email }}</td>
-        <td>{{ enrollment.numeroTelephone }}</td>
-        <td>{{ enrollment.departementEtude }}</td>
-        <td>{{ enrollment.niveauEtude }}</td>
-        <td>
-          <button class="btn btn-info btn-sm" 
-                  (click)="showMotivation(enrollment.messageMotivation)">
-            Voir motivation
-          </button>
-        </td>
-        <td>
-          <span [ngClass]="{
-            'badge bg-warning': enrollment.etat === 'EN_ATTENTE',
-            'badge bg-success': enrollment.etat === 'ACCEPTE',
-            'badge bg-danger': enrollment.etat === 'REJETE'
-          }">
-            {{ enrollment.etat }}
-          </span>
-        </td>
-        <td>
-          <button *ngIf="enrollment.etat === 'EN_ATTENTE'" 
-                  (click)="approveEnrollment(enrollment.id!)" 
-                  class="btn btn-success btn-sm">
-            Approuver
-          </button>
-          <button *ngIf="enrollment.etat === 'EN_ATTENTE'" 
-                  (click)="rejectEnrollment(enrollment.id!)" 
-                  class="btn btn-danger btn-sm ms-2">
-            Rejeter
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  <!-- Dans votre template -->
-<div *ngIf="showMotivationModal" class="motivation-overlay">
-  <div class="motivation-modal">
-    <div class="modal-header">
-      <h3>Message de motivation</h3>
-      <button (click)="closeMotivation()" class="close-btn">&times;</button>
-    </div>
-    <div class="modal-body">
-      {{ selectedMotivation }}
+  <div class="table-responsive" *ngIf="!isLoading && enrollments.length > 0">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Email</th>
+          <th>Téléphone</th>
+          <th>Département</th>
+          <th>Niveau</th>
+          <th>Motivation</th>
+          <th>Statut</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let enrollment of enrollments">
+          <td>{{ enrollment.nom }}</td>
+          <td>{{ enrollment.prenom }}</td>
+          <td>{{ enrollment.email }}</td>
+          <td>{{ enrollment.numeroTelephone }}</td>
+          <td>{{ enrollment.departementEtude }}</td>
+          <td>{{ enrollment.niveauEtude }}</td>
+          <td>
+            <button class="btn btn-info btn-sm" 
+                    (click)="showMotivation(enrollment.messageMotivation)">
+              <i class="bi bi-eye-fill"></i> Voir
+            </button>
+          </td>
+          <td>
+            <span [ngClass]="{
+              'badge bg-warning': enrollment.etat === 'EN_ATTENTE',
+              'badge bg-success': enrollment.etat === 'ACCEPTE',
+              'badge bg-danger': enrollment.etat === 'REJETE'
+            }">
+              {{ enrollment.etat | lowercase }}
+            </span>
+          </td>
+          <td>
+            <div class="d-flex">
+              <button *ngIf="enrollment.etat === 'EN_ATTENTE'" 
+                      (click)="approveEnrollment(enrollment.id)" 
+                      class="btn btn-success btn-sm me-2">
+                <i class="bi bi-check-circle-fill"></i> Valider
+              </button>
+              <button *ngIf="enrollment.etat === 'EN_ATTENTE'" 
+                      (click)="rejectEnrollment(enrollment.id)" 
+                      class="btn btn-danger btn-sm">
+                <i class="bi bi-x-circle-fill"></i> Refuser
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal de motivation -->
+  <div *ngIf="showMotivationModal" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Message de motivation</h5>
+          <button type="button" class="btn-close btn-close-white" 
+                  (click)="closeMotivation()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="motivation-content p-3">
+            {{ selectedMotivation }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" 
+                  (click)="closeMotivation()">Fermer</button>
+        </div>
+      </div>
     </div>
   </div>
+  <div *ngIf="showMotivationModal" class="modal-backdrop fade show"></div>
 </div>
-
- 
