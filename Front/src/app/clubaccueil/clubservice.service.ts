@@ -22,6 +22,10 @@ export class ClubService {
     return this.http.get<any>(`${this.apiUrl}/name/${username}`);
   }
 
+
+  createClub(club: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, club);
+  } 
   updateEnrollmentStatus(clubId: number, status: boolean): Observable<any> {
     return this.http.patch(`${this.apiUrl}/${clubId}`, { 
       openEnrollment: status 
