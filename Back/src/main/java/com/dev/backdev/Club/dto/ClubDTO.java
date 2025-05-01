@@ -26,7 +26,7 @@ public class ClubDTO {
     private List<String> memberUsernames;     // Plus explicite
     private LocalDate mandatStartDate;
     private Integer mandatDurationMonths;
-
+    
     // Constructeur à partir de l'entité Club
     public ClubDTO(Club club) {
         this.id = club.getId();

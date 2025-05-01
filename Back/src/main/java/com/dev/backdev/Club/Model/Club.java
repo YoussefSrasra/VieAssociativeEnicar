@@ -94,6 +94,7 @@ public class Club {
 
     public enum ClubStatus {
         ACTIVE, INACTIVE, PENDING
+
     }
 }
 

@@ -34,8 +34,8 @@ public class DemandeClubController {
         return ResponseEntity.ok(demandeClubService.createDemande(demande));
     }
 
-    @PostMapping("/creer")
-    public ResponseEntity<ClubDTO> creerDepuisDemande(@RequestBody Long demandeid) {
+    @PostMapping("/creer/{demandeid}")
+    public ResponseEntity<ClubDTO> creerDepuisDemande(@PathVariable Long demandeid) {
         ClubDTO clubCree = demandeClubService.accepterDemandeEtCreerClub(demandeid);
         return ResponseEntity.ok(clubCree);
     }
@@ -45,6 +45,7 @@ public class DemandeClubController {
         demandeClubService.deleteDemande(id);
         return ResponseEntity.ok().build();
     }
+
     @PutMapping("/{id}/approve")
     public ResponseEntity<demandeclub> approveDemande(@PathVariable Long id) {
         return ResponseEntity.ok(demandeClubService.updateDemandeState(id, "ACCEPTE"));

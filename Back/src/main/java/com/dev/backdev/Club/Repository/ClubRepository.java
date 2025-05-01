@@ -13,7 +13,9 @@ import com.dev.backdev.Club.Model.Club;
 public interface ClubRepository extends JpaRepository<Club, Long> {
     Optional<Club> findByName( String name);
     Optional<Club> findByResponsibleMember( User user);
+    Optional<Club> findByResponsibleMember_Username(String username);
     boolean existsByName(String name);
+   // void findByResponsibleMember(Optional<User> userReonsible);
 
     
 }

@@ -63,6 +63,7 @@ export class AccueilComponent implements OnInit {
     const sections = ['hero', 'about', 'services', 'events'];
     const scrollPosition = window.scrollY + 100;
 
+
     for (const section of sections) {
       const element = document.getElementById(section);
       if (element) {

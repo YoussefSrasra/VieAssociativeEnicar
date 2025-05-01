@@ -46,18 +46,14 @@
             <td>
               <div *ngIf="demande.etat === 'ACCEPTE'; else pendingActions">
                 <div class="d-flex flex-wrap gap-2">
-                  <button class="btn btn-primary btn-sm" (click)="genererCompte(demande)">
-                    <i class="bi bi-person-plus"></i> Générer compte
-                  </button>
-                  <button class="btn btn-info btn-sm" (click)="creerClub(demande)">
-                    <i class="bi bi-plus-circle"></i> Créer club
-                  </button>
+                  
+                  
                 </div>
               </div>
               
               <ng-template #pendingActions>
                 <div class="d-flex flex-wrap gap-2">
-                  <button class="btn btn-success btn-sm" (click)="approveDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
+                  <button class="btn btn-success btn-sm" (click)="approveDemande(demande )" *ngIf="demande.etat === 'EN_ATTENTE'">
                     <i class="bi bi-check"></i> Approuver
                   </button>
                   <button class="btn btn-warning btn-sm" (click)="rejectDemande(demande.id)" *ngIf="demande.etat === 'EN_ATTENTE'">
