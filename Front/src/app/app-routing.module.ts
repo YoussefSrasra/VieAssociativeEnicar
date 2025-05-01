@@ -77,6 +77,12 @@ const routes: Routes = [
           .then(c => c.EntretiensComponent)
       },
       {
+        path: 'member-dashboard',
+        loadComponent: () => import('./member-dashboard/member-dashboard.component')
+          .then(c => c.MemberDashboardComponent)
+      },
+
+      {
         path: 'partnerships',
         loadComponent: () => import('./features/partnerships/partnerships.component')
           .then(c => c.PartnershipsComponent)
@@ -87,6 +93,12 @@ const routes: Routes = [
         loadComponent: () => import('./features/event-requests/event-requests.component')
           .then(c => c.EventRequestsComponent)
       } ,
+      {
+        path: 'dashboard/default',
+        loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
+        canActivate: [authGuard]
+
+      },
       {
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
@@ -107,11 +119,11 @@ const routes: Routes = [
         loadComponent: () => import('./enrollment/enrollment.component').then((c) => c.EnrollmentComponent)
       },
       {
-        path: 'typography',
+        path: 'color',
         loadComponent: () => import('./demo/component/basic-component/color/color.component').then((c) => c.ColorComponent)
       },
       {
-        path: 'color',
+        path: 'typography',
         loadComponent: () => import('./demo/component/basic-component/typography/typography.component').then((c) => c.TypographyComponent)
       },
       {
@@ -119,8 +131,12 @@ const routes: Routes = [
         loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
       },
 
+
     ]
   },
+
+
+
   {
     path: '',
     component: GuestLayoutComponent,

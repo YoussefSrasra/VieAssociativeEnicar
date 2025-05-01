@@ -4,7 +4,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 interface EventRequest {
   id?: number;
-  
+
   eventName: string;
   type: string;
   description: string;

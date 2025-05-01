@@ -1,0 +1,136 @@
+<section id="member-events" class="events-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="title-icon">📅</span>
+        <span>Événements Approuvés</span>
+      </h2>
+      <p class="section-subtitle">Participez aux événements approuvés par les clubs de l'ENICarthage</p>
+      <div class="title-underline"></div>
+    </div>
+
+    <!-- Alerte -->
+    <div class="alert alert-{{ alert.type }} mb-4" role="alert" *ngIf="alert">
+      <i class="fas" [ngClass]="{
+        'fa-check-circle': alert.type === 'success',
+        'fa-exclamation-circle': alert.type === 'danger'
+      }"></i>
+      <span class="ms-2">{{ alert.message }}</span>
+    </div>
+
+    <!-- Grille des événements -->
+    <div class="events-grid" *ngIf="!isLoading; else loading">
+      <div class="event-card" *ngFor="let event of approvedEvents">
+        <div class="event-content">
+          <h3>{{ event.eventName }}</h3>
+          <p class="event-info"><strong>Type :</strong> {{ event.type }}</p>
+          <p class="event-info"><strong>Dates :</strong> {{ formatDate(event.startDate) }} - {{ formatDate(event.endDate) }}</p>
+          <p class="event-info"><strong>Lieu :</strong> {{ event.location }}</p>
+          <p class="event-info"><strong>Club :</strong> {{ event.club?.name || 'Club inconnu' }}</p>
+          <div class="event-actions">
+            <button class="btn btn-primary" (click)="openParticipationForm(event)">
+              Participer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #loading>
+      <p class="text-center text-muted">Chargement des événements...</p>
+    </ng-template>
+
+    <!-- Formulaire de participation -->
+    <div class="form-container" *ngIf="selectedEvent">
+      <div class="form-header">
+        <h2 class="section-title">
+          <span class="title-icon">✍️</span>
+          <span>{{ selectedEvent.eventName }}</span>
+        </h2>
+        <p class="form-subtitle">Remplissez le formulaire pour participer à l'événement.</p>
+        <div class="title-underline"></div>
+      </div>
+
+      <form #participantForm="ngForm" (ngSubmit)="onSubmit(participantForm)" class="event-form">
+        <div class="form-group">
+          <label for="eventName" class="form-label">Nom de l'événement</label>
+          <input
+            type="text"
+            name="eventName"
+            id="eventName"
+            class="form-control"
+            [(ngModel)]="formData.eventName"
+            readonly
+            required
+          />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input
+              type="text"
+              name="nom"
+              class="form-control"
+              id="nom"
+              [(ngModel)]="formData.nom"
+              placeholder="Nom"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="text"
+              name="prenom"
+              class="form-control"
+              id="prenom"
+              [(ngModel)]="formData.prenom"
+              placeholder="Prénom"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              id="email"
+              [(ngModel)]="formData.email"
+              placeholder="Email"
+              required
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <select
+              name="niveau"
+              id="niveau"
+              class="form-select"
+              [(ngModel)]="formData.niveauEtudes"
+              required
+              aria-label="Niveau d'études"
+            >
+              <option value="">Niveau d'études</option>
+              <option value="1A">1ère année</option>
+              <option value="2A">2ème année</option>
+              <option value="3A">3ème année</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            name="motivation"
+            rows="5"
+            [(ngModel)]="formData.motivation"
+            placeholder="Expliquez votre motivation pour participer..."
+            required
+          ></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="submit-button">Envoyer la candidature</button>
+          <button type="button" class="cancel-button" (click)="selectedEvent = null">Annuler</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

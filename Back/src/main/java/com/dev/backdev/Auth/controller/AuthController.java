@@ -30,6 +30,8 @@ import com.dev.backdev.Auth.service.AuthService;
 import com.dev.backdev.Auth.util.JwtUtil;
 import com.dev.backdev.Club.Model.Club;
 
+import com.dev.backdev.Enums.ClubRole;
+
 @RestController
 @RequestMapping("/api/public")
 public class AuthController {
@@ -49,6 +51,24 @@ public class AuthController {
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRegistrationDTO userDto) {
         User user = authService.registerUser(userDto);
         return ResponseEntity.ok(new UserResponseDto(user));
+    }
+
+    @PostMapping("/register/member")
+    public ResponseEntity<UserResponseDto> createVisitorAccount(@PathVariable String nom,@PathVariable  String prenom,@PathVariable  String email, @RequestBody Club club, @PathVariable ClubRole role) {
+        User user = authService.createVisitorAccount( nom,  prenom,  email, club, role);
+        return ResponseEntity.ok(new UserResponseDto(user));
+    }
+
+    // Pour le switch compte membre -> manager
+    @PostMapping("/switch-to-manager/{clubName}")
+    public ResponseEntity<?> switchToManagerAccount(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PathVariable String clubName) {
+        String token = authService.switchToManagerAccount(
+            userDetails.getUsername(), 
+            clubName
+        );
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @PostMapping("/login")
@@ -79,7 +99,7 @@ public class AuthController {
         return ResponseEntity.ok(updateUser);
     }
 
-     @DeleteMapping("/delete-user/{userId}")
+     @DeleteMapping("/delete-user/by-id/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         try {
             authService.deleteUser(userId);
@@ -90,7 +110,7 @@ public class AuthController {
                 .body(Map.of("error", e.getMessage()));
         }
     }
-    @DeleteMapping("/delete-user/{username}")
+    @DeleteMapping("/delete-user/bu-username/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
         try {
             authService.deleteUser(username);
@@ -107,11 +127,6 @@ public class AuthController {
         return authService.getAllUsers();
     }
 // UserController.java
-
-@GetMapping("/managers-with-clubs")
-public List<ManagerWithClubDto> getAllManagersWithClubs() {
-    return authService.getAllManagersWithClubs();
-}
 
 
     @GetMapping("/users/by-role/{role}")

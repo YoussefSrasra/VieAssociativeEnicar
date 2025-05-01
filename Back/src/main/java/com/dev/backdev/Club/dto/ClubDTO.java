@@ -1,83 +1,50 @@
 package com.dev.backdev.Club.dto;
 
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import com.dev.backdev.Club.Model.Club;
+import com.dev.backdev.Club.Model.Club.ClubStatus;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ClubDTO {
     private Long id;
     private String name;
     private String specialty;
-    private String status;
+    private ClubStatus status;  // Utilisation de l'enum plutôt que String
     private String logo;
-    private String responsibleMember; // Only the username
-    private List<String> members; // List of usernames
+    private boolean enrollmentOpen;
+    private String responsibleMemberUsername;  // Plus explicite
+    private List<String> memberUsernames;     // Plus explicite
+    private LocalDate mandatStartDate;
+    private Integer mandatDurationMonths;
 
-    public ClubDTO(Long id, String name, String specialty, String status, String logo, String responsibleMember, List<String> members) {
-        this.id = id;
-        this.name = name;
-        this.specialty = specialty;
-        this.status = status;
-        this.logo = logo;
-        this.responsibleMember = responsibleMember;
-        this.members = members;
+    // Constructeur à partir de l'entité Club
+    public ClubDTO(Club club) {
+        this.id = club.getId();
+        this.name = club.getName();
+        this.specialty = club.getSpecialty();
+        this.status = club.getStatus();
+        this.logo = club.getLogo();
+        this.enrollmentOpen = club.isEnrollmentOpen();
+        
+        this.responsibleMemberUsername = club.getResponsibleMember() != null 
+            ? club.getResponsibleMember().getUsername() 
+            : null;
+            
+        this.memberUsernames = club.getMemberships().stream()
+            .map(membership -> membership.getUser().getUsername())
+            .collect(Collectors.toList());
+        
+        this.mandatStartDate = club.getMandatStartDate();
+        this.mandatDurationMonths = club.getMandatDurationMonths();
     }
-
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSpecialty() {
-        return specialty;
-    }
-
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getResponsibleMember() {
-        return responsibleMember;
-    }
-
-    public void setResponsibleMember(String responsibleMember) {
-        this.responsibleMember = responsibleMember;
-    }
-
-    public List<String> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<String> members) {
-        this.members = members;
-    }
-
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
 }

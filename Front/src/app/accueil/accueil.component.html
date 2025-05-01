@@ -308,263 +308,186 @@
 
 
         <app-creationclub></app-creationclub>
-        <section id="latest-event" class="latest-event-section">
-          <div class="container">
-            <div *ngIf="latestEvent" class="latest-event-card">
-              <div class="section-header">
-                <h2 class="section-title">
-                  <span class="title-icon">📢</span>
-                  <span>DERNIER ÉVÉNEMENT</span>
-                </h2>
-                <div class="title-underline"></div>
-              </div>
+        <!-- Events Section -->
+<section id="events" class="events-section">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">
+        <span class="title-icon">📅</span>
+        <span>Tous les événements</span>
+      </h2>
+      <p class="section-subtitle">Découvrez tous les événements organisés par les clubs de l'ENICarthage</p>
+      <div class="title-underline"></div>
+    </div>
 
-              <div class="event-content">
-                <div class="event-detail">
-                  <div class="detail-icon">📌</div>
-                  <div class="detail-content">
-                    <h3>Nom de l'événement</h3>
-                    <p>{{ latestEvent.eventName }}</p>
-                  </div>
-                </div>
-
-                <div class="event-detail">
-                  <div class="detail-icon">🎭</div>
-                  <div class="detail-content">
-                    <h3>Type d'événement</h3>
-                    <p>{{ latestEvent.eventType }}</p>
-                  </div>
-                </div>
-
-                <div class="event-detail">
-                  <div class="detail-icon">📝</div>
-                  <div class="detail-content">
-                    <h3>Description</h3>
-                    <p>{{ latestEvent.description }}</p>
-                  </div>
-                </div>
-
-                <div class="event-detail">
-                  <div class="detail-icon">📅</div>
-                  <div class="detail-content">
-                    <h3>Date</h3>
-                    <p>
-                      <i class="bi bi-calendar"></i>
-                      {{ latestEvent.startDate | date:'dd/MM/yyyy' }}
-                    </p>
-                  </div>
-                </div>
-
-                <div class="event-detail">
-                  <div class="detail-icon">🏛️</div>
-                  <div class="detail-content">
-                    <h3>Organisé par</h3>
-                    <p>
-                      <i class="bi bi-people-fill"></i>
-                      {{ latestEvent.clubName }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div class="events-grid" *ngIf="!isLoading; else loading">
+      <div class="event-card" *ngFor="let event of allEvents">
+        <div class="event-content">
+          <h3>{{ event.eventName }}</h3>
+          <div class="event-actions">
+            <button
+              class="btn btn-info"
+              (click)="openEventDetails(event)">
+              Plus d'info
+            </button>
+            <button
+              *ngIf="canParticipate(event)"
+              class="btn btn-primary"
+              (click)="openParticipationForm(event)">
+              Participer
+            </button>
           </div>
-        </section>
+        </div>
+      </div>
+    </div>
 
-        <style>
-        /* Latest Event Section - Style harmonisé */
-        .latest-event-section {
-          padding: 80px 0;
-          background-color: white;
-        }
+    <ng-template #loading>
+      <p>Chargement des événements...</p>
+    </ng-template>
 
-        .latest-event-card {
-          background: #ffffff;
-          border-radius: 12px;
-          padding: 40px;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-          border: 1px solid rgba(52, 152, 219, 0.2);
-        }
+    <!-- Formulaire de candidature -->
+    <div class="form-container" *ngIf="selectedEvent">
+      <div class="form-header">
+        <h2 class="section-title">
+          <span class="title-icon">✍️</span>
+          <span>{{ selectedEvent.eventName }}</span>
+        </h2>
+        <p class="form-subtitle">Remplissez le formulaire pour participer à l'événement.</p>
+        <div class="title-underline"></div>
+      </div>
 
-        .section-header {
-          text-align: center;
-          margin-bottom: 40px;
-        }
-
-        .section-title {
-          font-size: 2.2rem;
-          color: #2c3e50;
-          display: inline-flex;
-          align-items: center;
-          gap: 15px;
-          margin-bottom: 15px;
-        }
-
-        .title-icon {
-          font-size: 1.8rem;
-        }
-
-        .title-underline {
-          width: 80px;
-          height: 4px;
-          background: #3498db;
-          margin: 0 auto;
-          border-radius: 2px;
-        }
-
-        .event-content {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: 30px;
-        }
-
-        .event-detail {
-          display: flex;
-          gap: 20px;
-          padding: 20px;
-          background: #f8fafc;
-          border-radius: 8px;
-          transition: all 0.3s ease;
-          border-left: 4px solid #3498db;
-        }
-
-        .event-detail:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 5px 15px rgba(52, 152, 219, 0.1);
-        }
-
-        .detail-icon {
-          font-size: 1.8rem;
-          color: #3498db;
-          margin-top: 5px;
-        }
-
-        .detail-content h3 {
-          font-size: 1rem;
-          color: #7f8c8d;
-          margin-bottom: 8px;
-          font-weight: 600;
-        }
-
-        .detail-content p {
-          font-size: 1.1rem;
-          color: #2c3e50;
-          margin: 0;
-          line-height: 1.6;
-        }
-
-        .bi {
-          margin-right: 8px;
-          color: #3498db;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-          .latest-event-card {
-            padding: 30px 20px;
-          }
-
-          .section-title {
-            font-size: 1.8rem;
-          }
-
-          .event-content {
-            grid-template-columns: 1fr;
-          }
-
-          .event-detail {
-            padding: 15px;
-          }
-        }
-        </style>
-
-        <!-- Forum Section -->
-        <section id="forum-enicarthage" class="event-form-section">
-          <div class="container">
-            <div class="form-header">
-              <h2 class="section-title">
-                <span class="title-icon">✍️</span>
-                <span>{{ latestEvent?.eventName }}</span>
-              </h2>
-              <p class="form-subtitle">Les étudiants souhaitant intégrer l'organisation peuvent remplir le formulaire ci-dessous.</p>
-              <div class="title-underline"></div>
-            </div>
-
-            <form #participantForm="ngForm" (ngSubmit)="onSubmit(participantForm)" class="event-form">
-              <!-- Event selection dropdown -->
-              <div class="form-group">
-                <label for="eventName" class="form-label">Nom de l'événement</label>
-                <input type="text" name="eventName" id="eventName" class="form-control"
-                       [(ngModel)]="formData.eventName" placeholder="Entrez le nom de l'événement" required>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <input type="text" name="nom" class="form-control" id="nom"
-                         [(ngModel)]="formData.nom" placeholder="Nom" required>
-                </div>
-                <div class="form-group">
-                  <input type="text" name="prenom" class="form-control" id="prenom"
-                         [(ngModel)]="formData.prenom" placeholder="Prénom" required>
-                </div>
-                <div class="form-group">
-                  <input type="email" name="email" class="form-control" id="email"
-                         [(ngModel)]="formData.email" placeholder="Email" required>
-                </div>
-              </div>
-
-              <div class="form-row">
-                <div class="form-group">
-                  <select name="niveau" id="niveau" class="form-select"
-                          [(ngModel)]="formData.niveauEtudes" required aria-label="Niveau d'études">
-                    <option value="">Niveau d'études</option>
-                    <option value="1A">1ère année</option>
-                    <option value="2A">2ème année</option>
-                    <option value="3A">3ème année</option>
-                  </select>
-                </div>
-                <div class="form-group">
-                  <select name="comite" id="comite" class="form-select"
-                          [(ngModel)]="formData.comite" required aria-label="Comité">
-                    <option value="">Choisissez un comité</option>
-                    <option *ngFor="let committee of latestEvent?.committees" [value]="committee">
-                      {{ committee }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group radio-group">
-                <fieldset>
-                  <legend>Participation :</legend>
-                  <div class="radio-options">
-                    <label class="radio-label">
-                      <input type="radio" id="membre" name="participation" value="membre"
-                             [(ngModel)]="formData.participationType" required>
-                      <span class="radio-custom"></span>
-                      <span>Membre</span>
-                    </label>
-                    <label class="radio-label">
-                      <input type="radio" id="responsable" name="participation" value="responsable"
-                             [(ngModel)]="formData.participationType" required>
-                      <span class="radio-custom"></span>
-                      <span>Responsable comité</span>
-                    </label>
-                  </div>
-                </fieldset>
-              </div>
-
-              <div class="form-group">
-                <textarea class="form-control" name="motivation" rows="5"
-                          [(ngModel)]="formData.motivation" placeholder="Expliquez votre motivation pour participer..." required></textarea>
-              </div>
-
-              <div class="form-submit">
-                <button type="submit" class="submit-button">Envoyer la candidature</button>
-              </div>
-            </form>
+      <form #participantForm="ngForm" (ngSubmit)="onSubmit(participantForm)" class="event-form">
+        <div class="form-group">
+          <label for="eventName" class="form-label">Nom de l'événement</label>
+          <input
+            type="text"
+            name="eventName"
+            id="eventName"
+            class="form-control"
+            [(ngModel)]="formData.eventName"
+            readonly
+            required />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <input
+              type="text"
+              name="nom"
+              class="form-control"
+              id="nom"
+              [(ngModel)]="formData.nom"
+              placeholder="Nom"
+              required />
           </div>
-        </section>
+          <div class="form-group">
+            <input
+              type="text"
+              name="prenom"
+              class="form-control"
+              id="prenom"
+              [(ngModel)]="formData.prenom"
+              placeholder="Prénom"
+              required />
+          </div>
+          <div class="form-group">
+            <input
+              type="email"
+              name="email"
+              class="form-control"
+              id="email"
+              [(ngModel)]="formData.email"
+              placeholder="Email"
+              required />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <select
+              name="niveau"
+              id="niveau"
+              class="form-select"
+              [(ngModel)]="formData.niveauEtudes"
+              required
+              aria-label="Niveau d'études">
+              <option value="">Niveau d'études</option>
+              <option value="1A">1ère année</option>
+              <option value="2A">2ème année</option>
+              <option value="3A">3ème année</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select
+              name="comite"
+              id="comite"
+              class="form-select"
+              [(ngModel)]="formData.comite"
+              required
+              aria-label="Comité">
+              <option value="">Choisissez un comité</option>
+              <option *ngFor="let committee of selectedEvent.committees" [value]="committee">
+                {{ committee }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group radio-group">
+          <fieldset>
+            <legend>Participation :</legend>
+            <div class="radio-options">
+              <label class="radio-label">
+                <input
+                  type="radio"
+                  id="membre"
+                  name="participation"
+                  value="membre"
+                  [(ngModel)]="formData.participationType"
+                  required />
+                <span class="radio-custom"></span>
+                <span>Membre</span>
+              </label>
+              <label class="radio-label">
+                <input
+                  type="radio"
+                  id="responsable"
+                  name="participation"
+                  value="responsable"
+                  [(ngModel)]="formData.participationType"
+                  required />
+                <span class="radio-custom"></span>
+                <span>Responsable comité</span>
+              </label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="form-group">
+          <textarea
+            class="form-control"
+            name="motivation"
+            rows="5"
+            [(ngModel)]="formData.motivation"
+            placeholder="Expliquez votre motivation pour participer..."
+            required></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="submit-button">Envoyer la candidature</button>
+          <button type="button" class="cancel-button" (click)="selectedEvent = null">Annuler</button>
+        </div>
+      </form>
+    </div>
 
+    <!-- Modale pour les détails de l'événement -->
+    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h2 class="modal-title">{{ modalEvent?.eventName }}</h2>
+        <p><strong>Type :</strong> {{ modalEvent?.eventType }}</p>
+        <p><strong>Description :</strong> {{ modalEvent?.description }}</p>
+        <p><strong>Dates :</strong> {{ modalEvent?.startDate | date: 'dd/MM/yyyy' }} - {{ modalEvent?.endDate | date: 'dd/MM/yyyy' }}</p>
+        <p><strong>Organisé par :</strong> {{ modalEvent?.clubName }}</p>
+        <button class="modal-close-btn" (click)="closeModal()">Fermer</button>
+      </div>
+    </div>
+  </div>
+</section>
         <style>
         /* Form Section - Style harmonisé */
         .event-form-section {

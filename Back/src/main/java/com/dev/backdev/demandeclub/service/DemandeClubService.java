@@ -1,19 +1,62 @@
 
 package com.dev.backdev.demandeclub.service;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.dev.backdev.Auth.service.AuthService;
+import com.dev.backdev.Club.Model.Club;
+import com.dev.backdev.Club.Model.Club.ClubStatus;
+import com.dev.backdev.Club.Service.ClubService;
+import com.dev.backdev.Club.dto.ClubDTO;
+import com.dev.backdev.Enums.ClubRole; // Import ajouté
+import com.dev.backdev.demandeclub.model.Etat;
 import com.dev.backdev.demandeclub.model.demandeclub;
-import com.dev.backdev.demandeclub.model.Etat; // Import ajouté
 import com.dev.backdev.demandeclub.repository.DemandeClubRepository;
-import java.util.List;
-import java.util.Arrays;
 
 @Service
 public class DemandeClubService {
 
     @Autowired
     private DemandeClubRepository DemandeClubRepository;
+    @Autowired
+    private ClubService clubService;
+
+    @Autowired
+    private AuthService authService;
+
+
+
+    public ClubDTO accepterDemandeEtCreerClub(long demandeid) {
+        // 1. Récupérer la demande
+        demandeclub demande = DemandeClubRepository.findById(demandeid)
+            .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
+        // 1. Créer le club
+        Club nouveauClub = new Club();
+        nouveauClub.setName(demande.getNomClub());
+        nouveauClub.setSpecialty(demande.getDescription());
+        nouveauClub.setLogo(demande.getLogoBase64());
+        nouveauClub.setStatus(ClubStatus.ACTIVE);
+
+        Club clubCree = clubService.createClub(nouveauClub);
+
+        // 2. Créer le compte visiteur (PRESIDENT) et l’ajouter au club
+        authService.createVisitorAccount(
+            demande.getNom(),
+            demande.getPrenom(),
+            demande.getEmail(),
+            clubCree, 
+            ClubRole.PRESIDENT
+        );
+
+        // 3. Supprimer ou marquer la demande comme traitée
+        DemandeClubRepository.delete(demande);
+        ClubDTO clubDTO = new ClubDTO(clubCree);
+        return clubDTO;
+    }
 
     public List<demandeclub> getAllDemandes() {
         return DemandeClubRepository.findAll();
