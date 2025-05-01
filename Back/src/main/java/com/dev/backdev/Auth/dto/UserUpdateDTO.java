@@ -6,11 +6,13 @@ import com.dev.backdev.Enums.Niveau;
 import com.dev.backdev.Enums.Sexe;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class UserUpdateDTO {
     private String username;
     private String nom;
@@ -25,6 +27,4 @@ public class UserUpdateDTO {
     private Sexe sexe;
     private Formation formation;
     private String photo;
-
-    
 }

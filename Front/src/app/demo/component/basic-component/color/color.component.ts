@@ -72,7 +72,8 @@ export class ColorComponent implements OnInit {
       console.error('Membership ID is missing for member:', member);
       return;
     }
-
+    console.log('Selected role:', this.selectedRole);
+    console.log('Member ID:', member.id);
     if (!Object.values(role).includes(this.selectedRole)) {
       alert('Rôle invalide.');
       return;

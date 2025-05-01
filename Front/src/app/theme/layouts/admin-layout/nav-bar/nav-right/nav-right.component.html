@@ -1,14 +1,19 @@
 <ul class="list-unstyled">
+  
   <li class="pc-h-item">
+    
+
     <a href="https://github.com/codedthemes/mantis-free-angular-admin-template" target="_blank" class="pc-head-link me-0 bg-gray-200">
       <i antIcon type="github" theme="outline"></i>
     </a>
   </li>
   <li class="dropdown pc-h-item" ngbDropdown>
+    
     <a class="pc-head-link dropdown-toggle arrow-none me-0 bg-gray-200" data-bs-toggle="dropdown" ngbDropdownToggle>
       <i antIcon type="bell" theme="outline"></i>
       <span class="badge bg-primary pc-h-badge">3</span>
     </a>
+    
     <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown" ngbDropdownMenu>
       <div class="dropdown-header d-flex align-items-center justify-content-between">
         <h5 class="m-0">Notification</h5>
@@ -123,13 +128,29 @@
                   <span>Profile</span>
                 </button>
               </div>
-            
+              <div *ngIf="canSwitchToManager()">
+                <button class="dropdown-item text-primary fw-bold" (click)="switchToManager()">
+                  <i class="text-muted" antIcon theme="outline" type="swap"></i>
+                  <span>Switch to Manager</span>
+                </button>
+              </div>
+          
+              <div *ngIf="isManagerSession()">
+                <button class="dropdown-item text-warning fw-bold" (click)="switchBackToPersonal()">
+                  <i class="text-muted" antIcon theme="outline" type="rollback"></i>
+                  <span>Switch Back to Personal Account</span>
+                </button>
+              </div>
+              
+              
             <div>
               <button class="dropdown-item" routerLink="/login" (click)="logout()">
                 <i class="text-muted" antIcon theme="outline" type="logout"></i>
                 <span>Logout</span>
               </button>
             </div>
+            
+            
           </ng-template>
         </li>
         <!--<li ngbNavItem="2">

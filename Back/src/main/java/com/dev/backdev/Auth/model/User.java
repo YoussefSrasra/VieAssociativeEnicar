@@ -20,8 +20,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 
@@ -29,7 +30,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Data
+@Getter
+@Setter
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,6 +89,9 @@ public class User {
     public boolean isManagerAccount() {
         return this.responsibleClub != null && this.username.equals(this.responsibleClub.getName());
     }
+    public boolean isFirstLogin() {
+        return firstLogin;
+    }
     public void setUsername(String username) {
         if (this.responsibleClub != null && !username.equals(this.responsibleClub.getName())) {
             throw new IllegalStateException("Le username d'un manager doit correspondre au nom de son club.");
@@ -98,6 +103,8 @@ public class User {
         this.clubMemberships.add(membership);
         club.getMemberships().add(membership); // Assuming Club has a Set<ClubMembership> members
     }
-    
+    public boolean getFirstLogin() {
+        return firstLogin;
+    }
     
 }   
