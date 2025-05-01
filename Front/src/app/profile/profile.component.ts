@@ -4,6 +4,7 @@ import { ProfileService } from './profile.service';
 import { UserProfile, Filiere, Formation, Niveau, Sexe } from './models/profile.model';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import {  NavigationStart } from '@angular/router';
 import { HostListener } from '@angular/core';
 
 @Component({
@@ -41,6 +42,14 @@ export class ProfileComponent implements OnInit {
     this.loadProfile();
     this.profileForm.valueChanges.subscribe(() => {
       this.formModified = this.profileForm.dirty;
+    });
+    this.router.events.subscribe(event => {
+      if (this.isFirstLogin && event instanceof NavigationStart) {
+        if (!event.url.includes('/profile')) {
+          this.router.navigate(['/profile']);
+          alert('Vous devez compléter votre profil avant de naviguer ailleurs.');
+        }
+      }
     });
   }
 
@@ -133,15 +142,30 @@ export class ProfileComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.isFirstLogin && this.currentRole === 'ROLE_MEMBER') {
-      const requiredFields = ['nom', 'prenom', 'email', 'cin', 'filiere', 'niveau', 'sexe', 'formation', 'password'];
-      for (const field of requiredFields) {
-        if (!this.profileForm.get(field).value) {
-          alert(`${field} est obligatoire pour la première connexion`);
-          return;
-        }
-      }
+     if (this.isFirstLogin) {
+      let requiredFields: string[];
+
+    // Mark all required fields as touched to show errors
+    if (this.currentRole === 'MEMBER') {
+      requiredFields = ['nom', 'prenom', 'email', 'cin', 'filiere', 'niveau', 'sexe', 'formation', 'password'];
+    } else if (this.currentRole === 'ADMIN') {
+      requiredFields = ['nom', 'prenom', 'email', 'cin', 'sexe', 'password'];
+    } else if (this.currentRole === 'MANAGER') {
+      requiredFields = ['email', 'password']; // Managers only need email and password
     }
+    let hasErrors = false;
+    
+    requiredFields.forEach(field => {
+      if (!this.profileForm.get(field).value) {
+        this.profileForm.get(field).markAsTouched();
+        hasErrors = true;
+      }
+    });
+    if (hasErrors) {
+      alert('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+  }
 
     this.isSubmitting = true;
     const formData = this.filterDataByRole(this.profileForm.getRawValue());
@@ -164,10 +188,18 @@ export class ProfileComponent implements OnInit {
     }
 
     const {confirmPassword: _, ...profileData} = formData;
-
-    const update$ = this.isFirstLogin 
-      ? this.profileService.completeProfile(profileData)
-      : this.profileService.updateProfile(profileData);
+    const cleanedData = {};
+    Object.keys(profileData).forEach(key => {
+      if (profileData[key] !== null && profileData[key] !== undefined && profileData[key] !== '') {
+        cleanedData[key] = profileData[key];
+      }
+    });
+    if (!cleanedData['password']) {
+      delete cleanedData['currentPassword'];
+    }
+  
+  
+    const update$ = this.profileService.updateProfile(cleanedData);
 
     update$.subscribe({
       next: (updatedProfile) => {
@@ -188,13 +220,13 @@ export class ProfileComponent implements OnInit {
   private filterDataByRole(formData: any): any {
     const filteredData = { ...formData };
     
-    if (this.currentRole !== 'ROLE_MEMBER') {
+    if (this.currentRole !== 'MEMBER') {
       delete filteredData.filiere;
       delete filteredData.niveau;
       delete filteredData.formation;
     }
     
-    if (this.currentRole === 'ROLE_MANAGER') {
+    if (this.currentRole === 'MANAGER') {
       delete filteredData.nom;
       delete filteredData.prenom;
       delete filteredData.cin;
@@ -215,6 +247,11 @@ export class ProfileComponent implements OnInit {
   }
 
   checkUnsavedChanges(): void {
+    if (this.isFirstLogin) {
+      alert('Vous devez compléter votre profil avant de quitter cette page.');
+      return;
+    }
+
     if (this.formModified) {
       if (confirm('Vous avez des modifications non enregistrées. Quitter quand même ?')) {
         this.router.navigate(['dashboard/default']);
@@ -244,4 +281,6 @@ export class ProfileComponent implements OnInit {
     // Otherwise, add the header manually
     return 'data:image/jpeg;base64,' + user.photo;
   }
+
+  
 }

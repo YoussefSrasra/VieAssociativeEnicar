@@ -123,14 +123,14 @@ public class AuthController {
     public List<UserResponseDto> getAllUsers() {
         return authService.getAllUsers();
     }
-// UserController.java
-@GetMapping("/managers")
-public List<UserResponseDto> getAllManagers() {
-    return userRepository.findByRole("MANAGER")
-        .stream()
-        .map(UserResponseDto::new)
-        .toList();
-}
+    // UserController.java
+    @GetMapping("/managers")
+    public List<UserResponseDto> getAllManagers() {
+        return userRepository.findByRole("MANAGER")
+            .stream()
+            .map(UserResponseDto::new)
+            .toList();
+    }
 
 
     @GetMapping("/users/by-role/{role}")
@@ -149,6 +149,7 @@ public List<UserResponseDto> getAllManagers() {
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
     @PutMapping("/users/{username}")
     public ResponseEntity<UserResponseDto> updateUser(
         @PathVariable String username,

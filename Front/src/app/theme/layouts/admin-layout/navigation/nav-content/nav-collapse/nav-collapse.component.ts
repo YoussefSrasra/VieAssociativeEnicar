@@ -1,16 +1,15 @@
 // Angular import
-import { Component, Input, output } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 // project import
 import { NavigationItem } from '../../navigation';
-
 import { NavItemComponent } from '../nav-item/nav-item.component';
 import { IconDirective } from '@ant-design/icons-angular';
-
+import { ClubSelectionService } from 'src/app/services/ClubSelectionService';
 @Component({
+  standalone: true, // <-- ADD THIS LINE
   selector: 'app-nav-collapse',
   imports: [CommonModule, IconDirective, RouterModule, NavItemComponent],
   templateUrl: './nav-collapse.component.html',
@@ -24,26 +23,27 @@ import { IconDirective } from '@ant-design/icons-angular';
       transition(':leave', [animate('250ms ease-in', style({ transform: 'translateY(-100%)' }))])
     ])
   ]
+
 })
 export class NavCollapseComponent {
   // public props
+  @Output() dynamicCollapseClick = new EventEmitter<string>();
+  @Output() showCollapseItem = new EventEmitter<void>();
+  @Output() loadClubs = new EventEmitter<void>();
 
-  // Compact Menu in use For Sub Child Open in sidebar menu
-  showCollapseItem = output();
-
-  // all Version Get Item(Component Name Take)
   @Input() item!: NavigationItem;
-
   windowWidth: number;
 
-  // Constructor
-  constructor() {
+  constructor(private clubSelectionService: ClubSelectionService) {
     this.windowWidth = window.innerWidth;
   }
 
-  // public method
-  navCollapse(e: MouseEvent) {
-    let parent = e.target as HTMLElement;
+  // Modify the navCollapse method
+  navCollapse(event: MouseEvent) {
+    event.preventDefault(); // Prevent default behavior
+    event.stopPropagation(); // Stop event bubbling
+
+    let parent = event.target as HTMLElement;
 
     if (parent?.tagName === 'SPAN') {
       parent = parent.parentElement!;
@@ -58,6 +58,21 @@ export class NavCollapseComponent {
       }
     }
 
+    // Add this at the start of navCollapse method
+    console.log('NavCollapse clicked for item:', this.item.id);
+    const match = this.item.id.match(/^club-(\d+)$/);
+      if (match) {
+        this.clubSelectionService.setSelectedClubId(+match[1]);
+      }
+
+
+    if (this.item.id === 'my-clubs' && (!this.item.children || this.item.children.length === 0)) {
+      console.log('Emitting loadClubs event from NavCollapse');
+      this.loadClubs.emit();
+      return; // Skip the rest if we're loading clubs
+    }
+
+    // Existing toggle logic
     let first_parent = parent.parentElement;
     let pre_parent = ((parent as HTMLElement).parentElement as HTMLElement).parentElement as HTMLElement;
     if (first_parent?.classList.contains('coded-hasmenu')) {
@@ -74,8 +89,26 @@ export class NavCollapseComponent {
     parent.classList.toggle('coded-trigger');
   }
 
-  // for Compact Menu
   subMenuCollapse(item: void) {
     this.showCollapseItem.emit(item);
   }
+  handleClick(event: MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    console.log('Click handled for:', this.item.id);
+  
+    if (this.item.id === 'my-clubs') {
+      console.log('Emitting dynamicCollapseClick event');
+      this.dynamicCollapseClick.emit(this.item.id);
+    } else {
+      this.navCollapse(event);
+    }
+  }
+  
+
+  debugClick(event: MouseEvent) {
+    console.log('CLICK EVENT REACHED LI:', this.item?.id);
+  }
+  
 }

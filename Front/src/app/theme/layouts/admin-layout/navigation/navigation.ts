@@ -1,7 +1,7 @@
 export interface NavigationItem {
   id: string;
   title: string;
-  type: 'item' | 'collapse' | 'group';
+  type: 'item' | 'collapse' | 'group' | 'dynamic-collapse';
   translate?: string;
   icon?: string;
   hidden?: boolean;
@@ -17,6 +17,8 @@ export interface NavigationItem {
   description?: string;
   path?: string;
   roles?: string[];
+  triggerExpansion?: boolean; // <--- Add this line
+  dynamicChildren?: { title: string; url: string }[];
 }
 
 export const NavigationItems: NavigationItem[] = [
@@ -149,6 +151,14 @@ export const NavigationItems: NavigationItem[] = [
         roles: ['ADMIN']
       },
       {
+        id: 'my-clubs',
+        title: 'My Clubs',
+        type: 'collapse', 
+        icon: 'icon-people',
+        roles: ['MEMBER'],
+        children: []
+      },
+      {
         id: 'contacts-urgence  ',
         title: 'Contacts-urgence ',
         type: 'item',
@@ -184,7 +194,11 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ant-design',
         target: true,
         external: true
-      }//commentaire 
+      }
+
+      
+
+      
 
     ]
   },
@@ -195,7 +209,7 @@ export const NavigationItems: NavigationItem[] = [
     type: 'group',
     icon: 'icon-navigation',
     children: [
-      {
+     {
         id: 'sample-page',
         title: 'Sample Page',
         type: 'item',

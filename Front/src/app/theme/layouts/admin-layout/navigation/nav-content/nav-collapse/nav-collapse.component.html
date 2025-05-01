@@ -1,20 +1,31 @@
-<li data-username="mantis dashboard" class="nav-item coded-hasmenu" [routerLinkActive]="['active']">
-  <a [routerLinkActive]="['active']" (click)="navCollapse($event)">
+<li class="nav-item coded-hasmenu" [routerLinkActive]="['active']" [class.coded-trigger]="item.triggerExpansion">
+  <a [routerLinkActive]="['active']" (click)="handleClick($event)">
     @if (item.icon) {
       <span class="coded-micon">
-        <i antIcon type="{{ item.icon }}" theme="outline"></i>
+        <i antIcon [type]="item.icon" theme="outline"></i>
       </span>
     }
-    <span class="coded-mtext">
-      {{ item.title }}
+    <span class="coded-mtext">{{ item.title }}</span>
+    <span class="coded-arrow">
+      @if (item.id === 'my-clubs' ) {
+        <i class="anticon anticon-loading"></i>
+      } @else {
+        <i class="anticon anticon-right"></i>
+      }
     </span>
   </a>
+
   <ul class="coded-submenu" [routerLinkActive]="['active']" [ngClass]="item.classes!">
-    @for (item of item.children; track item) {
-      @if (item.type === 'item') {
-        <app-nav-item [item]="item"></app-nav-item>
-      } @else if (item.type === 'collapse') {
-        <app-nav-collapse [item]="item"></app-nav-collapse>
+    
+    @for (child of item.children; track child.id) {
+      @if (child.type === 'item') {
+        <app-nav-item [item]="child"></app-nav-item>
+      } @else if (child.type === 'collapse') {
+        <app-nav-collapse 
+          [item]="child" 
+          (dynamicCollapseClick)="dynamicCollapseClick.emit($event)"
+          (showCollapseItem)="showCollapseItem.emit()">
+        </app-nav-collapse>
       }
     }
   </ul>

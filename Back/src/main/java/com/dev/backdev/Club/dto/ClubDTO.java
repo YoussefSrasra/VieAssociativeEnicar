@@ -47,4 +47,18 @@ public class ClubDTO {
         this.mandatStartDate = club.getMandatStartDate();
         this.mandatDurationMonths = club.getMandatDurationMonths();
     }
+    public ClubDTO(String name, String specialty, ClubStatus status, String logo, boolean enrollmentOpen,
+            String responsibleMemberUsername, List<String> memberUsernames, LocalDate mandatStartDate,
+            Integer mandatDurationMonths) {
+        this.name = name;
+        this.specialty = specialty;
+        this.status = status;
+        this.logo = logo;
+        this.enrollmentOpen = enrollmentOpen;
+        this.responsibleMemberUsername = responsibleMemberUsername;
+        this.memberUsernames = memberUsernames;
+        this.mandatStartDate = mandatStartDate;
+        this.mandatDurationMonths = mandatDurationMonths;
+    }
+
 }

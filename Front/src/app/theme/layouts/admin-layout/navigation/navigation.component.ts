@@ -31,4 +31,5 @@ export class NavigationComponent {
       this.NavCollapsedMob.emit();
     }
   }
+  
 }
