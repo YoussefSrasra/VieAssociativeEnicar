@@ -21,6 +21,11 @@ export class NavItemComponent {
   // public method
   closeOtherMenu(event: MouseEvent) {
     const ele = event.target as HTMLElement;
+
+    if (this.item?.id?.startsWith('club-')) {
+      console.log('Storing selected club ID to localStorage:', this.item.id);
+      localStorage.setItem('selectedClubId', this.item.id);
+    }
     if (ele !== null && ele !== undefined) {
       const parent = ele.parentElement as HTMLElement;
       const up_parent = ((parent.parentElement as HTMLElement).parentElement as HTMLElement).parentElement as HTMLElement;

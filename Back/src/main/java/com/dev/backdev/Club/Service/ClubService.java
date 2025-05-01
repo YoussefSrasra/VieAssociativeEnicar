@@ -14,6 +14,7 @@ import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Model.ClubMembership;
 import com.dev.backdev.Club.Repository.ClubRepository;
+import com.dev.backdev.Club.dto.ClubBasicDTO;
 import com.dev.backdev.Club.dto.ClubDTO;
 import com.dev.backdev.Enums.ClubRole;
 
@@ -82,13 +83,14 @@ public class ClubService {
         return clubRepository.findById(id).map(this::convertToDTO);
     }
 
-    public List<ClubDTO> getClubsByUserId(Long userId) {
-        return userRepository.findById(userId)
+    public List<ClubBasicDTO> getClubsByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .map(user -> user.getClubMemberships().stream()
-                        .map(ClubMembership::getClub) // Récupère le Club depuis ClubMembership
-                        .map(this::convertToDTO) // Convertit en DTO
+                        .map(ClubMembership::getClub)  // Récupère le Club depuis ClubMembership
+                        .map(club -> new ClubBasicDTO(club.getId(), club.getName())) // Convertit en DTO minimal
+
                         .collect(Collectors.toList()))
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
     }
 
     public List<ClubDTO> getClubsByUserName(String userName) {
@@ -211,4 +213,5 @@ public class ClubService {
         clubRepository.save(club);
         return club.isEnrollmentOpen();
     }
+
 }

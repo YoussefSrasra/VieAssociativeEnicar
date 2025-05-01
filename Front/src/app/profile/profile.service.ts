@@ -19,7 +19,30 @@ export class ProfileService {
     return this.http.post<UserProfile>(`${this.apiUrl}/complete-profile`, profileData);
   }
 
-  updateProfile(profileData: UserProfile): Observable<UserProfile> {
-    return this.http.put<UserProfile>(`${this.apiUrl}/users/${profileData.username}`, profileData);
+  updateProfile(profileData: any): Observable<UserProfile> {
+    const cleanedData = this.cleanProfileData(profileData);
+    return this.http.put<UserProfile>(`${this.apiUrl}/users/${profileData.username}`, cleanedData);
+  }
+  private cleanProfileData(data: any): any {
+    const cleanedData: any = {};
+    
+    // Only include fields that have values
+    Object.keys(data).forEach(key => {
+      if (data[key] !== null && data[key] !== undefined && data[key] !== '') {
+        cleanedData[key] = data[key];
+      }
+    });
+  
+    // Special handling for password fields
+    if (!cleanedData.password) {
+      delete cleanedData.currentPassword;
+      delete cleanedData.password;
+    }
+  
+    return cleanedData;
+  }
+
+  getUserByUsername(username: string): Observable<UserProfile> {
+    return this.http.get<UserProfile>(`${this.apiUrl}/users/${username}`);
   }
 }

@@ -7,10 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dev.backdev.Auth.model.User;
+import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Model.ClubMembership;
 import com.dev.backdev.Club.Repository.ClubMembershipRepository;
+import com.dev.backdev.Club.Repository.ClubRepository;
 import com.dev.backdev.Club.dto.ClubMembershipDTO;
+import com.dev.backdev.Club.dto.ClubMembershipRequestDTO;
 import com.dev.backdev.Enums.ClubRole;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ClubMembershipService {
     private final ClubMembershipRepository membershipRepository;
+    private final UserRepository userRepository; // Assuming you have a UserRepository to fetch users
+    private final ClubRepository clubRepository; // Assuming you have a ClubRepository to fetch clubs
 
     public ClubMembership createMembership(User user, Club club, ClubRole role) {
         ClubMembership membership = new ClubMembership();
@@ -47,5 +52,22 @@ public class ClubMembershipService {
         return memberships.stream()
             .map(ClubMembershipDTO::new)
             .collect(Collectors.toList());
+    }
+
+    public void addMembership(ClubMembershipRequestDTO membership) {
+        ClubMembership newMembership = new ClubMembership();
+        newMembership.setUser(userRepository.findById(membership.getUserId())
+            .orElseThrow(() -> new RuntimeException("User not found")));
+        newMembership.setClub(clubRepository.findById(membership.getClubId())
+            .orElseThrow(() -> new RuntimeException("Club not found")));
+        newMembership.setRole(membership.getRole());
+        membershipRepository.save(newMembership);
+        
+    }
+
+    public ClubRole getUserRoleInClub (String username, Long clubId){
+        ClubMembership membership = membershipRepository.findByUserUsernameAndClubId(username, clubId)
+            .orElseThrow(() -> new RuntimeException("Membership not found"));
+        return membership.getRole();
     }
 }

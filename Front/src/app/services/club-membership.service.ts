@@ -61,4 +61,19 @@ export class ClubMembershipService {
     };
     return this.http.post(`${this.apiUrl}/add`, payload);
   }
+
+    /**
+   * Récupère le rôle de l'utilisateur dans un club spécifique
+   * @param username Le nom d'utilisateur
+   * @param clubId L'ID du club
+   * @returns Observable contenant le rôle de l'utilisateur
+   */
+    getUserRoleInClub(username: string, clubId: number): Observable<string> {
+      return this.http.get<string>(`${this.apiUrl}/getRole/${encodeURIComponent(username)}/${clubId}`).pipe(
+        tap({
+          next: (role) => console.log(`Fetched role for user ${username} in club ${clubId}:`, role),
+          error: (err) => console.error('Error fetching user role in club:', err)
+        })
+      );
+    }
 }

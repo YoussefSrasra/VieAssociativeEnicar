@@ -17,6 +17,7 @@ public interface ClubMembershipRepository extends JpaRepository<ClubMembership, 
         @Param("username") String username,
         @Param("clubName") String clubName
     );
+    Optional <ClubMembership> findByUserUsernameAndClubId(String username ,Long  clubId);
     
     // Trouver tous les membreships d'un club
     List<ClubMembership> findByClubName(String clubName);

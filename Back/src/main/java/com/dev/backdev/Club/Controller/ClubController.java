@@ -19,6 +19,7 @@ import com.dev.backdev.Auth.model.User;
 import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Service.ClubService;
+import com.dev.backdev.Club.dto.ClubBasicDTO;
 import com.dev.backdev.Club.dto.ClubDTO;
 
 @RestController
@@ -90,13 +91,7 @@ public class ClubController {
 
         return ResponseEntity.ok(clubs);
     }
-
-    @GetMapping("/user/{username}")
-    public ResponseEntity<List<ClubDTO>> getClubsByUser(@PathVariable String username) {
-            List<ClubDTO> clubs = clubService.getClubsByUserName(username);
-            return ResponseEntity.ok(clubs);
-    }
-    @PutMapping("/{clubId}/toggle-enrollment")
+   @PutMapping("/{clubId}/toggle-enrollment")
     public ResponseEntity<String> toggleEnrollment(@PathVariable Long clubId) {
         try {
             boolean newStatus = clubService.toggleEnrollmentStatus(clubId);
@@ -105,5 +100,18 @@ public class ClubController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
+    @GetMapping("/username/{username}")
+    public ResponseEntity<List<ClubBasicDTO>> getClubsByUser(@PathVariable String username) {
+        List<ClubBasicDTO> clubs = clubService.getClubsByUsername(username);
+        return ResponseEntity.ok(clubs);    
+    }
+
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<ClubDTO>> getClubsByUser(@PathVariable String username) {
+            List<ClubDTO> clubs = clubService.getClubsByUserName(username);
+            return ResponseEntity.ok(clubs);
+    }
+   
 }
