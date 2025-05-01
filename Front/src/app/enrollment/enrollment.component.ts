@@ -3,7 +3,7 @@ import { EnrollmentService } from './enrollment.service';
 import { ClubService } from '../clubaccueil/clubservice.service';
 import { Enrollment } from './enrollment.model';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-enrollment',
@@ -84,23 +84,23 @@ export class EnrollmentComponent implements OnInit {
   private handleEnrollmentsSuccess(data: Enrollment[]): void {
     console.log('Toutes les demandes:', data);
     console.log('Club utilisateur:', this.userClub);
-    
+
     this.enrollments = data.filter(demande => {
-      const match = demande.etat === 'EN_ATTENTE' && 
+      const match = demande.etat === 'EN_ATTENTE' &&
                    demande.clubId === this.userClub?.id;
       console.log(`Demande ${demande.id}:`, {etat: demande.etat, clubId: demande.club?.id, match});
       return match;
     });
-    
+
     console.log('Demandes filtrées:', this.enrollments);
     this.isLoading = false;
   }
   // Bascule l'état des inscriptions
   toggleEnrollment(): void {
     if (!this.userClub) return;
-  
+
     console.log('Club ID:', this.userClub.id);
-  
+
     this.clubService.toggleEnrollmentStatus(this.userClub.id).subscribe({
       next: (res: string) => {
         console.log('Réponse brute :', res);
@@ -109,17 +109,17 @@ export class EnrollmentComponent implements OnInit {
       error: (err) => this.handleError('Échec de la mise à jour du statut', err)
     });
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
+
+
+
+
+
   // Affiche la motivation
   showMotivation(motivation: string): void {
     this.selectedMotivation = motivation;
