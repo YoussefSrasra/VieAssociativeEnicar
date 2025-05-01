@@ -30,6 +30,6 @@ export class EntretienService {
     return this.http.put<Entretien>(`${this.apiUrl}/${id}`, entretien);
   }
   getEnrollmentDetails(enrollmentId: number): Observable<any> {
-    return this.http.get(`http://localhost:8081/api/enrollments/${enrollmentId}`);
+    return this.http.get(`http://localhost:8080/api/enrollments/${enrollmentId}`);
   }
 }

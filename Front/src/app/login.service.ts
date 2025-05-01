@@ -20,7 +20,7 @@ export class LoginService {
 
   login(username: string, password: string) {
     return this.http.post<LoginResponse>(
-      'http://localhost:8081/api/public/login',
+      'http://localhost:8080/api/public/login',
       { username, password }
     ).pipe(
       tap(response => {
