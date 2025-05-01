@@ -4,13 +4,13 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ClubRequestService } from '../../services/club-request.service';
 
-
 @Component({
-  imports: [ CardComponent ,CommonModule,ReactiveFormsModule],
-
+  standalone: true,
+  imports: [CardComponent, CommonModule, ReactiveFormsModule],
   selector: 'app-event-requests',
   templateUrl: './event-requests.component.html',
-  styleUrls: ['./event-requests.component.scss']
+  styleUrls: ['./event-requests.component.scss'],
+  providers: [DatePipe]
 })
 export class EventRequestsComponent implements OnInit {
   eventForm = this.fb.group({
@@ -25,8 +25,9 @@ export class EventRequestsComponent implements OnInit {
     requested_amount: [0, [Validators.min(0)]],
     attendees: [0, [Validators.min(0)]],
     need_equipment: [false],
-    equipment_description: [''] // Pour stocker plusieurs équipements
+    equipment_description: ['']
   });
+
   equipmentOptions = [
     'Projecteur',
     'Écran',
@@ -37,14 +38,17 @@ export class EventRequestsComponent implements OnInit {
     'Multiprise',
     'Câbles HDMI',
     'Ordinateur portable'
-];
+  ];
+
   eventTypes = ['CONFERENCE', 'WORKSHOP', 'SEMINAR', 'COMPETITION', 'SOCIAL_EVENT'];
+
   statusCards = [
     { title: 'En attente', value: 0, icon: 'hourglass', color: 'bg-warning' },
     { title: 'Approuvées', value: 0, icon: 'check-circle', color: 'bg-success' },
     { title: 'Rejetées', value: 0, icon: 'times-circle', color: 'bg-danger' },
     { title: 'Total', value: 0, icon: 'list-alt', color: 'bg-info' }
   ];
+
   recentRequests: any[] = [];
   isLoading = false;
   isSubmitting = false;
@@ -52,7 +56,8 @@ export class EventRequestsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private clubRequestService: ClubRequestService
+    private clubRequestService: ClubRequestService,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -70,9 +75,11 @@ export class EventRequestsComponent implements OnInit {
       error: (err) => {
         console.error('Erreur lors du chargement:', err);
         this.isLoading = false;
+        this.showAlert('danger', 'Erreur lors du chargement des demandes');
       }
     });
   }
+
   trackByFn(index: number, item: any): any {
     return item?.title || index;
   }
@@ -100,28 +107,26 @@ export class EventRequestsComponent implements OnInit {
 
   onSubmit(): void {
     if (this.eventForm.invalid || this.isSubmitting) {
-        this.eventForm.markAllAsTouched();
-        return;
+      this.eventForm.markAllAsTouched();
+      return;
     }
 
     this.isSubmitting = true;
     const formData = {
-        eventName: this.eventForm.value.event_name,
-        type: this.eventForm.value.type,
-        description: this.eventForm.value.description,
-        location: this.eventForm.value.location,
-        startDate: new Date(this.eventForm.value.start_date!).toISOString(),
-        endDate: new Date(this.eventForm.value.end_date!).toISOString(),
-        financialRequest: this.eventForm.value.financial_request,
-        requestedAmount: this.eventForm.value.requested_amount || 0,
-        estimatedAttendees: this.eventForm.value.attendees || 0,
-        needEquipment: this.eventForm.value.need_equipment,
-        equipmentDescription: this.eventForm.value.equipment_description, // Champ texte simple
-        status: 'PENDING',
-        club: { id: Number(this.eventForm.value.club_id) } // Supprimez les champs inutiles ici
+      eventName: this.eventForm.value.event_name!,
+      type: this.eventForm.value.type!,
+      description: this.eventForm.value.description!,
+      location: this.eventForm.value.location!,
+      startDate: new Date(this.eventForm.value.start_date!).toISOString(),
+      endDate: new Date(this.eventForm.value.end_date!).toISOString(),
+      financialRequest: this.eventForm.value.financial_request!,
+      requestedAmount: this.eventForm.value.requested_amount || 0,
+      estimatedAttendees: this.eventForm.value.attendees || 0,
+      needEquipment: this.eventForm.value.need_equipment!,
+      equipmentDescription: this.eventForm.value.equipment_description,
+      status: 'PENDING',
+      club: { id: Number(this.eventForm.value.club_id) }
     };
-
-    console.log('Données envoyées:', formData);
 
     this.clubRequestService.createEventRequest(formData).subscribe({
       next: (response) => {
@@ -141,30 +146,45 @@ export class EventRequestsComponent implements OnInit {
         this.showAlert('danger', 'Erreur lors de l\'envoi de la demande.');
         this.isSubmitting = false;
       }
-
     });
-}
+  }
 
   approveRequest(id: number): void {
     this.clubRequestService.approveEventRequest(id).subscribe({
-      next: () => this.loadEventRequests(),
-      error: (err) => console.error('Erreur lors de l\'approbation:', err)
+      next: () => {
+        this.loadEventRequests();
+        this.showAlert('success', 'Demande approuvée avec succès.');
+      },
+      error: (err) => {
+        console.error('Erreur lors de l\'approbation:', err);
+        this.showAlert('danger', 'Erreur lors de l\'approbation.');
+      }
     });
   }
 
   rejectRequest(id: number): void {
     this.clubRequestService.rejectEventRequest(id).subscribe({
-      next: () => this.loadEventRequests(),
-      error: (err) => console.error('Erreur lors du rejet:', err)
+      next: () => {
+        this.loadEventRequests();
+        this.showAlert('success', 'Demande rejetée avec succès.');
+      },
+      error: (err) => {
+        console.error('Erreur lors du rejet:', err);
+        this.showAlert('danger', 'Erreur lors du rejet.');
+      }
     });
   }
 
   trackByRequest(index: number, request: any): number {
     return request.id || index;
   }
+
   showAlert(type: 'success' | 'danger' | 'info', message: string): void {
     this.alert = { type, message };
-    setTimeout(() => this.alert = null, 5000); // Disparaît après 5 secondes
+    setTimeout(() => this.alert = null, 5000);
   }
 
+  formatDate(date: string): string {
+    return this.datePipe.transform(date, 'dd/MM/yyyy HH:mm') || '';
+  }
 }

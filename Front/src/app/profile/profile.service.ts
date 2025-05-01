@@ -7,7 +7,7 @@ import { UserProfile } from './models/profile.model';
   providedIn: 'root'
 })
 export class ProfileService {
-  private apiUrl = 'http://localhost:8080/api/public';
+  private apiUrl = 'http://localhost:8081/api/public';
 
   constructor(private http: HttpClient) { }
 

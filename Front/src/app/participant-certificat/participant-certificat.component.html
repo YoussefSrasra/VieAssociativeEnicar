@@ -1,0 +1,33 @@
+<app-card [headerTitle]="'Générer un Certificat de Participation'">
+  <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="p-3 row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Nom</label>
+      <input type="text" class="form-control" formControlName="nom">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Prénom</label>
+      <input type="text" class="form-control" formControlName="prenom">
+    </div>
+    <div class="col-12 text-end">
+      <button class="btn btn-primary" type="submit" [disabled]="!searchForm.valid || loading">
+        {{ loading ? 'Recherche...' : 'Rechercher' }}
+      </button>
+    </div>
+  </form>
+
+  <div class="p-3" *ngIf="searched">
+    <h5 *ngIf="participations.length > 0">Participations trouvées :</h5>
+    <div *ngIf="participations.length === 0" class="text-danger">
+      Aucune participation trouvée.
+    </div>
+    <ul class="list-group" *ngIf="participations.length > 0">
+      <li class="list-group-item d-flex justify-content-between align-items-center"
+          *ngFor="let participation of participations">
+        {{ participation.nomEvenement }} ({{ participation.dateCreation | date:'shortDate' }})
+        <button class="btn btn-outline-success btn-sm" (click)="generatePDF(participation)">
+          Télécharger Certificat
+        </button>
+      </li>
+    </ul>
+  </div>
+</app-card>

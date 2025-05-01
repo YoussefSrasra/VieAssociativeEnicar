@@ -28,5 +28,7 @@ public class EventService {
     public Event getLatestEvent() {
         return eventRepository.findFirstByOrderByCreatedAtDesc();
     }
-    
+    public List<Event> getAllEvents() {
+        return eventRepository.findAll();
+    }
 }

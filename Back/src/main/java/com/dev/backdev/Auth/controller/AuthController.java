@@ -3,6 +3,7 @@ package com.dev.backdev.Auth.controller;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev.backdev.Auth.dto.ManagerWithClubDto;
 import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
 import com.dev.backdev.Auth.dto.UserRegistrationDTO;
 import com.dev.backdev.Auth.dto.UserResponseDto;
@@ -27,6 +29,7 @@ import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Auth.service.AuthService;
 import com.dev.backdev.Auth.util.JwtUtil;
 import com.dev.backdev.Club.Model.Club;
+
 import com.dev.backdev.Enums.ClubRole;
 
 @RestController
@@ -124,13 +127,6 @@ public class AuthController {
         return authService.getAllUsers();
     }
 // UserController.java
-@GetMapping("/managers")
-public List<UserResponseDto> getAllManagers() {
-    return userRepository.findByRole("MANAGER")
-        .stream()
-        .map(UserResponseDto::new)
-        .toList();
-}
 
 
     @GetMapping("/users/by-role/{role}")

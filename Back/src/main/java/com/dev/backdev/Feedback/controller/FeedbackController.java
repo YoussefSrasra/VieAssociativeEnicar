@@ -28,13 +28,14 @@ public class FeedbackController {
 
 
     @GetMapping
-    public ResponseEntity<List<Feedback>> getAllFeedbacks() {
+    public ResponseEntity<?> getAllFeedbacks() {
         try {
             List<Feedback> feedbackList = feedbackService.getAllFeedback();
             return ResponseEntity.ok(feedbackList);
         } catch (Exception e) {
+            e.printStackTrace(); // Log the error for debugging
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body(null); // Retourne un code 500 avec un message d'erreur
+                                 .body("Error fetching feedbacks: " + e.getMessage());
         }
     }
     

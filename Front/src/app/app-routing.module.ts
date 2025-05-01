@@ -61,11 +61,27 @@ const routes: Routes = [
       },
 
 
+
+
+      {
+        path: 'certif',
+        loadComponent: () => import('./participant-certificat/participant-certificat.component')
+          .then(c => c.ParticipantCertificatComponent)
+      },
+
+
+
       {
         path: 'entretiens',
         loadComponent: () => import('./entretiens/entretiens.component')
           .then(c => c.EntretiensComponent)
       },
+      {
+        path: 'member-dashboard',
+        loadComponent: () => import('./member-dashboard/member-dashboard.component')
+          .then(c => c.MemberDashboardComponent)
+      },
+
       {
         path: 'partnerships',
         loadComponent: () => import('./features/partnerships/partnerships.component')
@@ -81,7 +97,13 @@ const routes: Routes = [
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
         canActivate: [authGuard]
-        
+
+      },
+      {
+        path: 'dashboard/default',
+        loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
+        canActivate: [authGuard]
+
       },
       {
         path: 'contacts-urgence',
@@ -113,8 +135,12 @@ const routes: Routes = [
         loadComponent: () => import('./demo/others/sample-page/sample-page.component').then((c) => c.SamplePageComponent)
       },
 
+
     ]
   },
+
+
+
   {
     path: '',
     component: GuestLayoutComponent,
@@ -130,7 +156,7 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        loadComponent: () =>  
+        loadComponent: () =>
           import ('./profile/profile.component').then((c) => c.ProfileComponent)
       }
     ]
@@ -141,7 +167,7 @@ const routes: Routes = [
   imports:
   [RouterModule.forRoot(routes),
     FormsModule,
-    ReactiveFormsModule 
+    ReactiveFormsModule
   ],
   exports: [RouterModule]
 })

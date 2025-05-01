@@ -1,0 +1,28 @@
+#dataTable {
+  th {
+    background-color: #4e73df;
+    color: white;
+    font-weight: 600;
+  }
+
+  tr:hover {
+    background-color: #f8f9fc;
+  }
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.btn-success {
+  &:hover {
+    background-color: darken(#1cc88a, 10%);
+  }
+}
+
+.btn-danger {
+  &:hover {
+    background-color: darken(#e74a3b, 10%);
+  }
+}

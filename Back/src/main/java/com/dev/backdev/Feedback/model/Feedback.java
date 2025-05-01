@@ -42,6 +42,9 @@ public class Feedback {
         this.images = images;
         this.createdAt = createdAt;
     }
+    public Feedback() {
+        // no-args constructor required by JPA
+    }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }

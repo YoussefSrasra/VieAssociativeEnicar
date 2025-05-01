@@ -1,0 +1,50 @@
+<div class="card shadow mb-4">
+  <div class="card-header py-3">
+    <h5 class="m-0 font-weight-bold text-primary">Événements Approuvés</h5>
+  </div>
+  <div class="card-body">
+    <div *ngIf="loading" class="text-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="sr-only">Chargement...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loading && approvedEvents.length === 0" class="alert alert-info">
+      Aucun événement approuvé disponible pour le moment.
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading && approvedEvents.length > 0">
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+          <tr>
+            <th>Nom du Club</th>
+            <th>Événement</th>
+            <th>Date Début</th>
+            <th>Date Fin</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let event of approvedEvents">
+            <td>{{ event.clubName }}</td>
+            <td>{{ event.eventName }}</td>
+            <td>{{ event.startDate | date:'medium' }}</td>
+            <td>{{ event.endDate | date:'medium' }}</td>
+            <td>
+              <button *ngIf="!event.isParticipating"
+                      class="btn btn-success btn-sm"
+                      (click)="participate(event.id)">
+                Participer
+              </button>
+              <button *ngIf="event.isParticipating"
+                      class="btn btn-danger btn-sm"
+                      (click)="cancelParticipation(event.id)">
+                Annuler
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

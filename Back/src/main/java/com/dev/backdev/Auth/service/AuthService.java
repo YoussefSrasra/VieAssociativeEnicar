@@ -9,7 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
 
-    import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
+import com.dev.backdev.Auth.dto.ManagerWithClubDto;
+import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
     import com.dev.backdev.Auth.dto.UserRegistrationDTO;
     import com.dev.backdev.Auth.dto.UserResponseDto;
     import com.dev.backdev.Auth.dto.UserUpdateDTO;
@@ -359,6 +360,9 @@ import jakarta.transaction.Transactional;
                 throw new IllegalArgumentException("Formation is required");
             }
         }
+
+        
+
         private String capitalizeFirstLetter(String str) {
             if (str == null || str.isEmpty()) return str;
             return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
