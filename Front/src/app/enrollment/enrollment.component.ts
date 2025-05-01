@@ -12,6 +12,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './enrollment.component.html',
   styleUrls: ['./enrollment.component.scss']
 })
+
+
+
 export class EnrollmentComponent implements OnInit {
   // Variables d'état
   enrollments: Enrollment[] = [];

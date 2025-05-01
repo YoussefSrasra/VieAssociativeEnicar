@@ -34,4 +34,7 @@ export class ClubService {
   toggleEnrollmentStatus(clubId: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${clubId}/toggle-enrollment`, null,{ responseType: 'text' });
   }
+  updateClub(clubId: number, club: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${clubId}`, club);
+  }
 }

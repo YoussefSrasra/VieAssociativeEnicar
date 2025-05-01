@@ -105,4 +105,5 @@ public class ClubController {
             return ResponseEntity.notFound().build();
         }
     }
+    
 }
