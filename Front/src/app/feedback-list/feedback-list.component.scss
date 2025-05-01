@@ -1,0 +1,135 @@
+/* feedback-list.component.css */
+
+/* Style général de la carte */
+.card {
+  border: none;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+/* En-tête de la carte */
+.card-header {
+  background-color: #4e73df;
+  color: white;
+  font-weight: 600;
+  padding: 1.25rem 1.5rem;
+  border-bottom: none;
+}
+
+/* Contenu de la carte */
+.card-body {
+  padding: 0;
+}
+
+/* Conteneur principal */
+.feedback-container {
+  padding: 1.5rem;
+}
+
+/* Message quand il n'y a pas de feedback */
+.no-feedback-message {
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #6c757d;
+}
+
+/* Carte de feedback individuelle */
+.feedback-card {
+  background-color: white;
+  border: 1px solid #e3e6f0;
+  border-radius: 0.35rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.feedback-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+}
+
+/* Titre du feedback */
+.feedback-title {
+  color: #4e73df;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+}
+
+/* Détails du feedback */
+.feedback-detail {
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.feedback-detail strong {
+  color: #5a5c69;
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+/* Commentaire */
+.feedback-comment {
+  background-color: #f8f9fc;
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin: 1rem 0;
+  border-left: 3px solid #4e73df;
+}
+
+/* Images */
+.feedback-image-container {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed #e3e6f0;
+}
+
+.feedback-image {
+  border-radius: 0.25rem;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  object-fit: cover;
+  height: 120px;
+  width: 100%;
+}
+
+.feedback-image:hover {
+  transform: scale(1.03);
+}
+
+/* Note (étoiles) */
+.rating-stars {
+  color: #f39c12;
+  font-size: 1.1rem;
+  margin-left: 0.3rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .feedback-card {
+      padding: 1rem;
+  }
+
+  .feedback-title {
+      font-size: 1.1rem;
+  }
+
+  .feedback-image {
+      height: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-header {
+      padding: 1rem;
+  }
+
+  .feedback-container {
+      padding: 1rem;
+  }
+
+  .feedback-image {
+      height: 80px;
+  }
+}

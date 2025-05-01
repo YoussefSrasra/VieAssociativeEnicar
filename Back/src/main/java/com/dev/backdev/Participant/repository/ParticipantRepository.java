@@ -28,4 +28,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     }
     @Query("SELECT DISTINCT p.eventName FROM Participant p")
     List<String> findDistinctEventNames();
+
+    List<Participant> findByNomAndPrenom(String nom, String prenom);
+
 }

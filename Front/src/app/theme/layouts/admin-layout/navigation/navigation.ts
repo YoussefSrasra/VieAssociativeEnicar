@@ -103,7 +103,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/event-launch',
         //icon: 'bg-colors',
-        roles: ['ADMIN']
+        roles: ['ADMIN','MANAGER']
       },
       {
         id: 'event suivi ',
@@ -112,7 +112,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/admin/event-registrations',
         //icon: 'bg-colors',
-        roles: ['ADMIN']
+        roles: ['ADMIN','MANAGER']
       },
       {
         id: 'demande evenet  ',
@@ -159,6 +159,16 @@ export const NavigationItems: NavigationItem[] = [
         children: []
       },
       {
+        
+        id: 'Informations du club ',
+        title: 'Informations du club ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/DetailClub',
+        //icon: 'bg-colors',
+        roles: ['MANAGER']
+      },
+      {
         id: 'contacts-urgence  ',
         title: 'Contacts-urgence ',
         type: 'item',
@@ -167,15 +177,7 @@ export const NavigationItems: NavigationItem[] = [
         //icon: 'bg-colors',
         roles: ['ADMIN']
       },
-      {
-        id: 'feedback-evenement  ',
-        title: 'Feedback-evenement ',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/feedback-evenement',
-        //icon: 'bg-colors',
-        roles: ['MANAGER','MEMBER']
-      },
+     
       {
         id: 'feedback-list  ',
         title: 'Feedback-list ',
@@ -184,6 +186,15 @@ export const NavigationItems: NavigationItem[] = [
         url: '/feedbacks',
         
         roles: ['ADMIN','MANAGER'],
+      },
+       {
+        id: 'feedback-evenement  ',
+        title: 'Feedback-evenement ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/feedback-evenement',
+        //icon: 'bg-colors',
+        roles: ['MANAGER','MEMBER']
       },
       {
         id: 'tabler',
@@ -195,15 +206,11 @@ export const NavigationItems: NavigationItem[] = [
         target: true,
         external: true
       }
-
-      
-
-      
-
+  
     ]
   },
-
-  {
+  
+   {
     id: 'other',
     title: 'Other',
     type: 'group',

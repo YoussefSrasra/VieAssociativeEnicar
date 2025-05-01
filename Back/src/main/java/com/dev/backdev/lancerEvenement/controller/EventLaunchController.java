@@ -30,4 +30,8 @@ public class EventLaunchController {
 public Event getLatestEvent() {
     return eventService.getLatestEvent();
 }
+@GetMapping
+    public List<Event> getAllEvents() {
+        return eventService.getAllEvents();
+    }
 }

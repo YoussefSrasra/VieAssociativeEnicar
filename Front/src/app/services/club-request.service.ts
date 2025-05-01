@@ -1,29 +1,34 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-
+import { Observable, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 interface EventRequest {
   id?: number;
-  club: { id: number };
+
   eventName: string;
   type: string;
   description: string;
   location: string;
-  startDate: string;
-  endDate: string;
-  financialRequest?: boolean;
+  startDate: string;  // ou Date si votre backend gère les objets Date
+  endDate: string;    // ou Date
+  financialRequest: boolean;
   requestedAmount?: number;
   estimatedAttendees?: number;
-  needEquipment?: boolean;
+  needEquipment: boolean;
   equipmentDescription?: string;
   status?: string;
+  club: {
+    id: number;
+    name?: string;  // optionnel si seulement l'ID est requis pour la création
+  };
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClubRequestService {
-  private apiUrl = 'http://localhost:8080/api/event-requests';
+  private apiUrl = 'http://localhost:8081/api/event-requests';
+  private clubsUrl = 'http://localhost:8081/api/clubs';
 
   constructor(private http: HttpClient) { }
 
@@ -33,6 +38,22 @@ export class ClubRequestService {
 
   getEventRequests(): Observable<EventRequest[]> {
     return this.http.get<EventRequest[]>(this.apiUrl);
+  }
+  getAllRequests(): Observable<any[]> {
+    return forkJoin({
+      requests: this.http.get<any[]>(this.apiUrl),
+      clubs: this.http.get<any[]>(this.clubsUrl)
+    }).pipe(
+      map(({requests, clubs}) => {
+        return requests.map(request => {
+          const club = clubs.find(c => c.id === request.clubId);
+          return {
+            ...request,
+            clubName: club?.name || 'Club inconnu'
+          };
+        });
+      })
+    );
   }
 
   getEventRequestsByClub(clubId: number): Observable<EventRequest[]> {
@@ -52,9 +73,6 @@ export class ClubRequestService {
   }
 
 
-  getAllRequests(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}`);
-  }
 
   approveRequest(id: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/approve`, {});
@@ -63,4 +81,6 @@ export class ClubRequestService {
   rejectRequest(id: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/reject`, {});
   }
+
+
 }

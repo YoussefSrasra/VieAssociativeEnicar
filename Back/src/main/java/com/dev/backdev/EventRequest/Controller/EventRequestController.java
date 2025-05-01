@@ -7,6 +7,7 @@ import com.dev.backdev.EventRequest.Model.EventRequest;
 import com.dev.backdev.EventRequest.Repository.EventRequestRepository;
 import com.dev.backdev.EventRequest.Service.EventRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,11 +42,13 @@ public class EventRequestController {
         // Créer la demande d'événement
         EventRequest createdRequest = eventRequestService.createEventRequest(eventRequest);
         return ResponseEntity.ok(createdRequest);
+
+
+        
     }
     
     
 
-    
 
  
 
@@ -99,6 +102,6 @@ public class EventRequestController {
     }
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> getAllEventRequests() {
-        return ResponseEntity.ok(eventRequestService.getAllEventRequestsForDisplay());
+        return ResponseEntity.ok(eventRequestService.getAllEventRequestsWithClubNames());
     }
 }

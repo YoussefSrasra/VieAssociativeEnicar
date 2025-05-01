@@ -92,4 +92,16 @@ public ResponseEntity<List<String>> getDistinctEventNames() {
 }
 
 
+@GetMapping("/search")
+public ResponseEntity<List<Participant>> searchParticipants(
+        @RequestParam String nom,
+        @RequestParam String prenom) {
+    List<Participant> result = participantRepository.findByNomAndPrenom(nom, prenom);
+    if (result.isEmpty()) {
+        return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(result);
+}
+
+
 }

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dev.backdev.Auth.model.User;
+import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Service.ClubService;
 import com.dev.backdev.Club.dto.ClubBasicDTO;
@@ -26,6 +28,9 @@ public class ClubController {
 
     @Autowired
     private ClubService clubService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping
     public ClubDTO createClub(@RequestBody Club club) {
@@ -73,15 +78,40 @@ public class ClubController {
 
     @DeleteMapping("/{name}/members")
     public ResponseEntity<ClubDTO> removeMembersFromClub(
-            @PathVariable String  name,
+            @PathVariable String name,
             @RequestBody Set<String> usernames) {
         ClubDTO updatedClub = clubService.removeMembersFromClub(name, usernames);
         return ResponseEntity.ok(updatedClub);
     }
 
-    @GetMapping("/user/{username}")
+    @GetMapping("/userid/{id}")
+    public ResponseEntity<List<ClubDTO>> getClubsByUser(@PathVariable Long id) {
+        // List<ClubDTO> clubs = clubService.getClubsByUserName(username);
+        List<ClubDTO> clubs = clubService.getClubsByResponnsibleMemberId(id);
+
+        return ResponseEntity.ok(clubs);
+    }
+   @PutMapping("/{clubId}/toggle-enrollment")
+    public ResponseEntity<String> toggleEnrollment(@PathVariable Long clubId) {
+        try {
+            boolean newStatus = clubService.toggleEnrollmentStatus(clubId);
+            return ResponseEntity.ok("Enrollment status is now: " + newStatus);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/username/{username}")
     public ResponseEntity<List<ClubBasicDTO>> getClubsByUser(@PathVariable String username) {
         List<ClubBasicDTO> clubs = clubService.getClubsByUsername(username);
         return ResponseEntity.ok(clubs);    
     }
+
+
+    @GetMapping("/user/{username}")
+    public ResponseEntity<List<ClubDTO>> getClubsByUser(@PathVariable String username) {
+            List<ClubDTO> clubs = clubService.getClubsByUserName(username);
+            return ResponseEntity.ok(clubs);
+    }
+   
 }
