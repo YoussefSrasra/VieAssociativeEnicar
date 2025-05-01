@@ -1,80 +1,122 @@
-<div class="entretien-container">
-    <h2 class="entretien-title">Gestion des Entretiens</h2>
-    
-    <div class="table-wrapper">
-      <table class="entretien-table">
-        <thead>
-          <tr>
-            <th>Candidat</th>
-            <th>Date</th>
-            <th>Heure</th>
-            <th>Statut</th>
-            <th>Décision</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let entretien of entretiens">
-            <td>
-              <span class="candidate-name" (click)="showEnrollmentDetails(entretien.enrollment.id)">
-                {{ entretien.enrollment.prenom }} {{ entretien.enrollment.nom }}
-              </span>
-            </td>
-            <td><input type="date" [(ngModel)]="entretien.dateEntretien"></td>
-            <td><input type="time" [(ngModel)]="entretien.heureEntretien"></td>
-            <td>
-              <select [(ngModel)]="entretien.statut">
-                <option value="EN_ATTENTE">En attente</option>
-                <option value="ACHEVE">Achevée</option>
-                <option value="ANNULE">Annulée</option>
-              </select>
-            </td>
-            <td>
-              <select [(ngModel)]="entretien.resultat">
-                <option value="EN_ATTENTE">En attente</option>
-                <option value="ACCEPTE">Accepté</option>
-                <option value="REFUSE">Refusé</option>
-              </select>
-            </td>
-            <td>
-              <button class="save-btn" (click)="saveEntretien(entretien)">Sauvegarder</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+<div class="container">
+  <h2 class="mb-4">Gestion des Entretiens</h2>
   
-    <!-- Modal -->
-    <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <button class="close-btn" (click)="closeModal()">&times;</button>
-        <h3>Détails du Candidat</h3>
+  <!-- Indicateur de chargement 
+  <div *ngIf="isLoading" class="loading">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement en cours...</span>
+    </div>
+  </div>
+ 
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div> -->
+  
+  <!-- Message si aucun entretien -->
+  <div *ngIf="entretiens.length === 0" class="alert alert-info">
+    Aucun entretien programmé
+  </div>
+  
+  <!-- Tableau des entretiens -->
+  <div class="table-responsive" *ngIf="entretiens.length > 0">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Candidat</th>
+          <th>Date</th>
+          <th>Heure</th>
+          <th>Statut</th>
+          <th>Décision</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let entretien of entretiens">
+          <td>
+            <span class="text-primary cursor-pointer fw-medium" 
+                  (click)="showEnrollmentDetails(entretien.enrollment.id)">
+              {{ entretien.enrollment.prenom }} {{ entretien.enrollment.nom }}
+            </span>
+          </td>
+          <td>
+            <input type="date" class="form-control" [(ngModel)]="entretien.dateEntretien">
+          </td>
+          <td>
+            <input type="time" class="form-control" [(ngModel)]="entretien.heureEntretien">
+          </td>
+          <td>
+            <select class="form-select" [(ngModel)]="entretien.statut">
+              <option value="EN_ATTENTE">En attente</option>
+              <option value="ACHEVE">Achevée</option>
+              <option value="ANNULE">Annulée</option>
+            </select>
+          </td>
+          <td>
+            <select class="form-select" [(ngModel)]="entretien.resultat">
+              <option value="EN_ATTENTE">En attente</option>
+              <option value="ACCEPTE">Accepté</option>
+              <option value="REFUSE">Refusé</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn btn-primary btn-sm" (click)="saveEntretien(entretien)">
+              <i class="bi bi-save-fill"></i> Sauvegarder
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal de détails du candidat -->
+  <div *ngIf="showModal" class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header bg-primary text-white">
+          <h5 class="modal-title">Détails du Candidat</h5>
+          <button type="button" class="btn-close btn-close-white" 
+                  (click)="closeModal()"></button>
+        </div>
         <div class="modal-body" *ngIf="selectedEnrollment">
-          <div class="detail-row">
-            <span class="detail-label">Nom complet:</span>
-            <span class="detail-value">{{selectedEnrollment.prenom}} {{selectedEnrollment.nom}}</span>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <p><strong>Nom complet:</strong><br>
+              {{selectedEnrollment.prenom}} {{selectedEnrollment.nom}}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Email:</strong><br>
+              {{selectedEnrollment.email}}</p>
+            </div>
           </div>
-          <div class="detail-row">
-            <span class="detail-label">Email:</span>
-            <span class="detail-value">{{selectedEnrollment.email}}</span>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <p><strong>Téléphone:</strong><br>
+              {{selectedEnrollment.numeroTelephone}}</p>
+            </div>
+            <div class="col-md-6">
+              <p><strong>Département:</strong><br>
+              {{selectedEnrollment.departementEtude}}</p>
+            </div>
           </div>
-          <div class="detail-row">
-            <span class="detail-label">Téléphone:</span>
-            <span class="detail-value">{{selectedEnrollment.numeroTelephone}}</span>
+          <div class="row mb-2">
+            <div class="col-md-6">
+              <p><strong>Niveau:</strong><br>
+              {{selectedEnrollment.niveauEtude}}</p>
+            </div>
           </div>
-          <div class="detail-row">
-            <span class="detail-label">Département:</span>
-            <span class="detail-value">{{selectedEnrollment.departementEtude}}</span>
+          <div class="mb-2">
+            <p><strong>Motivation:</strong></p>
+            <div class="motivation-content p-3 bg-light rounded">
+              {{selectedEnrollment.messageMotivation}}
+            </div>
           </div>
-          <div class="detail-row">
-            <span class="detail-label">Niveau:</span>
-            <span class="detail-value">{{selectedEnrollment.niveauEtude}}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Motivation:</span>
-            <p class="detail-value">{{selectedEnrollment.messageMotivation}}</p>
-          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" 
+                  (click)="closeModal()">Fermer</button>
         </div>
       </div>
     </div>
   </div>
+  <div *ngIf="showModal" class="modal-backdrop fade show"></div>
+</div>

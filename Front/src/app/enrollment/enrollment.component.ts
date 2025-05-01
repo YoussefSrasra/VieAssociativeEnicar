@@ -12,6 +12,9 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './enrollment.component.html',
   styleUrls: ['./enrollment.component.scss']
 })
+
+
+
 export class EnrollmentComponent implements OnInit {
   // Variables d'état
   enrollments: Enrollment[] = [];
@@ -57,11 +60,9 @@ export class EnrollmentComponent implements OnInit {
 
   // Gère la réussite du chargement du club
   private handleClubSuccess(clubs: any): void {
-    console.log(clubs.length)
-    console.log(clubs)
-    if (clubs ) {
+    if (clubs) {
       this.userClub = clubs;
-      this.loadEnrollments();
+      this.loadEnrollments(); // Ajoutez cette ligne
     } else {
       this.handleError('Aucun club trouvé pour cet utilisateur');
     }
@@ -76,15 +77,24 @@ export class EnrollmentComponent implements OnInit {
     });
   }
 
+
+
+
   // Gère la réussite du chargement des inscriptions
   private handleEnrollmentsSuccess(data: Enrollment[]): void {
-    this.enrollments = data.filter(demande => 
-      demande.etat === 'EN_ATTENTE' && 
-      demande.club?.id === this.userClub?.id
-    );
+    console.log('Toutes les demandes:', data);
+    console.log('Club utilisateur:', this.userClub);
+    
+    this.enrollments = data.filter(demande => {
+      const match = demande.etat === 'EN_ATTENTE' && 
+                   demande.clubId === this.userClub?.id;
+      console.log(`Demande ${demande.id}:`, {etat: demande.etat, clubId: demande.club?.id, match});
+      return match;
+    });
+    
+    console.log('Demandes filtrées:', this.enrollments);
     this.isLoading = false;
   }
-
   // Bascule l'état des inscriptions
   toggleEnrollment(): void {
     if (!this.userClub) return;

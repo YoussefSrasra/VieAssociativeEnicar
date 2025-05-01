@@ -97,6 +97,10 @@ const routes: Routes = [
         loadComponent: () => import('./enrollment/enrollment.component').then((c) => c.EnrollmentComponent)
       },
       {
+        path: 'DetailClub',
+        loadComponent: () => import('./detail-club/detail-club.component').then((c) => c.DetailClubComponent)
+      },
+      {
         path: 'color',
         loadComponent: () => import('./demo/component/basic-component/color/color.component').then((c) => c.ColorComponent)
       },

@@ -1,3 +1,5 @@
+import { N } from "@angular/core/navigation_types.d-Lh6SmhKv";
+
 export interface Enrollment {
   id: number;
   nom: string;
@@ -7,6 +9,7 @@ export interface Enrollment {
   dateNaissance: string;
   departementEtude: string;
   niveauEtude: string;
+  clubId: Number; 
   messageMotivation: string;
   etat: string; // 'EN_ATTENTE' | 'APPROUVEE' | 'REJETEE'
   club: {  // Structure correspondant à votre backend

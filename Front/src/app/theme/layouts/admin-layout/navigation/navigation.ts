@@ -149,6 +149,15 @@ export const NavigationItems: NavigationItem[] = [
         roles: ['ADMIN']
       },
       {
+        id: 'Informations du club ',
+        title: 'Informations du club ',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/DetailClub',
+        //icon: 'bg-colors',
+        roles: ['MANAGER']
+      },
+      {
         id: 'contacts-urgence  ',
         title: 'Contacts-urgence ',
         type: 'item',
@@ -167,17 +176,7 @@ export const NavigationItems: NavigationItem[] = [
         
         roles: ['ADMIN','MANAGER'],
       },
-      /*{
-        id: 'tabler',
-        title: 'Tabler',
-        type: 'item',
-        classes: 'nav-item',
-        url: 'https://ant.design/components/icon',
-        icon: 'ant-design',
-        target: true,
-        external: true
-      }//commentaire */
-
+  
     ]
   },
   {

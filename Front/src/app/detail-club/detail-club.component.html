@@ -1,0 +1,44 @@
+<!-- Boutons d'action -->
+<div class="action-buttons">
+    <button *ngIf="!isEditing" (click)="toggleEdit()">Modifier</button>
+    <button *ngIf="isEditing" (click)="saveChanges()">Enregistrer</button>
+    <button *ngIf="isEditing" (click)="isEditing = false">Annuler</button>
+  </div>
+  
+  <!-- Affichage lecture seule -->
+  <div *ngIf="!isEditing && userClub" class="club-card">
+    <img *ngIf="userClub.logo" [src]="userClub.logo" alt="Logo du club" class="club-logo" />
+    <p><strong>Nom :</strong> {{ userClub.name }}</p>
+    <p><strong>Spécialité :</strong> {{ userClub.specialty }}</p>
+    <p><strong>Début du mandat :</strong> {{ userClub.mandatStartDate }}</p>
+    <p><strong>Durée du mandat (mois) :</strong> {{ userClub.mandatDurationMonths }}</p>
+  </div>
+  
+  <!-- Mode édition -->
+  <div *ngIf="isEditing && userClub" class="edit-form">
+    <label>Nom :
+      <input [(ngModel)]="userClub.name" />
+    </label>
+  
+    <label>Spécialité :
+      <input [(ngModel)]="userClub.specialty" />
+    </label>
+  
+    <label>Début du mandat :
+      <input type="date" [(ngModel)]="userClub.mandatStartDate" />
+    </label>
+  
+    <label>Durée du mandat (mois) :
+      <input type="number" [(ngModel)]="userClub.mandatDurationMonths" />
+    </label>
+  
+    <label>Changer le logo :
+      <input type="file" (change)="onLogoSelected($event)" />
+    </label>
+  
+    <div *ngIf="userClub.logo" class="preview-logo">
+      <p>Aperçu du logo :</p>
+      <img [src]="userClub.logo" alt="Prévisualisation logo" />
+    </div>
+  </div>
+  

@@ -35,7 +35,7 @@ export class CreationClubComponent {
     
     if (file) {
       // Vérification de la taille (1MB max)
-      if (file.size > 1048576) {
+      if (file.size > 7*1024*1024) {
         this.showError = true;
         this.errorMessage = 'Le fichier est trop volumineux (max 1MB)';
         return;
