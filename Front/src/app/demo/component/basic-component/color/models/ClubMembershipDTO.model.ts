@@ -2,7 +2,8 @@
 export interface ClubMembershipDTO {
     id?: number;
     nom: string;
-    prenom: string
+    prenom: string;
+    email: string;
     photo: string | null;
     clubname: string;
     role: role;

@@ -273,7 +273,7 @@ import jakarta.transaction.Transactional;
             if (updateDTO.getFormation() != null) user.setFormation(updateDTO.getFormation());
             if (updateDTO.getPhoto() != null) user.setPhoto(updateDTO.getPhoto());
 
-            
+            user.setFirstLogin(false); // Mark as completed
 
             // Update club (if provided)
             /*if (updateDTO.getMemberClubNames() != null) {

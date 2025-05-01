@@ -126,7 +126,6 @@ public class AuthController {
     public List<UserResponseDto> getAllUsers() {
         return authService.getAllUsers();
     }
-// UserController.java
 
 
     @GetMapping("/users/by-role/{role}")
@@ -145,6 +144,7 @@ public class AuthController {
         return user.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+    
     @PutMapping("/users/{username}")
     public ResponseEntity<UserResponseDto> updateUser(
         @PathVariable String username,

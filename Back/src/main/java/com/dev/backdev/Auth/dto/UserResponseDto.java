@@ -29,6 +29,7 @@ public class UserResponseDto {
     private Sexe sexe;
     private Formation formation;
     private String photo;
+    private boolean FirstLogin;
     private String managedClubName; // Nom du club géré (si manager)
     private Set<String> memberClubNames; // Noms des clubs où l'utilisateur est membre
     private boolean isManagerAccount; // Indique si c'est un compte manager
@@ -42,6 +43,7 @@ public class UserResponseDto {
         this.role = user.getRole();
         this.cin = user.getCin();
         this.filiere = user.getFiliere();
+        this.FirstLogin = user.getFirstLogin();
         this.niveau = user.getNiveau();
         this.sexe = user.getSexe();
         this.formation = user.getFormation();

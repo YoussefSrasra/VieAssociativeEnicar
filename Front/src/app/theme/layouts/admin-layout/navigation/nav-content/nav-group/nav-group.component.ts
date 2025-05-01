@@ -1,5 +1,5 @@
 // Angular import
-import { Component, OnInit, inject, input } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject, input } from '@angular/core';
 import { CommonModule, Location } from '@angular/common';
 
 // project import
@@ -21,6 +21,7 @@ export class NavGroupComponent implements OnInit {
 
   // All Version in Group Name
   item = input.required<NavigationItem>();
+  @Output() dynamicCollapseClick = new EventEmitter<string>(); // 👈 Add this
 
   // Life cycle events
   ngOnInit() {

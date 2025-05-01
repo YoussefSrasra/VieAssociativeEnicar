@@ -1,7 +1,7 @@
 export interface NavigationItem {
   id: string;
   title: string;
-  type: 'item' | 'collapse' | 'group';
+  type: 'item' | 'collapse' | 'group' | 'dynamic-collapse';
   translate?: string;
   icon?: string;
   hidden?: boolean;
@@ -17,6 +17,8 @@ export interface NavigationItem {
   description?: string;
   path?: string;
   roles?: string[];
+  triggerExpansion?: boolean; // <--- Add this line
+  dynamicChildren?: { title: string; url: string }[];
 }
 
 export const NavigationItems: NavigationItem[] = [
@@ -149,6 +151,15 @@ export const NavigationItems: NavigationItem[] = [
         roles: ['ADMIN']
       },
       {
+        id: 'my-clubs',
+        title: 'My Clubs',
+        type: 'collapse', 
+        icon: 'icon-people',
+        roles: ['MEMBER'],
+        children: []
+      },
+      {
+        
         id: 'Informations du club ',
         title: 'Informations du club ',
         type: 'item',
@@ -176,71 +187,36 @@ export const NavigationItems: NavigationItem[] = [
         
         roles: ['ADMIN','MANAGER'],
       },
-  
-    ]
-  },
-  {
-    id: 'club',
-    title: 'Club',
-    type: 'group', // Utilisez 'collapse' pour permettre l'expansion/contraction
-    icon: 'icon-star', 
-    roles: ['MEMBER'],// Choisissez une icône appropriée
-    
-    children: [
-      {
-        id: 'club-management',
-        title: 'Gestion du Club',
-        type: 'item',
-        url: '/club/management',
-        roles: ['MANAGER', 'ADMIN']
-      },
-      {
-        id: 'club-events',
-        title: 'Événements du Club',
-        type: 'item',
-        url: '/club/events',
-        roles: ['MANAGER', 'MEMBER']
-      },
-      {
-        id: 'club-members',
-        title: 'Membres du Club',
-        type: 'item',
-        url: '/club/members',
-        roles: ['MANAGER']
-      },
-      {
+       {
         id: 'feedback-evenement  ',
         title: 'Feedback-evenement ',
         type: 'item',
         classes: 'nav-item',
         url: '/feedback-evenement',
         //icon: 'bg-colors',
-        roles: ['MEMBER']
+        roles: ['MANAGER','MEMBER']
       },
       {
-        id: 'club-activities',
-        title: 'Activités',
+        id: 'tabler',
+        title: 'Tabler',
         type: 'item',
-        url: '/club/activities',
-        roles: ['MANAGER', 'MEMBER']
-      },
-      {
-        id: 'club-settings',
-        title: 'Paramètres',
-        type: 'item',
-        url: '/club/settings',
-        roles: ['MANAGER']
+        classes: 'nav-item',
+        url: 'https://ant.design/components/icon',
+        icon: 'ant-design',
+        target: true,
+        external: true
       }
+  
     ]
   },
-
- /* {
+  
+   {
     id: 'other',
     title: 'Other',
     type: 'group',
     icon: 'icon-navigation',
     children: [
-      {
+     {
         id: 'sample-page',
         title: 'Sample Page',
         type: 'item',
@@ -259,5 +235,5 @@ export const NavigationItems: NavigationItem[] = [
         external: true
       }
     ]
-  }*/
+  }
 ];
