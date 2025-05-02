@@ -1,6 +1,9 @@
 <div *ngIf="isLoading">Chargement...</div>
 <div *ngIf="errorMessage">{{ errorMessage }}</div>
 
+<div *ngIf="errorMessage" class="alert error-alert">{{ errorMessage }}</div>
+
+
 <table *ngIf="!isLoading && entretiensAcceptes.length > 0" class="table table-bordered">
   <thead>
     <tr>
@@ -16,7 +19,11 @@
       <td>{{ entretien.enrollment.prenom }}</td>
       <td>{{ entretien.enrollment.email }}</td>
       <td>
-        <button class="btn btn-primary" (click)="genererCompte(entretien)">Générer compte</button>
+        <button class="btn btn-primary"
+                [disabled]="entretien.compteCree"
+                (click)="genererCompte(entretien)">
+          {{ entretien.compteCree ? 'Compte déjà généré' : 'Générer compte' }}
+        </button>
       </td>
     </tr>
   </tbody>

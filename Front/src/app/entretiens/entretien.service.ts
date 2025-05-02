@@ -35,4 +35,8 @@ export class EntretienService {
   getEntretiensByClub(clubId: number): Observable<Entretien[]> {
     return this.http.get<Entretien[]>(`${this.apiUrl}/club/${clubId}`);
 
+
+}
+creercompte(entretienid: number): Observable<string> {
+  return this.http.post<string>(`http://localhost:8080/api/entretiens/${entretienid}/creer-compte`, {}, { responseType: 'text' as 'json' });
 }}
