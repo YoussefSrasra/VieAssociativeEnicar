@@ -1,5 +1,12 @@
 <div class="container">
   <h2 class="mb-4">Gestion des Entretiens</h2>
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+    {{ errorMessage }}
+  </div>
+  
+  <div *ngIf="successMessage" class="alert alert-success" role="alert">
+    {{ successMessage }}
+  </div>
   
   <!-- Indicateur de chargement 
   <div *ngIf="isLoading" class="loading">

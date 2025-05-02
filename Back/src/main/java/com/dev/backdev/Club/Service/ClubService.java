@@ -119,18 +119,52 @@ public class ClubService {
 
     public Club updateClub(Long id, Club clubDetails) {
         return clubRepository.findById(id).map(club -> {
+            // Vérification et mise à jour du nom
             if (clubDetails.getName() != null) {
-                // Vérifie que le nouveau nom n'existe pas déjà
                 if (!clubDetails.getName().equals(club.getName()) &&
                         clubRepository.existsByName(clubDetails.getName())) {
                     throw new IllegalArgumentException("Un club avec ce nom existe déjà");
                 }
                 club.setName(clubDetails.getName());
             }
-            // ... autres champs
+    
+            // Spécialité
+            if (clubDetails.getSpecialty() != null) {
+                club.setSpecialty(clubDetails.getSpecialty());
+            }
+    
+            // Statut
+            if (clubDetails.getStatus() != null) {
+                club.setStatus(clubDetails.getStatus());
+            }
+    
+            // Logo
+            if (clubDetails.getLogo() != null) {
+                club.setLogo(clubDetails.getLogo());
+            }
+    
+            // Responsable
+            if (clubDetails.getResponsibleMember() != null) {
+                club.setResponsibleMember(clubDetails.getResponsibleMember());
+            }
+    
+            // Ouverture d’enrôlement
+            club.setEnrollmentOpen(clubDetails.isEnrollmentOpen());
+    
+            // Date de début de mandat
+            if (clubDetails.getMandatStartDate() != null) {
+                club.setMandatStartDate(clubDetails.getMandatStartDate());
+            }
+    
+            // Durée du mandat
+            if (clubDetails.getMandatDurationMonths() != null) {
+                club.setMandatDurationMonths(clubDetails.getMandatDurationMonths());
+            }
+    
             return clubRepository.save(club);
         }).orElseThrow(() -> new RuntimeException("Club not found"));
     }
+    
 
     public ClubDTO assignMembersToClub(String name, Set<String> usernames) {
         Club club = clubRepository.findByName(name)

@@ -35,6 +35,9 @@ export class ClubService {
     return this.http.put(`${this.apiUrl}/${clubId}/toggle-enrollment`, null,{ responseType: 'text' });
   }
   updateClub(clubId: number, club: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${clubId}`, club);
+    return this.http.put(`${this.apiUrl}/${clubId}`, club, {
+      responseType: 'text' as 'json' // 👈 solution pour éviter l'erreur de parsing
+    });
   }
+  
 }

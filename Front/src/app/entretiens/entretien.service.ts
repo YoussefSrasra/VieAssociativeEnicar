@@ -18,7 +18,7 @@ export interface Entretien {
   providedIn: 'root'
 })
 export class EntretienService {
-  private apiUrl = 'http://localhost:8081/api/entretiens';
+  private apiUrl = 'http://localhost:8080/api/entretiens';
 
   constructor(private http: HttpClient) { }
 
@@ -32,4 +32,7 @@ export class EntretienService {
   getEnrollmentDetails(enrollmentId: number): Observable<any> {
     return this.http.get(`http://localhost:8080/api/enrollments/${enrollmentId}`);
   }
-}
+  getEntretiensByClub(clubId: number): Observable<Entretien[]> {
+    return this.http.get<Entretien[]>(`${this.apiUrl}/club/${clubId}`);
+
+}}

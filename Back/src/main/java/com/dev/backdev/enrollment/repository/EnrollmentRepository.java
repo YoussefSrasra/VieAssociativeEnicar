@@ -11,6 +11,7 @@ import com.dev.backdev.enrollment.model.Enrollment;
 
 @Repository
 public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+    List<Enrollment> findByClubId(Long clubId);
 
 }
 

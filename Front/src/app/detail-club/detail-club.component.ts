@@ -12,7 +12,10 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './detail-club.component.scss'
 })
 export class DetailClubComponent implements OnInit {
-  errorMessage = '';
+  successMessage = '';
+errorMessage = '';
+
+
   isLoading = true;
   userClub: any = null;
 constructor(
@@ -57,13 +60,7 @@ constructor(
       this.handleError('Aucun club trouvé pour cet utilisateur');
     }
   }
-  private handleError(message: string, error?: any): void {
-    this.errorMessage = message;
-    this.isLoading = false;
-    if (error) {
-      console.error(error);
-    }
-  }
+ 
   isEditing = false;
 
 toggleEdit(): void {
@@ -71,17 +68,25 @@ toggleEdit(): void {
 }
 
 saveChanges(): void {
-  this.clubService.updateClub(this.userClub.id ,this.userClub).subscribe({
+  this.clubService.updateClub(this.userClub.id, this.userClub).subscribe({
     next: () => {
+      this.successMessage = 'Modifications enregistrées avec succès.';
+      this.errorMessage = '';
       this.isEditing = false;
-      alert('Modifications enregistrées avec succès.');
     },
     error: (err) => {
-      console.error('Erreur lors de la mise à jour', err);
-      alert('Une erreur est survenue lors de la sauvegarde.');
+      this.successMessage = '';
+      this.errorMessage = 'Une erreur est survenue lors de la sauvegarde.';
     }
   });
 }
+
+private handleError(message: string, error?: any): void {
+  this.errorMessage = message;
+  this.successMessage = '';
+  this.isLoading = false;
+}
+
 onLogoSelected(event: any): void {
   const file = event.target.files[0];
   if (file) {

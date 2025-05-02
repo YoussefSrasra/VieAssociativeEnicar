@@ -49,4 +49,8 @@ public class EntretienController {
         entretienService.deleteEntretien(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/club/{clubId}")
+    public List<Entretien> getEntretiensByClub(@PathVariable Long clubId) {
+        return entretienService.getEntretiensByClubId(clubId);
+    }
 }

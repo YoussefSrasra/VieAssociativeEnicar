@@ -57,4 +57,7 @@ public class EntretienService {
                     return entretienRepository.save(entretien);
                 });
     }
+    public List<Entretien> getEntretiensByClubId(Long clubId) {
+        return entretienRepository.findByClubId(clubId);
+    }
 }
