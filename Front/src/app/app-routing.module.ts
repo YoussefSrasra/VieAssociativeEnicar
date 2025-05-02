@@ -111,6 +111,11 @@ const routes: Routes = [
         canActivate: [authGuard]
       },
       {
+        path: 'generation-compte',
+        loadComponent: () => import('./generation-compte/generation-compte.component').then((c) => c.GenerationCompteComponent),
+        canActivate: [authGuard]
+      },
+      {
         path: 'demandeclubadmin',
         loadComponent: () => import('./demandeclubadmin/demandeclubadmin.component').then((c) => c.DemandeclubadminComponent)
       },

@@ -1,1 +1,27 @@
-<p>generation-compte works!</p>
+<div *ngIf="isLoading">Chargement...</div>
+<div *ngIf="errorMessage">{{ errorMessage }}</div>
+
+<table *ngIf="!isLoading && entretiensAcceptes.length > 0" class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Email</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let entretien of entretiensAcceptes">
+      <td>{{ entretien.enrollment.nom }}</td>
+      <td>{{ entretien.enrollment.prenom }}</td>
+      <td>{{ entretien.enrollment.email }}</td>
+      <td>
+        <button class="btn btn-primary" (click)="genererCompte(entretien)">Générer compte</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!isLoading && entretiensAcceptes.length === 0">
+  Aucun entretien accepté.
+</div>

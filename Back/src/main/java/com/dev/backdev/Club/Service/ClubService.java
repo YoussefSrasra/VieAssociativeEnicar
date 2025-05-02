@@ -82,6 +82,9 @@ public class ClubService {
     public Optional<ClubDTO> getClubById(Long id) {
         return clubRepository.findById(id).map(this::convertToDTO);
     }
+    public Optional<Club> getClubByIdWithoutDTO(Long id) {
+        return clubRepository.findById(id);
+    }
 
     public List<ClubBasicDTO> getClubsByUsername(String username) {
         return userRepository.findByUsername(username)

@@ -53,4 +53,9 @@ public class EntretienController {
     public List<Entretien> getEntretiensByClub(@PathVariable Long clubId) {
         return entretienService.getEntretiensByClubId(clubId);
     }
+    @PostMapping("/{id}/creer-compte")
+    public ResponseEntity<String> creerComptePourEntretien(@PathVariable("id") Long entretienId) {
+        entretienService.creercompte(entretienId);
+        return ResponseEntity.ok("Compte créé avec succès");
+    }
 }

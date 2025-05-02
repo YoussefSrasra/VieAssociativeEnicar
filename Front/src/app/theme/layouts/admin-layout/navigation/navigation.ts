@@ -75,6 +75,15 @@ export const NavigationItems: NavigationItem[] = [
        
         roles: ['MANAGER']  
       },
+      {
+        id: 'genération-compte',
+        title: 'Génération des comptes',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/generation-compte',
+       
+        roles: ['ADMIN']  
+      },
       
       /*{
         id: 'color',
