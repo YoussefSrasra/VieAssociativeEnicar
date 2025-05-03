@@ -1,6 +1,8 @@
 package com.dev.backdev.EventRequest.Service;
 
+import com.dev.backdev.EventRequest.DTO.EventRequestDTO;
 import com.dev.backdev.EventRequest.Model.EventRequest;
+import com.dev.backdev.EventRequest.Model.EventRequest.RequestStatus;
 import com.dev.backdev.EventRequest.Repository.EventRequestRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class EventRequestService {
@@ -30,6 +33,27 @@ public class EventRequestService {
 
     public List<EventRequest> getEventRequestsByClubId(Long clubId) {
         return eventRequestRepository.findByClubId(clubId);
+    }
+
+    public List<EventRequestDTO> getAcceptedEventsByClubId(Long clubId){
+        RequestStatus status = RequestStatus.APPROVED;
+        List<EventRequest> approvedEvents = eventRequestRepository.findByClubIdAndStatus(clubId,status );
+        return approvedEvents.stream()
+            .map(eventRequest -> {
+                EventRequestDTO dto = new EventRequestDTO();
+                // Map all necessary fields from entity to DTO
+                dto.setId(eventRequest.getId());
+                dto.setType(eventRequest.getType());
+                dto.setClubName(eventRequest.getClub().getName());
+                dto.setNom(eventRequest.getEventName());
+                dto.setDescription(eventRequest.getDescription());
+                dto.setStartDate(eventRequest.getStartDate());
+                dto.setEndDate(eventRequest.getEndDate());
+                dto.setLocation(eventRequest.getLocation());
+                // Include any other relevant fields
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 
     public EventRequest updateEventRequest(Long id, EventRequest eventRequestDetails) {
@@ -83,4 +107,9 @@ public class EventRequestService {
         return eventRequestRepository.findAllForDisplay(); // Utilise la requête JOIN existante
     }
     
+// Dans EventRequestService.java
+public List<String> getEventNamesByClubId(Long clubId) {
+    return eventRequestRepository.findEventNamesByClubId(clubId);
+}
+
 }

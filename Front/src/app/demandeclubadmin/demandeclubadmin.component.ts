@@ -3,7 +3,7 @@ import { DemandeClub, DemandeClubService } from 'src/app/accueil/demande-club.se
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common'; 
+import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-demandeclubadmin',
@@ -75,7 +75,7 @@ export class DemandeclubadminComponent implements OnInit {
     }
   }
 
-  
+
  /* genererCompte(demande: DemandeClub, callback?: () => void): void {
     this.demandeService.genererCompte({
       email: demande.email,

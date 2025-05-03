@@ -1,111 +1,133 @@
-// angular import
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// project import
-import tableData from 'src/fake-data/default-data.json';
-
-import { MonthlyBarChartComponent } from 'src/app/theme/shared/apexchart/monthly-bar-chart/monthly-bar-chart.component';
-import { IncomeOverviewChartComponent } from 'src/app/theme/shared/apexchart/income-overview-chart/income-overview-chart.component';
-import { AnalyticsChartComponent } from 'src/app/theme/shared/apexchart/analytics-chart/analytics-chart.component';
-import { SalesReportChartComponent } from 'src/app/theme/shared/apexchart/sales-report-chart/sales-report-chart.component';
-
-// icons
 import { IconService, IconDirective } from '@ant-design/icons-angular';
-import { FallOutline, GiftOutline, MessageOutline, RiseOutline, SettingOutline } from '@ant-design/icons-angular/icons';
+import { RiseOutline, FallOutline } from '@ant-design/icons-angular/icons';
 import { CardComponent } from 'src/app/theme/shared/components/card/card.component';
+import { ParticipantService } from 'src/app/services/participant.service';
+import { DemandeClubService } from 'src/app/accueil/demande-club.service';
+import { ClubRequestService } from 'src/app/services/club-request.service';
 
 @Component({
   selector: 'app-default',
   imports: [
     CommonModule,
     CardComponent,
-    IconDirective,
-    MonthlyBarChartComponent,
-    IncomeOverviewChartComponent,
-    AnalyticsChartComponent,
-    SalesReportChartComponent
+    IconDirective
   ],
   templateUrl: './default.component.html',
   styleUrls: ['./default.component.scss']
 })
 export class DefaultComponent {
   private iconService = inject(IconService);
+  private participantService = inject(ParticipantService);
+  private demandeClubService = inject(DemandeClubService);
+  private clubRequestService = inject(ClubRequestService);
 
-  // constructor
+  eventStats: any = {};
+  clubStats: any = {};
+  loading = true;
+
   constructor() {
-    this.iconService.addIcon(...[RiseOutline, FallOutline, SettingOutline, GiftOutline, MessageOutline]);
+    this.iconService.addIcon(...[RiseOutline, FallOutline]);
+    this.loadStats();
   }
 
-  recentOrder = tableData;
+  loadStats() {
+    this.loading = true;
+
+    // Charger les stats des événements
+    this.participantService.getEventStats().subscribe({
+      next: (events) => {
+        this.eventStats = {
+          totalEvents: events.length,
+          totalParticipants: events.reduce((acc, event) => acc + event.registeredCount, 0),
+          pendingApprovals: events.reduce((acc, event) => acc + (event.waitingListCount || 0), 0)
+        };
+
+        // Charger les stats des clubs
+        this.loadClubStats();
+      },
+      error: (err) => {
+        console.error('Error loading event stats:', err);
+        this.loadClubStats();
+      }
+    });
+  }
+
+  loadClubStats() {
+    this.demandeClubService.getDemandes().subscribe({
+      next: (demandes) => {
+        this.clubStats = {
+          totalClubs: demandes.filter(d => d.etat === 'ACCEPTE').length,
+          pendingRequests: demandes.filter(d => d.etat === 'EN_ATTENTE').length,
+          rejectedRequests: demandes.filter(d => d.etat === 'REJETE').length
+        };
+
+        // Charger les stats des demandes d'événements
+        this.loadEventRequestStats();
+      },
+      error: (err) => {
+        console.error('Error loading club stats:', err);
+        this.loadEventRequestStats();
+      }
+    });
+  }
+
+  loadEventRequestStats() {
+    this.clubRequestService.getAllRequests().subscribe({
+      next: (requests) => {
+        this.eventStats.totalRequests = requests.length;
+        this.eventStats.approvedRequests = requests.filter(r => r.status === 'APPROVED').length;
+        this.eventStats.pendingRequests = requests.filter(r => r.status === 'PENDING').length;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Error loading event request stats:', err);
+        this.loading = false;
+      }
+    });
+  }
 
   AnalyticEcommerce = [
     {
-      title: 'Total Page Views',
-      amount: '4,42,236',
-      background: 'bg-light-primary ',
+      title: 'Événements Actifs',
+      amount: '0',
+      background: 'bg-light-primary',
       border: 'border-primary',
       icon: 'rise',
-      percentage: '59.3%',
+      percentage: '0%',
       color: 'text-primary',
-      number: '35,000'
+      number: '0'
     },
     {
-      title: 'Total Users',
-      amount: '78,250',
-      background: 'bg-light-primary ',
+      title: 'Participants Totaux',
+      amount: '0',
+      background: 'bg-light-primary',
       border: 'border-primary',
       icon: 'rise',
-      percentage: '70.5%',
+      percentage: '0%',
       color: 'text-primary',
-      number: '8,900'
+      number: '0'
     },
     {
-      title: 'Total Order',
-      amount: '18,800',
-      background: 'bg-light-warning ',
+      title: 'Demandes en Attente',
+      amount: '0',
+      background: 'bg-light-warning',
       border: 'border-warning',
       icon: 'fall',
-      percentage: '27.4%',
+      percentage: '0%',
       color: 'text-warning',
-      number: '1,943'
+      number: '0'
     },
     {
-      title: 'Total Sales',
-      amount: '$35,078',
-      background: 'bg-light-warning ',
-      border: 'border-warning',
-      icon: 'fall',
-      percentage: '27.4%',
-      color: 'text-warning',
-      number: '$20,395'
-    }
-  ];
-
-  transaction = [
-    {
-      background: 'text-success bg-light-success',
-      icon: 'gift',
-      title: 'Order #002434',
-      time: 'Today, 2:00 AM',
-      amount: '+ $1,430',
-      percentage: '78%'
-    },
-    {
-      background: 'text-primary bg-light-primary',
-      icon: 'message',
-      title: 'Order #984947',
-      time: '5 August, 1:45 PM',
-      amount: '- $302',
-      percentage: '8%'
-    },
-    {
-      background: 'text-danger bg-light-danger',
-      icon: 'setting',
-      title: 'Order #988784',
-      time: '7 hours ago',
-      amount: '- $682',
-      percentage: '16%'
+      title: 'Clubs Actifs',
+      amount: '0',
+      background: 'bg-light-success',
+      border: 'border-success',
+      icon: 'rise',
+      percentage: '0%',
+      color: 'text-success',
+      number: '0'
     }
   ];
 }

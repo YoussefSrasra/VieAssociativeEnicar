@@ -3,6 +3,7 @@ package com.dev.backdev.EventRequest.Controller;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Service.ClubService;
 import com.dev.backdev.Club.dto.ClubDTO;
+import com.dev.backdev.EventRequest.DTO.EventRequestDTO;
 import com.dev.backdev.EventRequest.Model.EventRequest;
 import com.dev.backdev.EventRequest.Repository.EventRequestRepository;
 import com.dev.backdev.EventRequest.Service.EventRequestService;
@@ -55,7 +56,12 @@ public class EventRequestController {
 
 
 
-
+// Dans EventRequestController.java
+@GetMapping("/club/{clubId}/event-names")
+public ResponseEntity<List<String>> getEventNamesByClub(@PathVariable Long clubId) {
+    List<String> eventNames = eventRequestService.getEventNamesByClubId(clubId);
+    return ResponseEntity.ok(eventNames);
+}
 
 
 
@@ -73,6 +79,11 @@ public class EventRequestController {
     @GetMapping("/club/{clubId}")
     public List<EventRequest> getEventRequestsByClub(@PathVariable Long clubId) {
         return eventRequestService.getEventRequestsByClubId(clubId);
+    }
+
+    @GetMapping("approved/club/{clubId}")
+    public List<EventRequestDTO> getApprovedEventsByClub(@PathVariable Long clubId){
+        return eventRequestService.getAcceptedEventsByClubId(clubId);
     }
 
     @PutMapping("/{id}")

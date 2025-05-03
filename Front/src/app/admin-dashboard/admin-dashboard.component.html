@@ -1,0 +1,32 @@
+<div class="container py-4">
+  <h2 class="mb-4">Tableau de bord administrateur</h2>
+
+  <div *ngIf="isLoading" class="text-center">
+    <div class="spinner-border text-primary"></div>
+  </div>
+
+  <div *ngIf="!isLoading" class="row g-4">
+    <div class="col-md-3" *ngFor="let card of [
+      { title: 'Total demandes', value: stats.total, color: 'bg-info' },
+      { title: 'En attente', value: stats.pending, color: 'bg-warning' },
+      { title: 'Approuvées', value: stats.approved, color: 'bg-success' },
+      { title: 'Rejetées', value: stats.rejected, color: 'bg-danger' }
+    ]">
+      <div class="card text-white {{ card.color }}">
+        <div class="card-body">
+          <h5 class="card-title">{{ card.title }}</h5>
+          <p class="display-6 fw-bold">{{ card.value }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card text-white bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Clubs participants</h5>
+          <p class="display-6 fw-bold">{{ stats.clubs }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

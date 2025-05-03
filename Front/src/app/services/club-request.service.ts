@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map ,tap } from 'rxjs/operators';
+
 interface EventRequest {
   id?: number;
 
@@ -21,6 +22,18 @@ interface EventRequest {
     id: number;
     name?: string;  // optionnel si seulement l'ID est requis pour la création
   };
+}
+
+interface EventRequestDTO{
+  id : number,
+  nom: string;
+  type: string;
+  description: string;
+  location: string;
+  startDate: string; // ou Date si votre backend gère les objets Date
+  endDate: string;
+  clubName: string
+
 }
 
 @Injectable({
@@ -83,4 +96,22 @@ export class ClubRequestService {
   }
 
 
+// Dans club-request.service.ts
+getApprovedEventsByClub(clubId: number): Observable<EventRequest[]> {
+  return this.http.get<EventRequest[]>(`${this.apiUrl}/club/${clubId}`).pipe(
+    map(events => events.filter(event => event.status === 'APPROVED'))
+  );
+}
+
+// Corrigez la méthode getEventsByClub
+// Dans ClubRequestService
+getEventsByClub(clubId: number): Observable<string[]> {
+  return this.http.get<string[]>(`${this.apiUrl}/club/${clubId}/event-names`).pipe(
+    tap(data => console.log(`API response for club/${clubId}/event-names:`, data))
+  );
+}
+getAcceptedEventsByClub(clubId : number): Observable<EventRequestDTO[]>{
+  return this.http.get<EventRequestDTO[]>(`${this.apiUrl}/approved/club/${clubId}`).pipe(
+    tap(data => console.log(`API response for approved/club/${clubId}`, data)))
+}
 }

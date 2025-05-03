@@ -102,7 +102,7 @@ public class ClubController {
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<List<ClubBasicDTO>> getClubsByUser(@PathVariable String username) {
+    public ResponseEntity<List<ClubBasicDTO>> getClubsByusername(@PathVariable String username) {
         List<ClubBasicDTO> clubs = clubService.getClubsByUsername(username);
         return ResponseEntity.ok(clubs);    
     }

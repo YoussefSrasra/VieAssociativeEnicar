@@ -11,6 +11,7 @@ import { NavCollapseComponent } from './nav-collapse/nav-collapse.component';
 import { ClubService } from 'src/app/services/Club.service';
 import { IconService } from '@ant-design/icons-angular';
 import { ChangeDetectorRef } from '@angular/core';
+import { ClubRequestService } from 'src/app/services/club-request.service';
 
 import {
   DashboardOutline,
@@ -42,6 +43,7 @@ export class NavContentComponent implements OnInit {
   private clubService = inject(ClubService);
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef); // 👈 add this
+  private requestService = inject(ClubRequestService);
 
   NavCollapsedMob = output();
   navigations: NavigationItem[] = [];
@@ -80,6 +82,9 @@ export class NavContentComponent implements OnInit {
       (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
     }
   }
+
+
+
 
   public handleDynamicCollapseClick(itemId: string): void {
     console.log('handleDynamicCollapseClick fired for:', itemId);
@@ -132,23 +137,6 @@ export class NavContentComponent implements OnInit {
     return undefined;
   }
 
-  private transformClubsToMenuItems(clubs: ClubBasicDTO[]): NavigationItem[] {
-    return clubs.map(club => ({
-      id: `club-${club.id}`,
-      title: club.name,
-      type: 'collapse',
-      roles: ['MEMBER'],
-      
-      icon: 'icon-people',
-      children: this.clubSubmenuItems.map(child => ({
-        id: `club-${club.id}-${child.title.toLowerCase()}`,
-        title: child.title,
-        type: 'item',
-        url: child.url(club.id),
-       
-      }))
-    }));
-  }
 
   fireOutClick() {
     let current_url = this.location.path();
@@ -181,5 +169,21 @@ export class NavContentComponent implements OnInit {
         document.querySelector('app-navigation.coded-navbar')?.classList.contains('mob-open')) {
       this.NavCollapsedMob.emit();
     }
+  }
+
+
+  private transformClubsToMenuItems(clubs: ClubBasicDTO[]): NavigationItem[] {
+    return clubs.map(club => ({
+      id: `club-${club.id}`,
+      title: club.name,
+      type: 'collapse',
+      icon: 'icon-people',
+      children: this.clubSubmenuItems.map(child => ({
+        id: `club-${club.id}-${child.title.toLowerCase()}`,
+        title: child.title,
+        type: 'item',
+        url: child.url(club.id)
+      }))
+    }));
   }
 }

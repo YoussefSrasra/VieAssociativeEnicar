@@ -37,14 +37,14 @@ export class ClubMembershipService {
     };
     return this.http.put(`${this.apiUrl}/update-role`, payload);
   }
-  
+
   removeMemberFromClub(membershipId: number): Observable<any> {
     const params = new HttpParams()
       .set('membershipId', membershipId.toString());
-  
+
     return this.http.delete(`${this.apiUrl}/remove`, { params });
   }
-  
+
 
   /**
    * Ajoute un utilisateur à un club avec un rôle spécifique
