@@ -41,6 +41,11 @@ public class EnrollmentController {
         List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(enrollments);
     }
+    @GetMapping("/club/{clubId}")
+    public ResponseEntity<List<Enrollment>> getEnrollmentsByClubId(@PathVariable Long clubId) {
+        List<Enrollment> enrollments = enrollmentService.getEnrollmentsByClub(clubId);
+        return ResponseEntity.ok(enrollments);
+    }
 
   
 

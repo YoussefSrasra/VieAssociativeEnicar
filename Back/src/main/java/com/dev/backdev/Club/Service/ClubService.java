@@ -13,10 +13,14 @@ import com.dev.backdev.Auth.model.User;
 import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Model.ClubMembership;
+import com.dev.backdev.Club.Repository.ClubMembershipRepository;
 import com.dev.backdev.Club.Repository.ClubRepository;
 import com.dev.backdev.Club.dto.ClubBasicDTO;
 import com.dev.backdev.Club.dto.ClubDTO;
 import com.dev.backdev.Enums.ClubRole;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ClubService {
@@ -25,6 +29,8 @@ public class ClubService {
     private ClubRepository clubRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ClubMembershipRepository membershipRepository;
     private final PasswordEncoder passwordEncoder;
 
     public ClubService(PasswordEncoder passwordEncoder) {
@@ -82,6 +88,9 @@ public class ClubService {
     public Optional<ClubDTO> getClubById(Long id) {
         return clubRepository.findById(id).map(this::convertToDTO);
     }
+    public Optional<Club> getClubByIdWithoutDTO(Long id) {
+        return clubRepository.findById(id);
+    }
 
     public List<ClubBasicDTO> getClubsByUsername(String username) {
         return userRepository.findByUsername(username)
@@ -119,18 +128,52 @@ public class ClubService {
 
     public Club updateClub(Long id, Club clubDetails) {
         return clubRepository.findById(id).map(club -> {
+            // Vérification et mise à jour du nom
             if (clubDetails.getName() != null) {
-                // Vérifie que le nouveau nom n'existe pas déjà
                 if (!clubDetails.getName().equals(club.getName()) &&
                         clubRepository.existsByName(clubDetails.getName())) {
                     throw new IllegalArgumentException("Un club avec ce nom existe déjà");
                 }
                 club.setName(clubDetails.getName());
             }
-            // ... autres champs
+    
+            // Spécialité
+            if (clubDetails.getSpecialty() != null) {
+                club.setSpecialty(clubDetails.getSpecialty());
+            }
+    
+            // Statut
+            if (clubDetails.getStatus() != null) {
+                club.setStatus(clubDetails.getStatus());
+            }
+    
+            // Logo
+            if (clubDetails.getLogo() != null) {
+                club.setLogo(clubDetails.getLogo());
+            }
+    
+            // Responsable
+            if (clubDetails.getResponsibleMember() != null) {
+                club.setResponsibleMember(clubDetails.getResponsibleMember());
+            }
+    
+            // Ouverture d’enrôlement
+            club.setEnrollmentOpen(clubDetails.isEnrollmentOpen());
+    
+            // Date de début de mandat
+            if (clubDetails.getMandatStartDate() != null) {
+                club.setMandatStartDate(clubDetails.getMandatStartDate());
+            }
+    
+            // Durée du mandat
+            if (clubDetails.getMandatDurationMonths() != null) {
+                club.setMandatDurationMonths(clubDetails.getMandatDurationMonths());
+            }
+    
             return clubRepository.save(club);
         }).orElseThrow(() -> new RuntimeException("Club not found"));
     }
+    
 
     public ClubDTO assignMembersToClub(String name, Set<String> usernames) {
         Club club = clubRepository.findByName(name)
@@ -171,9 +214,24 @@ public class ClubService {
         return convertToDTO(club);
     }
 
+    @Transactional
     public void deleteClub(Long id) {
-        clubRepository.deleteById(id);
+        Club club = clubRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+
+        // Manually delete memberships
+        club.getMemberships().forEach(membership -> membershipRepository.delete(membership));
+
+        // Optionally delete responsible member
+        User responsible = club.getResponsibleMember();
+        if (responsible != null) {
+            userRepository.delete(responsible);
+        }
+
+        // Delete the club itself
+        clubRepository.delete(club);
     }
+
 
     public Optional<ClubDTO> getClubByName(String name) {
         return clubRepository.findByName(name).map(this::convertToDTO);

@@ -1,4 +1,9 @@
 
+
+//import { N } from "@angular/core/navigation_types.d-Lh6SmhKv";
+
+
+
 export interface Enrollment {
   id: number;
   nom: string;

@@ -7,7 +7,7 @@ import { Enrollment } from './enrollment.model';
   providedIn: 'root'
 })
 export class EnrollmentService {
-  private apiUrl = 'http://localhost:8081/api/enrollments';
+  private apiUrl = 'http://localhost:8080/api/enrollments';
 
   constructor(private http: HttpClient) { }
 

@@ -40,8 +40,8 @@ interface EventRequestDTO{
   providedIn: 'root'
 })
 export class ClubRequestService {
-  private apiUrl = 'http://localhost:8081/api/event-requests';
-  private clubsUrl = 'http://localhost:8081/api/clubs';
+  private apiUrl = 'http://localhost:8080/api/event-requests';
+  private clubsUrl = 'http://localhost:8080/api/clubs';
 
   constructor(private http: HttpClient) { }
 

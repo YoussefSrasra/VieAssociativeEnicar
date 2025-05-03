@@ -15,6 +15,9 @@ export class ClubService {
   getAllClubs(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+  getClubById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
 
   // Ajoutez aussi les autres méthodes nécessaires
   getClubByUsername(username: string): Observable<any> {
@@ -35,6 +38,9 @@ export class ClubService {
     return this.http.put(`${this.apiUrl}/${clubId}/toggle-enrollment`, null,{ responseType: 'text' });
   }
   updateClub(clubId: number, club: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${clubId}`, club);
+    return this.http.put(`${this.apiUrl}/${clubId}`, club, {
+      responseType: 'text' as 'json' // 👈 solution pour éviter l'erreur de parsing
+    });
   }
+  
 }
