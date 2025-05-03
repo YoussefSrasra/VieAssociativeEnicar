@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class EnrollformService {
-  private apiUrl = 'http://localhost:8081/api/enrollments'; // Adaptez l'URL
+  private apiUrl = 'http://localhost:8080/api/enrollments'; // Adaptez l'URL
 
   constructor(private http: HttpClient) {}
 

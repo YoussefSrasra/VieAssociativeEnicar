@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dev.backdev.Auth.model.User;
 import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Service.ClubService;
@@ -102,7 +101,7 @@ public class ClubController {
     }
 
     @GetMapping("/username/{username}")
-    public ResponseEntity<List<ClubBasicDTO>> getClubsByUser(@PathVariable String username) {
+    public ResponseEntity<List<ClubBasicDTO>> getClubsByUsername(@PathVariable String username) {
         List<ClubBasicDTO> clubs = clubService.getClubsByUsername(username);
         return ResponseEntity.ok(clubs);    
     }

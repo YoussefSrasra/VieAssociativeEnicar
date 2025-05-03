@@ -5,6 +5,7 @@ import { LoginService } from '../../../../../login.service';
 import { UserProfile } from '../../../../../profile/models/profile.model';
 import { IconService, IconDirective } from '@ant-design/icons-angular';
 import { ClubMembershipService } from '../../../../../services/club-membership.service';
+import { Router } from '@angular/router'; // <-- at the top if not already imported
 
 import {
   BellOutline,
@@ -49,7 +50,7 @@ export class NavRightComponent {
   isLoading = true;
 
   // Modify constructor
-  constructor(private profileService: ProfileService, private loginService: LoginService, private clubMembershipService: ClubMembershipService,  private clubSelectionService: ClubSelectionService) {
+  constructor(private profileService: ProfileService,  private router: Router ,    private loginService: LoginService, private clubMembershipService: ClubMembershipService,  private clubSelectionService: ClubSelectionService) {
     this.windowWidth = window.innerWidth;
     this.iconService.addIcon(
       ...[
@@ -138,9 +139,10 @@ export class NavRightComponent {
   
   canSwitchToManager(): boolean {
     const clubRole = this.currentUser.role; // or however you store it
+    const role = localStorage.getItem('role');
     const isInManagerSession = localStorage.getItem('managerSession') !== null;
   
-    return clubRole && clubRole !== 'MEMBER' && !isInManagerSession;
+    return clubRole && clubRole !== 'MEMBER' && role!='ADMIN' && !isInManagerSession;
   }
   
   isManagerSession(): boolean {
@@ -148,26 +150,65 @@ export class NavRightComponent {
   }
   
   switchToManager(): void {
-    const personalSession = JSON.stringify(this.currentUser);
-    localStorage.setItem('personalSession', personalSession);
+    const {id, username } = this.currentUser;
+    const token = localStorage.getItem("token");
+    // Only store essential info to avoid storage overflow
+    const minimalUserSnapshot = JSON.stringify({ id, username, token });
+    localStorage.setItem('personalSession', minimalUserSnapshot);
   
     const clubId = localStorage.getItem('selectedClubId');
-    const username = this.currentUser?.username;
+    if (!clubId) {
+      console.error("Club ID not found");
+      return;
+    }
   
-    // Simulate backend login with elevated access
-    /*this.authService.managerLogin(username, clubId).subscribe(managerUser => {
-      localStorage.setItem('managerSession', JSON.stringify(managerUser));
-      this.authService.setCurrentUser(managerUser); // however you update current user
-      window.location.reload(); // or router navigation to refresh navbar
-    });*/
+    this.loginService.managerLogin(username, +clubId).subscribe(response => {
+      const newToken = response.token;
+    
+      // Replace old token (personal) with manager token
+      localStorage.setItem('token', newToken);
+      localStorage.setItem('managerSession', 'true');
+    
+      // Fetch the manager identity using the new token
+      this.loginService.getCurrentUser().subscribe(managerUser => {
+        // Overwrite session values with manager identity
+        localStorage.setItem('username', managerUser.username);
+        localStorage.setItem('role', managerUser.role);
+        this.loginService.setCurrentUser(managerUser);
+    
+        window.location.reload(); // Reload the UI with new session
+      });
+    });
+    
   }
+  
+  
   
   switchBackToPersonal(): void {
-    const personalUser = JSON.parse(localStorage.getItem('personalSession') || '{}');
-    //this.authService.setCurrentUser(personalUser);
-    localStorage.removeItem('managerSession');
-    window.location.reload();
+    const personalSession = JSON.parse(localStorage.getItem('personalSession') || '{}');
+  
+    if (personalSession.token && personalSession.username) {
+      localStorage.setItem('token', personalSession.token);
+      localStorage.setItem('username', personalSession.username);
+      localStorage.setItem('role', 'MEMBER'); // or whatever role you want to set
+      this.loginService.setCurrentUser({
+        id: personalSession.id,
+        username: personalSession.username,
+        role: "MEMBER", // or whatever role you want to set
+      });
+  
+      // Optional: cleanup
+      localStorage.removeItem('managerSession');
+      localStorage.removeItem('personalSession');
+      this.router.navigate(['/dashboard/default']).then(() => {
+        window.location.reload();
+      });
+    } else {
+      console.error('No personal session found to restore.');
+    }
   }
+  
+  
   
 
   // ... rest of existing code

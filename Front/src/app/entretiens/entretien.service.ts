@@ -18,7 +18,7 @@ export interface Entretien {
   providedIn: 'root'
 })
 export class EntretienService {
-  private apiUrl = 'http://localhost:8081/api/entretiens';
+  private apiUrl = 'http://localhost:8080/api/entretiens';
 
   constructor(private http: HttpClient) { }
 
