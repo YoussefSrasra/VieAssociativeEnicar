@@ -54,9 +54,9 @@ export class NavContentComponent implements OnInit {
   windowWidth = window.innerWidth;
 
   private clubSubmenuItems: DynamicChild[] = [
-    { title: 'Members', url: (id) => `/club/${id}/members` },
+   // { title: 'Members', url: (id) => `/club/${id}/members` },
     { title: 'Events', url: (id) => `/club/${id}/events` },
-    { title: 'Documents', url: (id) => `/club/${id}/docs` }
+   // { title: 'Documents', url: (id) => `/club/${id}/docs` }
   ];
 
   constructor() {
