@@ -9,7 +9,7 @@ export interface User {
   id: number;
   username: string;
   email?: string;
-  role: string; 
+  role: string;
 }
 
 interface LoginResponse {
@@ -31,7 +31,7 @@ export class LoginService {
   // Standard login
   login(username: string, password: string): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(
-      'http://localhost:8080/api/public/login',
+      'http://localhost:8081/api/public/login',
       { username, password }
     ).pipe(
       tap(response => {
@@ -45,7 +45,7 @@ export class LoginService {
   // Switch to manager account using username and clubId
   managerLogin(username: string, clubId: number): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(
-      `http://localhost:8080/api/public/switch-to-manager/${clubId}/${username}`,
+      `http://localhost:8081/api/public/switch-to-manager/${clubId}/${username}`,
       {}
     ).pipe(
       tap(response => {

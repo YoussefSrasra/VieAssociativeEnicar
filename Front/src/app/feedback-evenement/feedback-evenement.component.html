@@ -34,13 +34,7 @@
         </div>
 
         <!-- Événement -->
-        <div class="mb-3">
-          <label class="form-label">Événement *</label>
-          <select class="form-select" formControlName="eventName" required required aria-label="Type d'événement">
-            <option value="">Sélectionnez un événement</option>
-            <option *ngFor="let event of eventList" [value]="event">{{ event }}</option>
-          </select>
-        </div>
+      
 
         <!-- Commentaire -->
         <div class="mb-3">
@@ -56,10 +50,7 @@
         </div>
 
         <!-- Images -->
-        <div class="mb-3">
-          <label class="form-label">Ajouter des photos</label>
-          <input type="file" multiple accept="image/*" class="form-control" (change)="onImageUpload($event)">
-        </div>
+
 
         <!-- Aperçu des images -->
         <div class="row mb-3">

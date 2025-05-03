@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, output } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule ,Router,NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { filterNavigationByRole } from '../navigation-filter';
 import { ClubBasicDTO } from 'src/app/demo/component/basic-component/color/models/ClubBasicDTO.model';
@@ -10,8 +10,9 @@ import { NavGroupComponent } from './nav-group/nav-group.component';
 import { NavCollapseComponent } from './nav-collapse/nav-collapse.component';
 import { ClubService } from 'src/app/services/Club.service';
 import { IconService } from '@ant-design/icons-angular';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef ,NgZone } from '@angular/core';
 import { ClubRequestService } from 'src/app/services/club-request.service';
+import { filter } from 'rxjs/operators'; // <-- Ajoutez ceci
 
 import {
   DashboardOutline,
@@ -43,6 +44,8 @@ export class NavContentComponent implements OnInit {
   private clubService = inject(ClubService);
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef); // 👈 add this
+  private ngZone = inject(NgZone); // Ajouter NgZone
+  private router = inject(Router); // Ajouter Router
   private requestService = inject(ClubRequestService);
 
   NavCollapsedMob = output();
@@ -54,9 +57,9 @@ export class NavContentComponent implements OnInit {
   windowWidth = window.innerWidth;
 
   private clubSubmenuItems: DynamicChild[] = [
-   // { title: 'Members', url: (id) => `/club/${id}/members` },
     { title: 'Events', url: (id) => `/club/${id}/events` },
-   // { title: 'Documents', url: (id) => `/club/${id}/docs` }
+    { title: 'Events inscrit ', url: (id) => `my-events` },
+    { title: 'feedback', url: (id) => `feedback-evenement` }
   ];
 
   constructor() {
@@ -74,25 +77,65 @@ export class NavContentComponent implements OnInit {
     this.navigations = [...NavigationItems]; // Copy initial nav
   }
 
-  ngOnInit() {
+  /*ngOnInit() {
     const userRole = this.getUserRoleFromStorage();
     this.navigations = filterNavigationByRole(NavigationItems, [userRole]);
 
     if (this.windowWidth < 1025) {
       (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
     }
-  }
 
+    this.router.events.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+  }*/
+    ngOnInit() {
+      const userRole = this.getUserRoleFromStorage();
+      this.navigations = filterNavigationByRole(NavigationItems, [userRole]);
 
+      if (this.windowWidth < 1025) {
+        (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+      }
 
-
-  public handleDynamicCollapseClick(itemId: string): void {
-    console.log('handleDynamicCollapseClick fired for:', itemId);
-    if (itemId === 'my-clubs') {
-      this.loadClubsForUser();
+      // Écoutez les changements de route
+      this.router.events
+        .pipe(filter(event => event instanceof NavigationEnd))
+        .subscribe(() => {
+          this.cdr.detectChanges();
+          this.handleRouteChange();
+        });
     }
-  }
+    private handleRouteChange(): void {
+      const currentUrl = this.router.url;
+      const clubsItem = this.findMyClubsItem(this.navigations);
 
+        // Force le rechargement des clubs quand on navigue vers une URL de club
+        if (currentUrl.includes('/club/') && clubsItem) {
+          this.loadClubsForUser(true); // true pour forcer le rechargement
+        }
+
+        this.cdr.detectChanges();
+    }
+
+
+
+    public handleDynamicCollapseClick(itemId: string): void {
+      console.log('handleDynamicCollapseClick fired for:', itemId);
+      if (itemId === 'my-clubs') {
+        // Reset les enfants avant de recharger pour forcer l'affichage
+        const clubsItem = this.findMyClubsItem(this.navigations);
+        if (clubsItem) {
+          clubsItem.children = [];
+          this.cdr.detectChanges();
+        }
+
+        // Puis charger les clubs
+        this.loadClubsForUser();
+      }
+    }
+  shouldForceReload(item: NavigationItem): boolean {
+    return item.id === 'my-clubs' && this.router.url.includes('/club/');
+  }
   loadClubsForUser(event?: any) {
     console.log('loadClubsForUser() called!');
 
@@ -107,12 +150,19 @@ export class NavContentComponent implements OnInit {
       console.error('My Clubs menu item not found');
       return;
     }
+
+
     this.clubService.getUserClubs(username).subscribe({
       next: (clubs) => {
         console.log('Clubs loaded:', clubs);
         clubsItem.children = this.transformClubsToMenuItems(clubs);
         clubsItem.triggerExpansion = true; // <-- tell the UI to auto-expand
         this.cdr.detectChanges();
+        this.ngZone.run(() => {
+          this.cdr.detectChanges();
+          console.log('Menu mis à jour avec les clubs:', clubsItem.children);
+        });
+
       },
       error: (err) => {
         console.error('Failed to load clubs', err);
@@ -123,6 +173,10 @@ export class NavContentComponent implements OnInit {
           icon: 'warning'
         }];
       }
+    });
+
+    this.clubService.getUserClubs(username).subscribe({
+      // ... reste inchangé ...
     });
   }
 

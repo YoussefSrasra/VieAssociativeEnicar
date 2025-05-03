@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <div class="card">
+    <div class="card-header">
+      <h4>Mes Événements</h4>
+    </div>
+    <div class="card-body">
+      @if (isLoading) {
+        <div class="text-center py-4">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+        </div>
+      } @else if (error) {
+        <div class="alert alert-danger">{{ error }}</div>
+      } @else {
+        @if (myEvents.length === 0) {
+          <div class="alert alert-info">
+            Vous n'êtes inscrit à aucun événement.
+          </div>
+        } @else {
+          <div class="row">
+            @for (event of myEvents; track event.id) {
+              <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card h-100 shadow-sm card-hover">
+                  <div class="card-body">
+                    <p class="card-text">
+                      <strong>Club :</strong> {{ event.clubName || 'N/A' }}<br>
+                      <strong>Type :</strong> {{ event.type || 'N/A' }}<br>
+                      <strong>Lieu :</strong> {{ event.location || 'N/A' }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

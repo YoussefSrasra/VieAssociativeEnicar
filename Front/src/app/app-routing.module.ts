@@ -105,6 +105,13 @@ const routes: Routes = [
 
 
 
+      {
+        path: 'my-events',
+        loadComponent: () => import('./my-events/my-events.component')
+          .then(c => c.MyEventsComponent)
+      },
+
+
 
       {
         path: 'event-requests',

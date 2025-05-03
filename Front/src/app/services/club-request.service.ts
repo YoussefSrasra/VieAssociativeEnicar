@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient ,HttpParams } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map ,tap } from 'rxjs/operators';
 
@@ -40,13 +40,17 @@ interface EventRequestDTO{
   providedIn: 'root'
 })
 export class ClubRequestService {
-  private apiUrl = 'http://localhost:8080/api/event-requests';
-  private clubsUrl = 'http://localhost:8080/api/clubs';
+  private apiUrl = 'http://localhost:8081/api/event-requests';
+  private clubsUrl = 'http://localhost:8081/api/clubs';
 
   constructor(private http: HttpClient) { }
 
   createEventRequest(eventRequest: EventRequest): Observable<EventRequest> {
     return this.http.post<EventRequest>(this.apiUrl, eventRequest);
+  }
+
+  participateInEvent(eventId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/events/${eventId}/participate`, {});
   }
 
   getEventRequests(): Observable<EventRequest[]> {
@@ -114,4 +118,13 @@ getAcceptedEventsByClub(clubId : number): Observable<EventRequestDTO[]>{
   return this.http.get<EventRequestDTO[]>(`${this.apiUrl}/approved/club/${clubId}`).pipe(
     tap(data => console.log(`API response for approved/club/${clubId}`, data)))
 }
+
+getEventsByIds(eventIds: number[]): Observable<EventRequestDTO[]> {
+  let params = new HttpParams();
+  
+  params = params.append('ids', eventIds.join(',')); // Convertit [1, 2, 3] en "1,2,3"
+  return this.http.get<EventRequestDTO[]>(`${this.apiUrl}/by-ids`, { params });
+}
+
+
 }
