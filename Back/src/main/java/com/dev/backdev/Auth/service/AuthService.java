@@ -366,4 +366,5 @@ import com.dev.backdev.Enums.ClubRole;
             if (str == null || str.isEmpty()) return str;
             return str.substring(0, 1).toUpperCase() + str.substring(1).toLowerCase();
         }
+        
     }

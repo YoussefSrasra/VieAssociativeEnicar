@@ -30,6 +30,16 @@ export class EntretienService {
     return this.http.put<Entretien>(`${this.apiUrl}/${id}`, entretien);
   }
   getEnrollmentDetails(enrollmentId: number): Observable<any> {
-    return this.http.get(`http://localhost:8081/api/enrollments/${enrollmentId}`);
+    return this.http.get(`http://localhost:8080/api/enrollments/${enrollmentId}`);
   }
+  getEntretiensByClub(clubId: number): Observable<Entretien[]> {
+    return this.http.get<Entretien[]>(`${this.apiUrl}/club/${clubId}`);
+
+
 }
+creercompte(entretienid: number): Observable<string> {
+  return this.http.post<string>(`http://localhost:8080/api/entretiens/${entretienid}/creer-compte`, {}, { responseType: 'text' as 'json' });
+}
+getClubIdByEntretienId(entretienId: number): Observable<number> {
+  return this.http.get<number>(`${this.apiUrl}/${entretienId}/club-id`);
+}}

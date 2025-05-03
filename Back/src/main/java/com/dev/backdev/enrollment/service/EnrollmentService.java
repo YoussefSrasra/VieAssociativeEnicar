@@ -30,6 +30,9 @@ public class EnrollmentService {
         return enrollmentRepository.findById(id);
     }
 
+    public List<Enrollment> getEnrollmentsByClub(Long clubId) {
+        return enrollmentRepository.findByClubId(clubId);
+    }
     public Enrollment createEnrollment(Enrollment enrollment) {
         enrollment.setEtat(EnrollmentStatus.EN_ATTENTE);
         return enrollmentRepository.save(enrollment);
@@ -63,7 +66,7 @@ public class EnrollmentService {
     private void createDefaultEntretien(Enrollment enrollment) {
         Entretien entretien = new Entretien();
         entretien.setEnrollment(enrollment);
-        entretien.setStatut(StatutEntretien.EN_ATTENTE);
+         entretien.setStatut(StatutEntretien.EN_ATTENTE);
         entretien.setResultat(ResultatEntretien.EN_ATTENTE);
         entretien.setConfirmation(false);
         // dateEntretien et heureEntretien restent null

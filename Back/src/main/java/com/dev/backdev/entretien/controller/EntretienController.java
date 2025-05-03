@@ -49,4 +49,20 @@ public class EntretienController {
         entretienService.deleteEntretien(id);
         return ResponseEntity.noContent().build();
     }
+    @GetMapping("/club/{clubId}")
+    public List<Entretien> getEntretiensByClub(@PathVariable Long clubId) {
+        return entretienService.getEntretiensByClubId(clubId);
+    }
+    @PostMapping("/{id}/creer-compte")
+    public ResponseEntity<String> creerComptePourEntretien(@PathVariable("id") Long entretienId) {
+        entretienService.creercompte(entretienId);
+        return ResponseEntity.ok("Compte créé avec succès");
+    }
+    @GetMapping("/{id}/club-id")
+public ResponseEntity<Long> getClubIdByEntretienId(@PathVariable("id") Long entretienId) {
+    return entretienService.getClubIdByEntretienId(entretienId)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
+
 }
