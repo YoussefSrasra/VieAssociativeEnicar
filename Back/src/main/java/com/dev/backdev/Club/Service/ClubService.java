@@ -13,10 +13,14 @@ import com.dev.backdev.Auth.model.User;
 import com.dev.backdev.Auth.repository.UserRepository;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Model.ClubMembership;
+import com.dev.backdev.Club.Repository.ClubMembershipRepository;
 import com.dev.backdev.Club.Repository.ClubRepository;
 import com.dev.backdev.Club.dto.ClubBasicDTO;
 import com.dev.backdev.Club.dto.ClubDTO;
 import com.dev.backdev.Enums.ClubRole;
+
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ClubService {
@@ -25,6 +29,8 @@ public class ClubService {
     private ClubRepository clubRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ClubMembershipRepository membershipRepository;
     private final PasswordEncoder passwordEncoder;
 
     public ClubService(PasswordEncoder passwordEncoder) {
@@ -208,9 +214,24 @@ public class ClubService {
         return convertToDTO(club);
     }
 
+    @Transactional
     public void deleteClub(Long id) {
-        clubRepository.deleteById(id);
+        Club club = clubRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
+
+        // Manually delete memberships
+        club.getMemberships().forEach(membership -> membershipRepository.delete(membership));
+
+        // Optionally delete responsible member
+        User responsible = club.getResponsibleMember();
+        if (responsible != null) {
+            userRepository.delete(responsible);
+        }
+
+        // Delete the club itself
+        clubRepository.delete(club);
     }
+
 
     public Optional<ClubDTO> getClubByName(String name) {
         return clubRepository.findByName(name).map(this::convertToDTO);

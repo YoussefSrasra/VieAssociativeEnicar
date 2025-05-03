@@ -24,7 +24,11 @@
                     <li><a (click)="scrollTo('about')" [class.active]="activeSection === 'about'">À propos</a></li>
                     <li><a (click)="scrollTo('services')" [class.active]="activeSection === 'services'">Clubs</a></li>
                     <li><a (click)="scrollTo('events')" [class.active]="activeSection === 'events'">Evenements</a></li>
-                    <li><a routerLink="/login">Connexion</a></li>
+                    <li>
+                      <a *ngIf="!isLoggedIn" routerLink="/login">Connexion</a>
+                      <a *ngIf="isLoggedIn" routerLink="/dashboard/default">Dashboard</a>
+                    </li>
+                    
                   </ul>
                 </nav>
             </div>
@@ -153,7 +157,7 @@
         <p class="form-subtitle">Remplissez le formulaire pour participer à l'événement.</p>
         <div class="title-underline"></div>
       </div>
-       
+
 
       
        
