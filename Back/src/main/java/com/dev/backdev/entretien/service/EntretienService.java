@@ -96,4 +96,15 @@ public class EntretienService {
 
       
 }
+public Optional<Long> getClubIdByEntretienId(Long entretienId) {
+    return getEntretienById(entretienId)
+            .map(entretien -> {
+                if (entretien.getEnrollment() != null) {
+                    return entretien.getEnrollment().getClubId();
+                } else {
+                    return null;
+                }
+            });
+}
+
 }

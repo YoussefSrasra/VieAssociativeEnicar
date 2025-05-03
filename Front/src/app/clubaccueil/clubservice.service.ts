@@ -15,6 +15,9 @@ export class ClubService {
   getAllClubs(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+  getClubById(id: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
 
   // Ajoutez aussi les autres méthodes nécessaires
   getClubByUsername(username: string): Observable<any> {

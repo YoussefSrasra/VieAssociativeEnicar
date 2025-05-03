@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { EntretienService } from '../entretiens/entretien.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ClubService } from '../clubaccueil/clubservice.service';
 
 @Component({
   selector: 'app-generation-compte',
@@ -16,8 +17,10 @@ export class GenerationCompteComponent implements OnInit {
   isLoading = true;
   errorMessage: string | null = null;
   successMessage: string | null = null;
+  clubNames: { [key: string]: string } = {};
 
-  constructor(private entretienService: EntretienService) {}
+  constructor(private entretienService: EntretienService,
+              private clubService: ClubService) {}
 
   ngOnInit(): void {
     this.loadEntretiensAcceptes();
@@ -26,9 +29,26 @@ export class GenerationCompteComponent implements OnInit {
   loadEntretiensAcceptes(): void {
     this.entretienService.getEntretiens().subscribe({
       next: (data: any[]) => {
-        this.entretiensAcceptes = data
+        const acceptes = data
           .filter(e => e.resultat === 'ACCEPTE' && e.statut !== 'COMPTE')
           .map(e => ({ ...e, compteCree: false }));
+    
+        this.entretiensAcceptes = acceptes;
+    
+        // Récupération des noms des clubs en utilisant l'API pour obtenir l'ID du club
+        acceptes.forEach(entretien => {
+          this.entretienService.getClubIdByEntretienId(entretien.id).subscribe({
+            next: (clubId) => {
+              // Maintenant, récupère le nom du club via le service ClubService
+              this.clubService.getClubById(clubId).subscribe({
+                next: (club) => this.clubNames[entretien.id] = club.name,
+                error: (err) => console.error(`Erreur chargement club ${clubId}:`, err)
+              });
+            },
+            error: (err) => console.error(`Erreur récupération ID club pour entretien ${entretien.id}:`, err)
+          });
+        });
+
         this.isLoading = false;
       },
       error: (err) => {
@@ -64,4 +84,12 @@ export class GenerationCompteComponent implements OnInit {
       }
     });
   }
+  genererTousLesComptes() {
+    this.entretiensAcceptes.forEach(entretien => {
+      if (!entretien.compteCree) {
+        this.genererCompte(entretien);
+      }
+    });
+  }
+  
 }

@@ -34,6 +34,9 @@ public class Entretien {
 
     @Enumerated(EnumType.STRING)
     private ResultatEntretien resultat = ResultatEntretien.EN_ATTENTE;
+
+    public Enrollment getEnrollment() {
+        return this.enrollment;
+    }
+
 }
-
-

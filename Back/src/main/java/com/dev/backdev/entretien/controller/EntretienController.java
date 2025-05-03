@@ -58,4 +58,11 @@ public class EntretienController {
         entretienService.creercompte(entretienId);
         return ResponseEntity.ok("Compte créé avec succès");
     }
+    @GetMapping("/{id}/club-id")
+public ResponseEntity<Long> getClubIdByEntretienId(@PathVariable("id") Long entretienId) {
+    return entretienService.getClubIdByEntretienId(entretienId)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+}
+
 }
