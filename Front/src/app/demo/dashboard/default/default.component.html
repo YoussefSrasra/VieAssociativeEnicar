@@ -1,118 +1,199 @@
-<div class="row">
-  @for (analytic of AnalyticEcommerce; track analytic) {
-    <div class="col-md-6 col-xl-3">
-      <app-card [showHeader]="false" blockClass="dashboard-card">
-        <h6 class="mb-2 f-w-400 text-muted">{{ analytic.title }}</h6>
-        <h4 class="mb-3">
-          {{ analytic.amount }}
-          <span class="badge {{ analytic.background }} border {{ analytic.border }} ">
-            <i antIcon type="{{ analytic.icon }}" theme="outline"></i>
-            {{ analytic.percentage }}
-          </span>
-        </h4>
-        <p class="mb-0 text-muted text-sm">
-          You made an extra
-          <span class="{{ analytic.color }}">{{ analytic.number }}</span>
-          this year
-        </p>
+<div class="container-fluid">
+  <div class="row">
+    <!-- Cartes de statistiques -->
+    @for (analytic of AnalyticEcommerce; track analytic) {
+      <div class="col-md-6 col-xl-3 mb-4">
+        <app-card [showHeader]="false" blockClass="dashboard-card h-100">
+          <div class="d-flex align-items-center">
+            <div class="icon-container {{ analytic.background.split('bg-light-')[1] }} me-3">
+              <i antIcon type="{{ analytic.icon }}" theme="outline"></i>
+            </div>
+            <div>
+              <h6 class="mb-2 f-w-400 text-muted">{{ analytic.title }}</h6>
+              <h4 class="mb-0">
+                @if (loading) {
+                  <span class="spinner-border spinner-border-sm"></span>
+                } @else {
+                  {{
+                    analytic.title === 'Événements Actifs' ? eventStats.totalEvents :
+                    analytic.title === 'Participants Totaux' ? eventStats.totalParticipants :
+                    analytic.title === 'Demandes en Attente' ? (eventStats.pendingRequests + clubStats.pendingRequests) :
+                    analytic.title === 'Clubs Actifs' ? clubStats.totalClubs : '0'
+                  }}
+                }
+              </h4>
+            </div>
+          </div>
+          <div class="mt-3 pt-2 border-top">
+            <p class="mb-0 text-muted">
+              <span class="{{ analytic.color }} f-w-600">
+                {{ analytic.percentage }}
+              </span>
+              {{
+                analytic.title === 'Événements Actifs' ? ' vs mois dernier' :
+                analytic.title === 'Participants Totaux' ? ' inscrits ce mois' :
+                analytic.title === 'Demandes en Attente' ? ' en attente' :
+                analytic.title === 'Clubs Actifs' ? ' actifs' : ''
+              }}
+            </p>
+          </div>
+        </app-card>
+      </div>
+    }
+  </div>
+
+  <div class="row mt-4">
+    <!-- Carte Budget Principal -->
+    <div class="col-xl-4 mb-4">
+      <app-card [showHeader]="false" blockClass="dashboard-card h-100">
+        <div class="d-flex align-items-center">
+          <div class="icon-container bg-light-primary border-primary me-3">
+            <i antIcon type="euro" theme="outline"></i>
+          </div>
+          <div>
+            <h6 class="mb-2 f-w-400 text-muted">Budget Total</h6>
+            <h4 class="mb-0">
+              {{ budgetStats.totalBudget | currency:'EUR':'symbol':'1.0-0' }}
+              <span class="badge bg-light-primary border border-primary ms-2">
+                {{ budgetStats.percentageUsed }}%
+              </span>
+            </h4>
+          </div>
+        </div>
+        <div class="mt-3 pt-2 border-top">
+          <div class="progress mb-2" style="height: 8px;">
+            <div class="progress-bar bg-primary"
+                 [style.width.%]="budgetStats.percentageUsed"
+                 role="progressbar"></div>
+          </div>
+          <p class="mb-0 text-muted">
+            <span class="text-primary f-w-600">
+              {{ budgetStats.annualBudget - budgetStats.totalBudget | currency:'EUR':'symbol':'1.0-0' }}
+            </span>
+            disponible sur {{ budgetStats.annualBudget | currency:'EUR':'symbol':'1.0-0' }}
+          </p>
+        </div>
       </app-card>
     </div>
-  }
-  <div class="col-md-12 col-xl-8">
-    <app-monthly-bar-chart />
-  </div>
-  <div class="col-md-12 col-xl-4">
-    <app-income-overview-chart />
-  </div>
 
-  <div class="col-md-12 col-xl-8">
-    <h5 class="mb-3">Recent Orders</h5>
-    <div class="card tbl-card">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead>
-            <tr>
-              <th>TRACKING NO.</th>
-              <th>PRODUCT NAME</th>
-              <th>STATUS</th>
-              <th class="text-end">TOTAL ORDER</th>
-              <th class="text-end">TOTAL AMOUNT</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (order of recentOrder; track order) {
-              <tr>
-                <td>
-                  <a href="javascript:" class="text-muted">{{ order.id }}</a>
-                </td>
-                <td>{{ order.name }}</td>
-                <td>
-                  <span class="d-block">
-                    <i class="badge-circle {{ order.status_type }} f-10 m-r-5"></i>
-                    {{ order.status }}
-                  </span>
-                </td>
-                <td class="text-end">{{ order.quantity }}</td>
-                <td class="text-end">{{ order.amount }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <!-- Détails Budget -->
+    <div class="col-xl-4 mb-4">
+      <app-card [showHeader]="false" blockClass="dashboard-card h-100">
+        <div class="budget-details">
+          <div class="detail-item">
+            <div class="detail-icon bg-light-success text-success">
+              <i antIcon type="check-circle" theme="fill"></i>
+            </div>
+            <div class="detail-content">
+              <h6>Approuvé</h6>
+              <p class="mb-0 text-success f-w-600">
+                {{ budgetStats.totalBudget | currency:'EUR':'symbol':'1.0-0' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon bg-light-warning text-warning">
+              <i antIcon type="hourglass" theme="fill"></i>
+            </div>
+            <div class="detail-content">
+              <h6>En attente</h6>
+              <p class="mb-0 text-warning f-w-600">
+                {{ budgetStats.pendingRequests | currency:'EUR':'symbol':'1.0-0' }}
+              </p>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <div class="detail-icon bg-light-danger text-danger">
+              <i antIcon type="close-circle" theme="fill"></i>
+            </div>
+            <div class="detail-content">
+              <h6>Rejeté</h6>
+
+            </div>
+          </div>
+        </div>
+      </app-card>
     </div>
-  </div>
-  <div class="col-md-12 col-xl-4">
-    <app-analytics-chart />
-  </div>
 
-  <div class="col-md-12 col-xl-8">
-    <app-sales-report-chart />
-  </div>
-  <div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Transaction History</h5>
-    <div class="card">
-      <div class="list-group list-group-flush">
-        @for (history of transaction; track history) {
-          <a href="javascript:" class="list-group-item list-group-item-action px-3">
-            <div class="d-flex">
-              <div class="flex-shrink-0">
-                <div class="avatar avatar-s rounded-circle {{ history.background }}">
-                  <i class="f-16" antIcon type="{{ history.icon }}" theme="outline"></i>
-                </div>
+    <!-- Dernières Demandes -->
+    <div class="col-xl-4 mb-4">
+      <app-card headerTitle="Dernières Demandes">
+        <div class="budget-requests">
+          @for (request of recentBudgetRequests; track request.id) {
+            <div class="request-item">
+              <div class="request-icon" [ngClass]="{
+                'bg-success-light': request.status === 'APPROVED',
+                'bg-warning-light': request.status === 'PENDING',
+                'bg-danger-light': request.status === 'REJECTED'
+              }">
+                <i antIcon [type]="request.status === 'APPROVED' ? 'check' :
+                                  request.status === 'PENDING' ? 'clock-circle' : 'close'"
+                   theme="outline"></i>
               </div>
-              <div class="flex-grow-1 ms-3">
-                <h6 class="mb-1">{{ history.title }}</h6>
-                <p class="mb-0 text-muted">{{ history.time }}</p>
+              <div class="request-info">
+                <h6 class="mb-0">{{ request.eventName }}</h6>
+                <small class="text-muted">{{ request.clubName }}</small>
               </div>
-              <div class="flex-shrink-0 text-end">
-                <h6 class="mb-1">{{ history.amount }}</h6>
-                <p class="mb-0 text-muted">{{ history.percentage }}</p>
+              <div class="request-amount" [ngClass]="{
+                'text-success': request.status === 'APPROVED',
+                'text-warning': request.status === 'PENDING',
+                'text-danger': request.status === 'REJECTED'
+              }">
+                {{ request.amount | currency:'EUR':'symbol':'1.0-0' }}
               </div>
             </div>
+          }
+          @empty {
+            <div class="text-center py-3 text-muted">
+              <i antIcon type="folder-open" theme="outline" class="fs-4"></i>
+              <p class="mb-0">Aucune demande récente</p>
+            </div>
+          }
+        </div>
+        <div class="text-end mt-2">
+          <a routerLink="/budget/requests" class="btn btn-sm btn-link text-primary">
+            Voir tout <i antIcon type="arrow-right" theme="outline"></i>
           </a>
+        </div>
+      </app-card>
+    </div>
+  </div>
+    <!-- Partenaires -->
+<!-- Partenaires -->
+<!-- Nos Partenariats -->
+<div class="col-md-6 mb-4">
+  <div class="section-title mb-3">
+    <h5 class="fw-bold text-primary">Nos Partenariats</h5>
+    <p class="text-muted mb-0">Découvrez nos collaborateurs et partenaires stratégiques</p>
+  </div>
+  <app-card headerTitle="Partenaires">
+    @if (loadingPartners) {
+      <div class="text-center py-3">
+        <span class="spinner-border spinner-border-sm"></span> Chargement des partenaires...
+      </div>
+    } @else {
+      <div class="partners-grid">
+        @for (partner of partners; track partner.id) {
+          <div class="partner-item">
+            <div class="partner-card">
+              <div class="partner-logo {{ getPartnerColor(partner.type) }}">
+                <i antIcon [type]="getPartnerIcon(partner.type)" theme="outline"></i>
+              </div>
+              <div class="partner-info">
+                <h6 class="partner-name">{{ partner.name }}</h6>
+                <small class="text-muted">{{ partner.type }}</small>
+              </div>
+            </div>
+          </div>
+        }
+        @empty {
+          <p class="text-muted text-center py-3">Aucun partenaire disponible pour le moment</p>
         }
       </div>
-    </div>
-    <div class="card">
-      <div class="card-body">
-        <div class="row justify-content-between">
-          <div class="col-auto">
-            <h5>Help & Support Chat</h5>
-            <p class="mb-3">Typical replay within 5 min</p>
-          </div>
-          <div class="col-auto">
-            <div class="user-group mb-3">
-              <img src="assets/images/user/avatar-1.jpg" alt="image" />
-              <img src="assets/images/user/avatar-2.jpg" alt="image" />
-              <img src="assets/images/user/avatar-3.jpg" alt="image" />
-            </div>
-          </div>
-        </div>
-        <div class="d-grid">
-          <div class="btn btn-primary">Need Help?</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- [ sample-page ] end -->
+    }
+  </app-card>
 </div>
+  </div>
+

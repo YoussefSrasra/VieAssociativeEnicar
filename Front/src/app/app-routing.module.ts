@@ -88,6 +88,24 @@ const routes: Routes = [
           .then(c => c.PartnershipsComponent)
       },
 
+
+
+      {
+        path: 'club/:id/events',
+        loadComponent: () => import('./club-events/club-events.component')
+          .then(c => c.ClubEventsComponent)
+      },
+
+      {
+        path: 'admin-dashboard',
+        loadComponent: () => import('./admin-dashboard/admin-dashboard.component')
+          .then(c => c.AdminDashboardComponent)
+      },
+
+
+
+
+
       {
         path: 'event-requests',
         loadComponent: () => import('./features/event-requests/event-requests.component')
@@ -103,8 +121,12 @@ const routes: Routes = [
         path: 'dashboard/default',
         loadComponent: () => import('./demo/dashboard/default/default.component').then((c) => c.DefaultComponent),
         canActivate: [authGuard]
-
       },
+
+
+
+
+
       {
         path: 'contacts-urgence',
         loadComponent: () => import('./gestion-contacts-urgence/gestion-contacts-urgence.component').then((c) => c.GestionContactsUrgenceComponent),

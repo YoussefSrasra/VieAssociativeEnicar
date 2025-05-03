@@ -1,31 +1,558 @@
-.card {
-  .card-body.dashboard-card {
-    padding: 18px;
-    padding-bottom: 20px;
+.dashboard-card {
+  .card-body {
+    padding: 1.5rem;
   }
 }
 
-.user-group {
-  img {
-    position: relative;
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    z-index: 2;
-    transition: all 0.1s ease-in-out;
-    border: 2px solid var(--bs-white);
-    + img {
-      margin-left: -14px;
+.icon-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: white;
+
+  &.bg-primary { background: #4e73df; }
+  &.bg-success { background: #1cc88a; }
+  &.bg-warning { background: #f6c23e; }
+  &.bg-info { background: #36b9cc; }
+}
+
+.popular-clubs {
+  .club-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+
+    &:last-child { border-bottom: none; }
+
+    .club-avatar {
+      width: 40px;
+      height: 40px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 1.2rem;
     }
+
+    .club-info {
+      flex-grow: 1;
+
+      h6 { margin-bottom: 2px; }
+    }
+  }
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+
+  .partner-item {
+    text-align: center;
+
+    .partner-logo {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 8px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+
+      &.blue { background: #4e73df; }
+      &.green { background: #1cc88a; }
+      &.orange { background: #f6c23e; }
+      &.red { background: #e74a3b; }
+    }
+
+    .partner-name {
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 250px;
+}
+.dashboard-card {
+  .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  h4 {
+    font-size: 1.75rem;
+    font-weight: 600;
+  }
+}
+
+.icon-container {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: white;
+  flex-shrink: 0;
+
+  &.primary { background: #4e73df; }
+  &.success { background: #1cc88a; }
+  &.warning { background: #f6c23e; }
+  &.info { background: #36b9cc; }
+}
+
+.popular-clubs {
+  .club-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+    transition: all 0.3s;
+
     &:hover {
-      z-index: 5;
+      background: rgba(0,0,0,0.02);
+      transform: translateX(5px);
+    }
+
+    &:last-child { border-bottom: none; }
+
+    .club-avatar {
+      width: 50px;
+      height: 50px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .club-info {
+      flex-grow: 1;
+
+      h6 {
+        margin-bottom: 2px;
+        font-weight: 500;
+      }
     }
   }
 }
 
-.badge-circle {
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+
+  .partner-item {
+    text-align: center;
+    padding: 15px;
+    border-radius: 8px;
+    transition: all 0.3s;
+
+    &:hover {
+      background: rgba(0,0,0,0.03);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .partner-logo {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      color: white;
+
+      &.blue { background: #4e73df; }
+      &.green { background: #1cc88a; }
+      &.orange { background: #f6c23e; }
+      &.red { background: #e74a3b; }
+    }
+
+    .partner-name {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #4a4a4a;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .partners-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+.section-title {
+  border-left: 4px solid #4e73df;
+  padding-left: 1rem;
+  h5 {
+    margin-bottom: 0.5rem;
+    font-size: 1.25rem;
+  }
+  p {
+    font-size: 0.9rem;
+  }
+}
+
+.partners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem 0;
+}
+
+.partner-item {
+  text-align: center;
+}
+
+.partner-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.partner-logo {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  &.blue { background-color: #4e73df; color: white; }
+  &.green { background-color: #1cc88a; color: white; }
+  &.orange { background-color: #f6c23e; color: white; }
+  &.red { background-color: #e74a3b; color: white; }
+}
+
+.partner-info {
+  .partner-name {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    color: #333;
+  }
+  small {
+    font-size: 0.8rem;
+  }
+}
+.popular-clubs {
+  .club-item {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.02);
+    }
+
+    .club-avatar {
+      width: 50px;
+      height: 50px;
+      margin-right: 1rem;
+      flex-shrink: 0;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 8px;
+      }
+
+      &-initial {
+        width: 100%;
+        height: 100%;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.25rem;
+      }
+    }
+
+    .club-info {
+      flex-grow: 1;
+
+      h6 {
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+      }
+
+      small {
+        font-size: 0.8rem;
+      }
+
+      .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+      }
+    }
+
+    .club-actions {
+      flex-shrink: 0;
+    }
+  }
+}
+
+
+.budget-summary {
+  .progress {
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+
+    .progress-bar {
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .budget-numbers {
+    .budget-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom: none;
+      }
+    }
+  }
+}
+
+.budget-requests {
+  .request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f8f9fa;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .request-info {
+      h6 {
+        font-size: 0.9rem;
+        margin-bottom: 0.25rem;
+      }
+
+      small {
+        font-size: 0.75rem;
+      }
+    }
+
+    .request-amount {
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+  }
+}
+/* Styles pour les cartes budget */
+.dashboard-card {
+  .budget-details {
+    .detail-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .detail-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+        font-size: 1rem;
+      }
+
+      .detail-content {
+        flex-grow: 1;
+
+        h6 {
+          font-size: 0.85rem;
+          margin-bottom: 0.25rem;
+          color: #6c757d;
+        }
+      }
+    }
+  }
+
+  .budget-requests {
+    .request-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .request-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+
+        &.bg-success-light {
+          background-color: rgba(28, 200, 138, 0.1);
+          color: #1cc88a;
+        }
+        &.bg-warning-light {
+          background-color: rgba(246, 194, 62, 0.1);
+          color: #f6c23e;
+        }
+        &.bg-danger-light {
+          background-color: rgba(231, 74, 59, 0.1);
+          color: #e74a3b;
+        }
+      }
+
+      .request-info {
+        flex-grow: 1;
+
+        h6 {
+          font-size: 0.9rem;
+          margin-bottom: 0.1rem;
+        }
+
+        small {
+          font-size: 0.75rem;
+        }
+      }
+
+      .request-amount {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+/* Classes utilitaires */
+.bg-light-primary { background-color: rgba(78, 115, 223, 0.1); }
+.bg-light-success { background-color: rgba(28, 200, 138, 0.1); }
+.bg-light-warning { background-color: rgba(246, 194, 62, 0.1); }
+.bg-light-danger { background-color: rgba(231, 74, 59, 0.1); }
+.text-primary { color: #4e73df; }
+.text-success { color: #1cc88a; }
+.text-warning { color: #f6c23e; }
+.text-danger { color: #e74a3b; }
+/* Styles globaux */
+.dashboard-card {
+  .card-body {
+    padding: 1.25rem;
+  }
+}
+
+/* Points de badge */
+.badge-dot {
   display: inline-block;
   width: 8px;
   height: 8px;
   border-radius: 50%;
+
+  &.bg-success { background-color: #1cc88a; }
+  &.bg-warning { background-color: #f6c23e; }
+  &.bg-danger { background-color: #e74a3b; }
+}
+
+/* Demandes budget */
+.request-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.bg-success-light {
+    background-color: rgba(28, 200, 138, 0.1);
+    color: #1cc88a;
+  }
+  &.bg-warning-light {
+    background-color: rgba(246, 194, 62, 0.1);
+    color: #f6c23e;
+  }
+  &.bg-danger-light {
+    background-color: rgba(231, 74, 59, 0.1);
+    color: #e74a3b;
+  }
+}
+
+/* Partenaires */
+.partner-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: white;
+
+  &.bg-primary { background-color: #4e73df; }
+  &.bg-success { background-color: #1cc88a; }
+  &.bg-warning { background-color: #f6c23e; }
+  &.bg-danger { background-color: #e74a3b; }
+  &.bg-info { background-color: #36b9cc; }
+}
+
+.partner-card {
+  transition: transform 0.2s;
+  &:hover {
+    transform: translateY(-3px);
+  }
 }
