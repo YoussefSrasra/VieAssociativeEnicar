@@ -1,37 +1,57 @@
-<div class="row">
-  <div class="col-12">
-    <app-card headerTitle="Liste des Partenaires">
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Nom</th>
-            <th>Type</th>
-            <th>Contact</th>
-            <th>Téléphone</th>
-            <th>Partenaire depuis</th>
-            <th>Détails</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let partner of partners">
-            <td>{{ partner.id }}</td>
-            <td>{{ partner.name }}</td>
-            <td>{{ partner.type }}</td>
-            <td>{{ partner.contact }}</td>
-            <td>{{ partner.phone }}</td>
-            <td>{{ partner.since }}</td>
-            <td>{{ partner.details }}</td>
-            <td>
+<div class="container-fluid px-4 py-3">
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white border-0 py-3">
+      <h4 class="mb-0 text-primary fw-semibold">
+        <i class="fas fa-handshake me-2"></i>Liste des Partenaires
+      </h4>
+    </div>
 
-              <button class="btn btn-danger btn-icon" (click)="deletePartner(partner.id)">
-                Supprimer
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </app-card>
+    <div class="card-body px-0 py-0">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="bg-light">
+            <tr>
+              <th class="ps-4 py-3 text-uppercase text-muted fw-semibold small">#</th>
+              <th class="py-3 text-uppercase text-muted fw-semibold small">Nom</th>
+              <th class="py-3 text-uppercase text-muted fw-semibold small">Type</th>
+              <th class="py-3 text-uppercase text-muted fw-semibold small">Contact</th>
+              <th class="py-3 text-uppercase text-muted fw-semibold small">Téléphone</th>
+              <th class="py-3 text-uppercase text-muted fw-semibold small">Partenaire depuis</th>
+              <th class="py-3 text-uppercase text-muted fw-semibold small">Détails</th>
+              <th class="pe-4 py-3 text-uppercase text-muted fw-semibold small text-end">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let partner of partners" class="border-top">
+              <td class="ps-4 fw-medium">{{ partner.id }}</td>
+              <td>{{ partner.name }}</td>
+              <td>
+                <span class="badge bg-primary bg-opacity-10 text-primary">
+                  {{ partner.type }}
+                </span>
+              </td>
+              <td>{{ partner.contact }}</td>
+              <td>{{ partner.phone }}</td>
+              <td>{{ partner.since | date:'dd/MM/yyyy' }}</td>
+              <td>
+                <span class="text-truncate d-inline-block" style="max-width: 150px;"
+                      [title]="partner.details">
+                  {{ partner.details }}
+                </span>
+              </td>
+              <td class="pe-4 text-end">
+                <div class="d-flex gap-2 justify-content-end">
+                
+                  <button class="btn btn-sm btn-danger rounded-pill px-3"
+                          (click)="deletePartner(partner.id)">
+                    <i class="fas fa-trash-alt me-1"></i>Supprimer
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </div>

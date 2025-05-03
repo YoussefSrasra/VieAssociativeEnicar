@@ -203,7 +203,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/feedback-evenement',
         //icon: 'bg-colors',
-        roles: ['MANAGER','MEMBER']
+        roles: ['MANAGER']
       },
       {
         id: 'tabler',

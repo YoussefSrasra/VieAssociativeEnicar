@@ -97,13 +97,28 @@ export class NavContentComponent implements OnInit {
         (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
       }
 
-      // Écoutez les changements de route
-      this.router.events
-        .pipe(filter(event => event instanceof NavigationEnd))
-        .subscribe(() => {
-          this.cdr.detectChanges();
-          this.handleRouteChange();
-        });
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe(() => {
+        this.handleRouteChange();
+        this.forceMenuUpdate();
+      });
+    }
+
+    private forceMenuUpdate(): void {
+      const clubsItem = this.findMyClubsItem(this.navigations);
+      if (clubsItem && clubsItem.children) {
+        // Crée une nouvelle référence du tableau pour forcer la détection de changement
+        clubsItem.children = [...clubsItem.children];
+        this.cdr.detectChanges();
+
+        // Double vérification après un léger délai
+        setTimeout(() => {
+          if (!document.querySelector('.coded-hasmenu.show')) {
+            this.cdr.detectChanges();
+          }
+        }, 100);
+      }
     }
     private handleRouteChange(): void {
       const currentUrl = this.router.url;
@@ -111,75 +126,78 @@ export class NavContentComponent implements OnInit {
 
         // Force le rechargement des clubs quand on navigue vers une URL de club
         if (currentUrl.includes('/club/') && clubsItem) {
-          this.loadClubsForUser(true); // true pour forcer le rechargement
+          this.loadClubsForUser(); // true pour forcer le rechargement
         }
 
         this.cdr.detectChanges();
     }
 
-
+    shouldForceUpdate(item: NavigationItem): boolean {
+      return item.id === 'my-clubs' && this.router.url.includes('/club/');
+    }
 
     public handleDynamicCollapseClick(itemId: string): void {
-      console.log('handleDynamicCollapseClick fired for:', itemId);
       if (itemId === 'my-clubs') {
-        // Reset les enfants avant de recharger pour forcer l'affichage
         const clubsItem = this.findMyClubsItem(this.navigations);
         if (clubsItem) {
+          // Réinitialise et recharge les clubs
           clubsItem.children = [];
           this.cdr.detectChanges();
+          this.loadClubsForUser();
         }
-
-        // Puis charger les clubs
-        this.loadClubsForUser();
       }
     }
+
   shouldForceReload(item: NavigationItem): boolean {
     return item.id === 'my-clubs' && this.router.url.includes('/club/');
   }
-  loadClubsForUser(event?: any) {
-    console.log('loadClubsForUser() called!');
-
+  loadClubsForUser(): void {
     const username = localStorage.getItem('username');
-    if (!username) {
-      console.error('No username found in localStorage');
-      return;
-    }
+    if (!username) return;
 
     const clubsItem = this.findMyClubsItem(this.navigations);
-    if (!clubsItem) {
-      console.error('My Clubs menu item not found');
-      return;
-    }
-
+    if (!clubsItem) return;
 
     this.clubService.getUserClubs(username).subscribe({
       next: (clubs) => {
-        console.log('Clubs loaded:', clubs);
         clubsItem.children = this.transformClubsToMenuItems(clubs);
-        clubsItem.triggerExpansion = true; // <-- tell the UI to auto-expand
-        this.cdr.detectChanges();
+        clubsItem.triggerExpansion = true;
+
+        // Force la mise à jour du template
         this.ngZone.run(() => {
           this.cdr.detectChanges();
-          console.log('Menu mis à jour avec les clubs:', clubsItem.children);
+          setTimeout(() => {
+            this.cdr.detectChanges();
+            this.ensureMenuVisible();
+          }, 150);
         });
-
       },
       error: (err) => {
         console.error('Failed to load clubs', err);
-        clubsItem.children = [{
-          id: 'error',
-          title: 'Failed to load clubs',
-          type: 'item',
-          icon: 'warning'
-        }];
       }
     });
+    this.fixMenuVisibility();
 
-    this.clubService.getUserClubs(username).subscribe({
-      // ... reste inchangé ...
-    });
   }
 
+  private fixMenuVisibility(): void {
+    setTimeout(() => {
+      const navContainer = document.querySelector('.coded-navbar');
+      if (navContainer) {
+        navContainer.classList.remove('coded-triggered');
+        setTimeout(() => {
+          navContainer.classList.add('coded-triggered');
+        }, 50);
+      }
+    }, 200);
+  }
+  private ensureMenuVisible(): void {
+    const activeMenu = document.querySelector('.coded-hasmenu.show');
+    if (!activeMenu) {
+      const firstMenu = document.querySelector('.coded-hasmenu');
+      firstMenu?.classList.add('show');
+    }
+  }
   private findMyClubsItem(items: NavigationItem[]): NavigationItem | undefined {
     for (const item of items) {
       if (item.id === 'my-clubs') return item;

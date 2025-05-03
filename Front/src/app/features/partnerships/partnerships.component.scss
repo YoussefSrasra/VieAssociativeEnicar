@@ -1,19 +1,58 @@
-.table {
-  th {
-    font-weight: 500;
-    color: #6c757d;
-  }
+/* Styles globaux */
+.container-fluid {
+  background-color: #f8f9fa;
+}
 
-  .btn-icon {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
+.card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
   }
 }
 
-.badge {
-  &.bg-light-primary {
-    background-color: rgba(13, 110, 253, 0.1);
-    color: #0d6efd;
+/* Form elements */
+.form-control, .form-select, .input-group-text {
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus, .form-select:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+  border-color: #86b7fe;
+}
+
+/* Boutons */
+.btn {
+  transition: all 0.3s ease;
+  font-weight: 500;
+
+  &-primary {
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+    }
+
+    &:disabled {
+      background-color: #86b7fe;
+      cursor: not-allowed;
+    }
   }
-  /* Ajoutez d'autres couleurs si nécessaire */
+
+  &-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
 }
