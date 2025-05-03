@@ -13,7 +13,7 @@ export class ClubService {
   constructor(private http: HttpClient) { }
 
   getUserClubs(username: string): Observable<ClubBasicDTO[]> {
-    return this.http.get<ClubBasicDTO[]>(`${this.apiUrl}/user/${encodeURIComponent(username)}`).pipe(
+    return this.http.get<ClubBasicDTO[]>(`${this.apiUrl}/username/${encodeURIComponent(username)}`).pipe(
       tap({
         next: (response) => console.log('Clubs response:', response),
         error: (err) => console.error('Error fetching members:', err)

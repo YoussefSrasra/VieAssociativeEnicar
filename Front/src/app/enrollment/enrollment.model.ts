@@ -1,4 +1,4 @@
-import { N } from "@angular/core/navigation_types.d-Lh6SmhKv";
+// Removed invalid import as it is not needed
 
 export interface Enrollment {
   id: number;

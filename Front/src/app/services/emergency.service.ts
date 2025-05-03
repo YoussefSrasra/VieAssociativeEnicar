@@ -13,7 +13,7 @@ interface ManagerWithClub {
 
 @Injectable({ providedIn: 'root' })
 export class EmergencyService {
-  private apiUrl = 'http://localhost:8081/api/public/managers-with-clubs';
+  private apiUrl = 'http://localhost:8080/api/public/managers-with-clubs';
 
   constructor(private http: HttpClient) {}
 

@@ -12,6 +12,7 @@ import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Model.Club.ClubStatus;
 import com.dev.backdev.Club.Service.ClubService;
 import com.dev.backdev.Club.dto.ClubDTO;
+import com.dev.backdev.Email.EmailService;
 import com.dev.backdev.Enums.ClubRole; // Import ajouté
 import com.dev.backdev.demandeclub.model.Etat;
 import com.dev.backdev.demandeclub.model.demandeclub;
@@ -27,6 +28,9 @@ public class DemandeClubService {
 
     @Autowired
     private AuthService authService;
+    @Autowired
+    private  EmailService emailService;
+
 
 
 
@@ -42,6 +46,7 @@ public class DemandeClubService {
         nouveauClub.setStatus(ClubStatus.ACTIVE);
 
         Club clubCree = clubService.createClub(nouveauClub);
+        emailService.sendClubCreationInfo(demande.getEmail(), demande.getNomClub());
 
         // 2. Créer le compte visiteur (PRESIDENT) et l’ajouter au club
         authService.createVisitorAccount(

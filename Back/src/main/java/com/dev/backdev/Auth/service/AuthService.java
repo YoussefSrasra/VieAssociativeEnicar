@@ -9,22 +9,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
 
-import com.dev.backdev.Auth.dto.ManagerWithClubDto;
 import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
-    import com.dev.backdev.Auth.dto.UserRegistrationDTO;
+import com.dev.backdev.Auth.dto.UserRegistrationDTO;
     import com.dev.backdev.Auth.dto.UserResponseDto;
     import com.dev.backdev.Auth.dto.UserUpdateDTO;
     import com.dev.backdev.Auth.model.User;
     import com.dev.backdev.Auth.repository.UserRepository;
-import com.dev.backdev.Auth.util.JwtUtil;
+    import com.dev.backdev.Auth.util.JwtUtil;
 import com.dev.backdev.Club.Model.Club;
-    import com.dev.backdev.Club.Model.ClubMembership;
-import com.dev.backdev.Club.Repository.ClubMembershipRepository;
+import com.dev.backdev.Club.Model.ClubMembership;
+    import com.dev.backdev.Club.Repository.ClubMembershipRepository;
 import com.dev.backdev.Club.Repository.ClubRepository;
 import com.dev.backdev.Email.EmailService;
-    import com.dev.backdev.Enums.ClubRole;
+import com.dev.backdev.Enums.ClubRole;
 
-import jakarta.transaction.Transactional;
+    import jakarta.transaction.Transactional;
 
 
     @Service
@@ -129,12 +128,12 @@ import jakarta.transaction.Transactional;
         }
 
         @Transactional
-        public String switchToManagerAccount(String memberUsername, String clubName) {
+        public String switchToManagerAccount(String memberUsername, Long clubId) {
             // 1. Trouver l'utilisateur et le club
             User member = userRepository.findByUsername(memberUsername)
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            Club club = clubRepository.findByName(clubName)
+            Club club = clubRepository.findById(clubId)
                 .orElseThrow(() -> new RuntimeException("Club not found"));
 
             // 2. Vérifier les droits via les membreships

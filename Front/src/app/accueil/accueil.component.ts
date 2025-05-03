@@ -45,6 +45,7 @@ export class AccueilComponent implements OnInit {
   allEvents: Event[] = [];
   isLoading = true;
   formData: any = {};
+  isLoggedIn: boolean = false;
   selectedEvent: Event | null = null;
   showModal: boolean = false;
   modalEvent: Event | null = null;
@@ -56,6 +57,7 @@ export class AccueilComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadAllEvents();
+    this.isLoggedIn = !!localStorage.getItem('username');
   }
 
   @HostListener('window:scroll', ['$event'])
