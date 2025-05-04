@@ -43,6 +43,11 @@ public class ClubController {
         return clubService.getAllClubs();
     }
 
+    @GetMapping("/basic")
+    public List<ClubBasicDTO> getAllClubsBasic() {
+        return clubService.getAllClubsBasic();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ClubDTO> getClubById(@PathVariable Long id) {
         Optional<ClubDTO> club = clubService.getClubById(id);
