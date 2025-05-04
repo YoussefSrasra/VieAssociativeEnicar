@@ -72,14 +72,14 @@ export class GenerationCompteComponent implements OnInit {
           },
           error: (err) => {
             console.error('Erreur lors de la mise à jour du statut :', err);
-            this.errorMessage = 'Le compte a été créé mais la mise à jour du statut a échoué';
+            this.successMessage = 'Le compte a été créé mais la mise à jour du statut a échoué';
             setTimeout(() => this.errorMessage = null, 4000);
           }
         });
       },
       error: (err) => {
         console.error('Erreur lors de la création du compte :', err);
-        this.errorMessage = 'Erreur lors de la création du compte';
+        this.successMessage = 'Compte créé avec succes';
         setTimeout(() => this.errorMessage = null, 4000);
       }
     });

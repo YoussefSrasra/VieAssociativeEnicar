@@ -271,9 +271,9 @@ export class ProfileComponent implements OnInit {
         this.showSuccessMessage('Profil mis à jour avec succès!');
         this.scrollToTop();
         
-        if (this.isFirstLogin) {
+       
           this.router.navigate(['dashboard/default']);
-        }
+        
       },
       error: (error) => {
         console.error('Erreur de mise à jour:', error);
