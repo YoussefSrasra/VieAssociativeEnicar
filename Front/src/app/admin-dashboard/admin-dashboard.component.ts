@@ -30,7 +30,7 @@ export class AdminDashboardComponent implements OnInit {
         this.stats.pending = requests.filter(r => r.status === 'PENDING').length;
         this.stats.approved = requests.filter(r => r.status === 'APPROVED').length;
         this.stats.rejected = requests.filter(r => r.status === 'REJECTED').length;
-        this.stats.clubs = new Set(requests.map(r => r.club.id)).size;
+      // this.stats.clubs = new Set(requests.map(r => r.club.id)).size;
         this.isLoading = false;
       },
       error: (err) => {

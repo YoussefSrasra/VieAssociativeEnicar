@@ -1,87 +1,97 @@
-<div class="card">
-  <div class="card-header">
-    <h4>Événements du Club</h4>
-  </div>
-  <div class="card-body">
-    <!-- Filtres -->
-    <div class="row g-3 mb-3">
-      <div class="col-md-6">
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Rechercher..."
-          [(ngModel)]="searchTerm"
-        />
-      </div>
-     <!-- <div class="col-md-6">
-        <select
-          class="form-select"
-          [(ngModel)]="selectedStatus"
-          aria-label="Statut de l'événement"
-        >
-          <option value="all">Tous les statuts</option>
-          <option value="PENDING">En attente</option>
-          <option value="APPROVED">Approuvé</option>
-          <option value="REJECTED">Rejeté</option>
-        </select>
-      </div>-->
+<div class="container-fluid px-4 py-3">
+  <div class="card border-0 shadow-sm">
+    <div class="card-header bg-white border-0 py-3">
+      <h4 class="mb-0 text-primary fw-semibold">
+        <i class="fas fa-calendar-alt me-2"></i>Événements du Club
+      </h4>
     </div>
 
-    <!-- Tableau -->
-    @if (isLoading) {
-      <div class="text-center py-4">
-        <div class="spinner-border text-primary" role="status">
-          <span class="visually-hidden">Chargement...</span>
+    <div class="card-body px-4 py-3">
+      <!-- Filtres -->
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="fas fa-search text-muted"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control border-start-0 ps-2"
+              placeholder="Rechercher un événement..."
+              [(ngModel)]="searchTerm"
+            />
+          </div>
         </div>
       </div>
-    } @else {
-      @if (filteredEvents.length === 0) {
-        <div class="alert alert-info">
-          Aucun événement pour ce club.
+
+      <!-- Tableau -->
+      @if (isLoading) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Chargement...</span>
+          </div>
+          <p class="mt-3 text-muted">Chargement des événements...</p>
         </div>
       } @else {
-        <div class="table-responsive">
-          <table class="table table-hover">
-            <thead>
-              <tr>
-              <!--<th>ID</th>-->
-                <th>Nom Événement</th>
-                <th>Type</th>
-                <th>Date Début</th>
-                <th>Date Fin</th>
-                <th>Statut</th>
-              </tr>
-            </thead>
-            <tbody>
-              @for (event of filteredEvents; track event.id) {
+        @if (filteredEvents.length === 0) {
+          <div class="alert alert-info border-0 rounded-3">
+            <i class="fas fa-info-circle me-2"></i>
+            Aucun événement disponible pour ce club.
+          </div>
+        } @else {
+          <div class="table-responsive rounded-3 overflow-hidden border">
+            <table class="table table-hover align-middle mb-0">
+              <thead class="bg-light">
                 <tr>
-            <!--      <td>{{ event.id || 'N/A' }}</td> -->
-                  <td>{{ event.nom || 'N/A' }}</td>
-                  <td>{{ event.type || 'N/A' }}</td>
-                  <td>{{ formatDate(event.startDate) || 'N/A' }}</td>
-                  <td>{{ formatDate(event.endDate) || 'N/A' }}</td>
-                  <td>
-                     <!--<span
-                     class="badge"
-                      [ngClass]="{
-                        'bg-warning': event.status === 'PENDING',
-                        'bg-success': event.status === 'APPROVED',
-                        'bg-danger': event.status === 'REJECTED',
-                        'bg-secondary': !event.status
-                      }"
-                    >
-                      {{ getStatusText(event.status) }}
-                    </span>-->
-                    <span>
-                      APPROVED
-                    </span>
-                  </td>
+                  <th class="ps-4 py-3 text-uppercase text-muted fw-semibold small">Événement</th>
+                  <th class="py-3 text-uppercase text-muted fw-semibold small">Type</th>
+                  <th class="py-3 text-uppercase text-muted fw-semibold small">Date Début</th>
+                  <th class="py-3 text-uppercase text-muted fw-semibold small">Date Fin</th>
+                  <th class="py-3 text-uppercase text-muted fw-semibold small">Statut</th>
+                  <th class="pe-4 py-3 text-uppercase text-muted fw-semibold small text-end">Actions</th>
                 </tr>
-              }
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                @for (event of filteredEvents; track event.id) {
+                  <tr class="border-top">
+                    <td class="ps-4 fw-medium">{{ event.nom || 'N/A' }}</td>
+                    <td>
+                      <span class="badge bg-primary bg-opacity-10 text-primary">
+                        {{ event.type || 'N/A' }}
+                      </span>
+                    </td>
+                    <td>{{ formatDate(event.startDate) || 'N/A' }}</td>
+                    <td>{{ formatDate(event.endDate) || 'N/A' }}</td>
+                    <td>
+                      <span class="badge rounded-pill bg-success bg-opacity-10 text-success">
+                        <i class="fas fa-check-circle me-1"></i> APPROUVÉ
+                      </span>
+                    </td>
+                    <td class="pe-4 text-end">
+                      <button
+                        class="btn btn-sm rounded-pill px-3"
+                        [ngClass]="{
+                          'btn-outline-primary': !myParticipations.includes(event.id),
+                          'btn-success': myParticipations.includes(event.id)
+                        }"
+                        [disabled]="myParticipations.includes(event.id)"
+                        (click)="participateInEvent(event.id)"
+                      >
+                        <i class="fas"
+                           [ngClass]="{
+                             'fa-user-plus': !myParticipations.includes(event.id),
+                             'fa-check': myParticipations.includes(event.id)
+                           }"></i>
+                        {{ myParticipations.includes(event.id) ? 'Inscrit' : 'Participer' }}
+                      </button>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        }
       }
-    }
+    </div>
   </div>
 </div>

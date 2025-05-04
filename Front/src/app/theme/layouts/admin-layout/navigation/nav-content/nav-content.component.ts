@@ -1,6 +1,6 @@
 import { Component, OnInit, inject, output } from '@angular/core';
 import { CommonModule, Location, LocationStrategy } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule ,Router,NavigationEnd } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { filterNavigationByRole } from '../navigation-filter';
 import { ClubBasicDTO } from 'src/app/demo/component/basic-component/color/models/ClubBasicDTO.model';
@@ -10,8 +10,9 @@ import { NavGroupComponent } from './nav-group/nav-group.component';
 import { NavCollapseComponent } from './nav-collapse/nav-collapse.component';
 import { ClubService } from 'src/app/services/Club.service';
 import { IconService } from '@ant-design/icons-angular';
-import { ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef ,NgZone } from '@angular/core';
 import { ClubRequestService } from 'src/app/services/club-request.service';
+import { filter } from 'rxjs/operators'; // <-- Ajoutez ceci
 
 import {
   DashboardOutline,
@@ -43,6 +44,8 @@ export class NavContentComponent implements OnInit {
   private clubService = inject(ClubService);
   private http = inject(HttpClient);
   private cdr = inject(ChangeDetectorRef); // 👈 add this
+  private ngZone = inject(NgZone); // Ajouter NgZone
+  private router = inject(Router); // Ajouter Router
   private requestService = inject(ClubRequestService);
 
   NavCollapsedMob = output();
@@ -54,9 +57,9 @@ export class NavContentComponent implements OnInit {
   windowWidth = window.innerWidth;
 
   private clubSubmenuItems: DynamicChild[] = [
-   // { title: 'Members', url: (id) => `/club/${id}/members` },
     { title: 'Events', url: (id) => `/club/${id}/events` },
-   // { title: 'Documents', url: (id) => `/club/${id}/docs` }
+    { title: 'Events inscrit ', url: (id) => `my-events` },
+    { title: 'feedback', url: (id) => `feedback-evenement` }
   ];
 
   constructor() {
@@ -74,58 +77,127 @@ export class NavContentComponent implements OnInit {
     this.navigations = [...NavigationItems]; // Copy initial nav
   }
 
-  ngOnInit() {
+  /*ngOnInit() {
     const userRole = this.getUserRoleFromStorage();
     this.navigations = filterNavigationByRole(NavigationItems, [userRole]);
 
     if (this.windowWidth < 1025) {
       (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
     }
-  }
 
+    this.router.events.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+  }*/
+    ngOnInit() {
+      const userRole = this.getUserRoleFromStorage();
+      this.navigations = filterNavigationByRole(NavigationItems, [userRole]);
 
+      if (this.windowWidth < 1025) {
+        (document.querySelector('.coded-navbar') as HTMLDivElement).classList.add('menupos-static');
+      }
 
-
-  public handleDynamicCollapseClick(itemId: string): void {
-    console.log('handleDynamicCollapseClick fired for:', itemId);
-    if (itemId === 'my-clubs') {
-      this.loadClubsForUser();
+      this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd)
+      ).subscribe(() => {
+        this.handleRouteChange();
+        this.forceMenuUpdate();
+      });
     }
+
+    private forceMenuUpdate(): void {
+      const clubsItem = this.findMyClubsItem(this.navigations);
+      if (clubsItem && clubsItem.children) {
+        // Crée une nouvelle référence du tableau pour forcer la détection de changement
+        clubsItem.children = [...clubsItem.children];
+        this.cdr.detectChanges();
+
+        // Double vérification après un léger délai
+        setTimeout(() => {
+          if (!document.querySelector('.coded-hasmenu.show')) {
+            this.cdr.detectChanges();
+          }
+        }, 100);
+      }
+    }
+    private handleRouteChange(): void {
+      const currentUrl = this.router.url;
+      const clubsItem = this.findMyClubsItem(this.navigations);
+
+        // Force le rechargement des clubs quand on navigue vers une URL de club
+        if (currentUrl.includes('/club/') && clubsItem) {
+          this.loadClubsForUser(); // true pour forcer le rechargement
+        }
+
+        this.cdr.detectChanges();
+    }
+
+    shouldForceUpdate(item: NavigationItem): boolean {
+      return item.id === 'my-clubs' && this.router.url.includes('/club/');
+    }
+
+    public handleDynamicCollapseClick(itemId: string): void {
+      if (itemId === 'my-clubs') {
+        const clubsItem = this.findMyClubsItem(this.navigations);
+        if (clubsItem) {
+          // Réinitialise et recharge les clubs
+          clubsItem.children = [];
+          this.cdr.detectChanges();
+          this.loadClubsForUser();
+        }
+      }
+    }
+
+  shouldForceReload(item: NavigationItem): boolean {
+    return item.id === 'my-clubs' && this.router.url.includes('/club/');
   }
-
-  loadClubsForUser(event?: any) {
-    console.log('loadClubsForUser() called!');
-
+  loadClubsForUser(): void {
     const username = localStorage.getItem('username');
-    if (!username) {
-      console.error('No username found in localStorage');
-      return;
-    }
+    if (!username) return;
 
     const clubsItem = this.findMyClubsItem(this.navigations);
-    if (!clubsItem) {
-      console.error('My Clubs menu item not found');
-      return;
-    }
+    if (!clubsItem) return;
+
     this.clubService.getUserClubs(username).subscribe({
       next: (clubs) => {
-        console.log('Clubs loaded:', clubs);
         clubsItem.children = this.transformClubsToMenuItems(clubs);
-        clubsItem.triggerExpansion = true; // <-- tell the UI to auto-expand
-        this.cdr.detectChanges();
+        clubsItem.triggerExpansion = true;
+
+        // Force la mise à jour du template
+        this.ngZone.run(() => {
+          this.cdr.detectChanges();
+          setTimeout(() => {
+            this.cdr.detectChanges();
+            this.ensureMenuVisible();
+          }, 150);
+        });
       },
       error: (err) => {
         console.error('Failed to load clubs', err);
-        clubsItem.children = [{
-          id: 'error',
-          title: 'Failed to load clubs',
-          type: 'item',
-          icon: 'warning'
-        }];
       }
     });
+    this.fixMenuVisibility();
+
   }
 
+  private fixMenuVisibility(): void {
+    setTimeout(() => {
+      const navContainer = document.querySelector('.coded-navbar');
+      if (navContainer) {
+        navContainer.classList.remove('coded-triggered');
+        setTimeout(() => {
+          navContainer.classList.add('coded-triggered');
+        }, 50);
+      }
+    }, 200);
+  }
+  private ensureMenuVisible(): void {
+    const activeMenu = document.querySelector('.coded-hasmenu.show');
+    if (!activeMenu) {
+      const firstMenu = document.querySelector('.coded-hasmenu');
+      firstMenu?.classList.add('show');
+    }
+  }
   private findMyClubsItem(items: NavigationItem[]): NavigationItem | undefined {
     for (const item of items) {
       if (item.id === 'my-clubs') return item;

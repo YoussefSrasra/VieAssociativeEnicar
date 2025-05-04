@@ -1,3 +1,4 @@
+
 <div class="row">
   <div class="col-12">
     
@@ -30,44 +31,127 @@
               <option [value]="type">{{ type }}</option>
             }
           </select>
+=======
+<div class="container-fluid px-4 py-3">
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white border-0 py-3">
+      <h4 class="mb-0 text-primary fw-semibold">
+        <i class="fas fa-handshake me-2"></i>
+        {{ editingPartner ? 'Modifier Partenaire' : 'Nouveau Partenaire' }}
+      </h4>
+    </div>
+
+    <div class="card-body px-4 py-3">
+      <form [formGroup]="partnershipForm" (ngSubmit)="onSubmit()">
+        <!-- Nom -->
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Nom *</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="fas fa-building text-muted"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control border-start-0 ps-2"
+              formControlName="name"
+              placeholder="Nom du partenaire">
+          </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Contact (email) *</label>
-          <input type="email" class="form-control" formControlName="contact">
+        <!-- Type -->
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Type *</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="fas fa-tag text-muted"></i>
+            </span>
+            <select
+              class="form-select border-start-0 ps-2"
+              formControlName="type"
+              style="background-image: none;"   aria-label="Type d'événement">
+              <option value="">Sélectionnez un type...</option>
+              @for (type of partnershipTypes; track type) {
+                <option [value]="type">{{ type }}</option>
+              }
+            </select>
+          </div>
         </div>
 
-        <div class="row">
+        <!-- Contact -->
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Contact (email) *</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="fas fa-envelope text-muted"></i>
+            </span>
+            <input
+              type="email"
+              class="form-control border-start-0 ps-2"
+              formControlName="contact"
+              placeholder="email@partenaire.com">
+          </div>
+        </div>
+
+        <!-- Téléphone et Date -->
+        <div class="row g-3 mb-4">
           <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">Téléphone</label>
-              <input type="tel" class="form-control" formControlName="phone">
+            <label class="form-label text-muted small fw-semibold mb-2">Téléphone</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="fas fa-phone text-muted"></i>
+              </span>
+              <input
+                type="tel"
+                class="form-control border-start-0 ps-2"
+                formControlName="phone"
+                placeholder="+212 6...">
             </div>
           </div>
           <div class="col-md-6">
-            <div class="mb-3">
-              <label class="form-label">Partenaire depuis</label>
-              <input type="number" class="form-control" formControlName="since">
+            <label class="form-label text-muted small fw-semibold mb-2">Partenaire depuis</label>
+            <div class="input-group">
+              <span class="input-group-text bg-light border-end-0">
+                <i class="fas fa-calendar-alt text-muted"></i>
+              </span>
+              <input
+                type="number"
+                class="form-control border-start-0 ps-2"
+                formControlName="since"
+                placeholder="Année (ex: 2023)">
             </div>
           </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">Détails</label>
-          <textarea class="form-control" formControlName="details" rows="2"></textarea>
+        <!-- Détails -->
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Détails</label>
+          <textarea
+            class="form-control border"
+            formControlName="details"
+            rows="3"
+            style="border-radius: 8px;"
+            placeholder="Description du partenariat..."></textarea>
         </div>
 
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-outline-secondary"
-                  (click)="resetForm()" *ngIf="editingPartner">
-            Annuler
-          </button>
-          <button type="submit" class="btn btn-primary ms-auto"
-                  [disabled]="!partnershipForm.valid">
+        <!-- Boutons -->
+        <div class="d-flex justify-content-between mt-4">
+          @if (editingPartner) {
+            <button
+              type="button"
+              class="btn btn-outline-secondary rounded-pill px-4 py-2"
+              (click)="resetForm()">
+              <i class="fas fa-times me-2"></i>Annuler
+            </button>
+          }
+          <button
+            type="submit"
+            class="btn btn-primary rounded-pill px-4 py-2 fw-medium ms-auto"
+            [disabled]="!partnershipForm.valid">
+            <i class="fas fa-save me-2"></i>
             {{ editingPartner ? 'Mettre à jour' : 'Ajouter' }}
           </button>
         </div>
       </form>
-    </app-card>
+    </div>
   </div>
 </div>

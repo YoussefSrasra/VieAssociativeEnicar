@@ -112,4 +112,24 @@ public List<String> getEventNamesByClubId(Long clubId) {
     return eventRequestRepository.findEventNamesByClubId(clubId);
 }
 
+
+public List<EventRequestDTO> getEventsByIds(List<Long> eventIds) {
+    List<EventRequest> events = eventRequestRepository.findAllById(eventIds);
+    return events.stream()
+            .map(event -> {
+                EventRequestDTO dto = new EventRequestDTO();
+                dto.setId(event.getId());
+                dto.setType(event.getType());
+                dto.setClubName(event.getClub().getName());
+                dto.setNom(event.getEventName());
+                dto.setDescription(event.getDescription());
+                dto.setStartDate(event.getStartDate());
+                dto.setEndDate(event.getEndDate());
+                dto.setLocation(event.getLocation());
+                return dto;
+            })
+            .collect(Collectors.toList());
+}
+
+
 }

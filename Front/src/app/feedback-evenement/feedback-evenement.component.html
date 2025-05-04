@@ -1,79 +1,83 @@
-<div class="row">
-  <div class="col-12">
-    <app-card headerTitle="Donner votre Feedback sur l'Événement">
-      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()" class="p-3">
+<div class="container-fluid px-4 py-3">
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white border-0 py-3">
+      <h4 class="mb-0 text-primary fw-semibold">
+        <i class="fas fa-comment-alt me-2"></i>Donner votre Feedback
+      </h4>
+    </div>
 
-        <!-- Nom -->
-        <div class="mb-3">
-          <label class="form-label">Nom *</label>
-          <input type="text" class="form-control" formControlName="lastName"
-                 [class.is-invalid]="feedbackForm.get('lastName')?.invalid && feedbackForm.get('lastName')?.touched">
-          <div class="invalid-feedback" *ngIf="feedbackForm.get('lastName')?.invalid && feedbackForm.get('lastName')?.touched">
-            Le nom est requis
-          </div>
-        </div>
-
-        <!-- Prénom -->
-        <div class="mb-3">
-          <label class="form-label">Prénom *</label>
-          <input type="text" class="form-control" formControlName="firstName"
-                 [class.is-invalid]="feedbackForm.get('firstName')?.invalid && feedbackForm.get('firstName')?.touched">
-          <div class="invalid-feedback" *ngIf="feedbackForm.get('firstName')?.invalid && feedbackForm.get('firstName')?.touched">
-            Le prénom est requis
-          </div>
-        </div>
-
+    <div class="card-body px-4 py-3">
+      <form [formGroup]="feedbackForm" (ngSubmit)="onSubmit()">
         <!-- Email -->
-        <div class="mb-3">
-          <label class="form-label">Email *</label>
-          <input type="email" class="form-control" formControlName="email"
-                 [class.is-invalid]="feedbackForm.get('email')?.invalid && feedbackForm.get('email')?.touched">
-          <div class="invalid-feedback" *ngIf="feedbackForm.get('email')?.invalid && feedbackForm.get('email')?.touched">
-            Veuillez saisir un email valide
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Email *</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="fas fa-envelope text-muted"></i>
+            </span>
+            <input
+              type="email"
+              class="form-control border-start-0 ps-2"
+              formControlName="email"
+              [class.is-invalid]="feedbackForm.get('email')?.invalid && feedbackForm.get('email')?.touched"
+              placeholder="votre@email.com">
+          </div>
+          <div class="invalid-feedback mt-1 small" *ngIf="feedbackForm.get('email')?.invalid && feedbackForm.get('email')?.touched">
+            <i class="fas fa-exclamation-circle me-1"></i>Veuillez saisir un email valide
           </div>
         </div>
 
         <!-- Événement -->
-        <div class="mb-3">
-          <label class="form-label">Événement *</label>
-          <select class="form-select" formControlName="eventName" required required aria-label="Type d'événement">
-            <option value="">Sélectionnez un événement</option>
-            <option *ngFor="let event of eventList" [value]="event">{{ event }}</option>
-          </select>
-        </div>
-
-        <!-- Commentaire -->
-        <div class="mb-3">
-          <label class="form-label">Votre commentaire *</label>
-          <textarea class="form-control" formControlName="comment" rows="3"
-                    placeholder="Exprimez votre expérience..."></textarea>
-        </div>
-
-        <!-- Note -->
-        <div class="mb-3">
-          <label class="form-label">Note sur 5 *</label>
-          <input type="number" min="1" max="5" class="form-control" formControlName="rating">
-        </div>
-
-        <!-- Images -->
-        <div class="mb-3">
-          <label class="form-label">Ajouter des photos</label>
-          <input type="file" multiple accept="image/*" class="form-control" (change)="onImageUpload($event)">
-        </div>
-
-        <!-- Aperçu des images -->
-        <div class="row mb-3">
-          <div class="col-md-3 mb-2" *ngFor="let img of uploadedImages">
-            <img [src]="img" class="img-fluid rounded shadow-sm" alt="Uploaded image">
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Nom de l'événement *</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light border-end-0">
+              <i class="fas fa-calendar-alt text-muted"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control border-start-0 ps-2"
+              formControlName="eventName"
+              placeholder="Nom de l'événement">
           </div>
         </div>
 
-        <!-- Boutons -->
-        <div class="d-flex justify-content-end">
-          <button class="btn btn-primary" type="submit" [disabled]="!feedbackForm.valid">Envoyer Feedback</button>
+        <!-- Commentaire -->
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Votre commentaire *</label>
+          <textarea
+            class="form-control border"
+            formControlName="comment"
+            rows="4"
+            style="border-radius: 8px;"
+            placeholder="Décrivez votre expérience..."></textarea>
         </div>
 
+        <!-- Note -->
+        <div class="mb-4">
+          <label class="form-label text-muted small fw-semibold mb-2">Note sur 5 *</label>
+          <div class="input-group" style="max-width: 150px;">
+            <input
+              type="number"
+              min="1"
+              max="5"
+              class="form-control text-center"
+              formControlName="rating"
+              style="font-weight: 500;">
+            <span class="input-group-text bg-light">/5</span>
+          </div>
+        </div>
+
+        <!-- Bouton -->
+        <div class="d-flex justify-content-end mt-4">
+          <button
+            class="btn btn-primary rounded-pill px-4 py-2 fw-medium"
+            type="submit"
+            [disabled]="!feedbackForm.valid">
+            <i class="fas fa-paper-plane me-2"></i>Envoyer Feedback
+          </button>
+        </div>
       </form>
-    </app-card>
+    </div>
   </div>
 </div>

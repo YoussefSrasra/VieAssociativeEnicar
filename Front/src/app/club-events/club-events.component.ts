@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute ,Router } from '@angular/router';
 import { ClubRequestService } from 'src/app/services/club-request.service';
 import { CommonModule } from '@angular/common';
 import { DatePipe } from '@angular/common';
@@ -54,14 +54,38 @@ export class ClubEventsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private requestService: ClubRequestService
+    private requestService: ClubRequestService ,
+    private router: Router
   ) {}
-
+  showOnlyMyParticipations = false; // Nouvelle variable pour le filtre
+  myParticipations: number[] = []; // Stocke les IDs des événements où l'utilisateur participe
   ngOnInit(): void {
     this.clubId = +this.route.snapshot.paramMap.get('id')!;
    // this.clubId = +localStorage.getItem("selectedClubId");
     console.log('Club ID from URL:', this.clubId);
     this.loadEvents();
+    const storedParticipations = localStorage.getItem('myParticipations');
+    this.myParticipations = storedParticipations ? JSON.parse(storedParticipations) : [];
+    this.loadEvents();
+    this.route.params.subscribe(params => {
+      const newClubId = +params['id'];
+      if (newClubId !== this.clubId) {
+        this.clubId = newClubId;
+        this.loadEvents();
+      }
+    });
+
+
+  }
+
+  participateInEvent(eventId: number): void {
+    if (this.myParticipations.includes(eventId)) {
+      alert('Vous êtes déjà inscrit à cet événement.');
+      return;
+    }
+    this.myParticipations.push(eventId);
+    localStorage.setItem('myParticipations', JSON.stringify(this.myParticipations));
+    alert('Inscription enregistrée avec succès !');
   }
 
   formatDate(dateString: string): string {
@@ -69,6 +93,12 @@ export class ClubEventsComponent implements OnInit {
     return datePipe.transform(dateString, 'dd/MM/yyyy HH:mm') || '';
   }
 
+
+
+
+  avigateToMyEvents(): void {
+    this.router.navigate(['/my-events']);
+  }
   loadEvents(): void {
     console.log('Loading events for club ID:', this.clubId);
     this.isLoading = true;
@@ -110,4 +140,7 @@ export class ClubEventsComponent implements OnInit {
         return status || 'N/A';
     }
   }
+
+
+
 }
