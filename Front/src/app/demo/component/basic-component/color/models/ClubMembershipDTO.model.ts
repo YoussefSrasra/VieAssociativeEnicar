@@ -12,9 +12,9 @@ export interface ClubMembershipDTO {
   export enum role {
     PRESIDENT = 'PRESIDENT',
     VICE_PRESIDENT = 'VICE_PRESIDENT',
-    SECRETAIRE = 'SECRETAIRE',
-    TREASORIER  = 'TREASORIER',
-    MEMBRE  = 'MEMBRE',
+    SECRETAIRE = 'SECRETARY',
+    TREASORIER  = 'TREASURER',
+    MEMBRE  = 'MEMBER',
   }
   
  
