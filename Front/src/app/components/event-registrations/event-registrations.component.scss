@@ -1,42 +1,71 @@
-.table {
-  th {
-    font-weight: 500;
-    background-color: #f8f9fa;
-  }
-
-  tr {
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-      background-color: #f1f1f1;
-    }
-  }
+/* Amélioration générale */
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
+thead th {
+  background-color: #f8f9fa;
+  color: #333;
+  font-weight: 600;
+  text-align: center;
+}
+
+tbody td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Hover des lignes */
+tbody tr:hover {
+  background-color: #f0f8ff;
+  transition: background-color 0.2s ease-in-out;
+}
+
+/* Ligne sélectionnée */
+tr.table-primary {
+  background-color: #d1ecf1 !important;
+  color: #0c5460;
+}
+
+/* Boutons */
+button.btn {
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+button.btn:hover {
+  transform: scale(1.05);
+}
+
+/* Badge */
 .badge {
-  &.bg-success {
-    background-color: #28a745 !important;
-  }
-
-  &.bg-warning {
-    background-color: #ffc107 !important;
-    color: #212529;
-  }
+  font-size: 0.85rem;
+  padding: 0.4em 0.7em;
+  border-radius: 20px;
 }
 
-.btn-sm {
-  i {
-    margin-right: 0.25rem;
-  }
-}
-
+/* Card headers */
 .card-header {
-  backgr
-  .btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+  table {
+    font-size: 0.9rem;
   }
 
+  .btn {
+    font-size: 0.8rem;
+  }
 
+  .card-header {
+    font-size: 1rem;
+  }
 }

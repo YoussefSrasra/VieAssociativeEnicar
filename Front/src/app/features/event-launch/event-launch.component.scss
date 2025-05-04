@@ -1,44 +1,113 @@
-.form-check {
-  padding-left: 0;
-  margin-bottom: 0.5rem;
-
-  .form-check-input {
-    margin-right: 0.5rem;
-  }
+/* Container général */
+form {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease-in-out;
 }
 
+/* Champs obligatoires */
+.form-label::after {
+  content: " *";
+  color: #dc3545;
+  font-weight: bold;
+}
+
+/* Champs texte */
+input.form-control,
+select.form-select,
+textarea.form-control {
+  border-radius: 12px;
+  border: 1px solid #ced4da;
+  transition: border-color 0.2s ease;
+}
+
+input.form-control:focus,
+select.form-select:focus,
+textarea.form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.15rem rgba(0, 123, 255, 0.25);
+}
+
+/* Checkbox stylée */
+.form-check-input {
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  accent-color: #007bff;
+}
+
+.form-check-label {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* Zones de texte */
 textarea {
   min-height: 120px;
+  resize: vertical;
 }
 
-.datetime-input {
-  position: relative;
-
-  &::after {
-    content: "📅";
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-}
+/* Alerts */
 .custom-alert {
-  padding: 15px;
-  border-radius: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
   font-weight: 500;
   margin-bottom: 1rem;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .success-alert {
-  background-color: #d4edda;
-  color: #155724;
-  border-left: 5px solid #28a745;
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border-left: 5px solid #198754;
 }
 
 .error-alert {
   background-color: #f8d7da;
-  color: #721c24;
+  color: #842029;
   border-left: 5px solid #dc3545;
+}
+
+/* Boutons */
+button.btn {
+  border-radius: 30px;
+  font-size: 0.95rem;
+  padding: 8px 20px;
+  min-width: 140px;
+  transition: all 0.2s ease-in-out;
+}
+
+button.btn:hover {
+  transform: scale(1.03);
+}
+
+/* Layout des boutons */
+.d-flex.justify-content-between {
+  gap: 10px;
+}
+
+/* Date picker custom */
+input[type="datetime-local"] {
+  position: relative;
+  padding-right: 2rem;
+}
+
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(0.5);
+  cursor: pointer;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .form-check-label {
+    font-size: 0.9rem;
+  }
+
+  button.btn {
+    font-size: 0.85rem;
+    padding: 6px 16px;
+  }
 }

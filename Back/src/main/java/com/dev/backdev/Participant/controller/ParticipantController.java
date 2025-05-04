@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/participants")
-@CrossOrigin(origins = "http://localhost:4200") // Ajout pour CORS
+@CrossOrigin(origins = "http://localhost:4200",methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PATCH, RequestMethod.DELETE}) // Ajout pour CORS
 public class ParticipantController {
 
     private final ParticipantService participantService;
@@ -78,7 +78,6 @@ public ResponseEntity<Void> approveParticipant(@PathVariable Long id) {
     participantService.approveParticipant(id);
     return ResponseEntity.ok().build();
 }
-
 
 @PatchMapping("/{id}/reject")
 public ResponseEntity<Void> rejectParticipant(@PathVariable Long id) {

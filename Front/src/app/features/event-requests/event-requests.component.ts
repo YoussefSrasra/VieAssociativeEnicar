@@ -3,6 +3,7 @@ import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ClubRequestService } from '../../services/club-request.service';
+import { AuthServiceService } from '../../services/auth-service.service';
 
 @Component({
   standalone: true,
@@ -14,7 +15,7 @@ import { ClubRequestService } from '../../services/club-request.service';
 })
 export class EventRequestsComponent implements OnInit {
   eventForm = this.fb.group({
-    club_id: ['', [Validators.required, Validators.min(1)]],
+  // club_id: ['', [Validators.required, Validators.min(1)]],
     event_name: ['', Validators.required],
     type: ['', Validators.required],
     description: ['', Validators.required],
@@ -57,10 +58,15 @@ export class EventRequestsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private clubRequestService: ClubRequestService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe ,
+    private authService: AuthServiceService, // Injectez AuthService
+
+
   ) {}
 
   ngOnInit(): void {
+    console.log('Token:', localStorage.getItem('token')); // Vérifiez la clé exacte
+    console.log('User data:', localStorage.getItem('myParticipations')); // Pour debugger clubId
     this.loadEventRequests();
   }
 
@@ -106,49 +112,59 @@ export class EventRequestsComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.authService.isLoggedIn()) {
+      this.showAlert('danger', 'Connectez-vous avant de soumettre');
+      return;
+    }
+
     if (this.eventForm.invalid || this.isSubmitting) {
       this.eventForm.markAllAsTouched();
       return;
     }
 
     this.isSubmitting = true;
+
     const formData = {
       eventName: this.eventForm.value.event_name!,
       type: this.eventForm.value.type!,
       description: this.eventForm.value.description!,
       location: this.eventForm.value.location!,
-      startDate: new Date(this.eventForm.value.start_date!).toISOString(),
-      endDate: new Date(this.eventForm.value.end_date!).toISOString(),
+      startDate: this.eventForm.value.start_date!, // Conversion se fera dans le service
+      endDate: this.eventForm.value.end_date!,
       financialRequest: this.eventForm.value.financial_request!,
       requestedAmount: this.eventForm.value.requested_amount || 0,
       estimatedAttendees: this.eventForm.value.attendees || 0,
       needEquipment: this.eventForm.value.need_equipment!,
       equipmentDescription: this.eventForm.value.equipment_description,
-      status: 'PENDING',
-      club: { id: Number(this.eventForm.value.club_id) }
+      status: 'PENDING'
     };
+
+    console.log('Données du formulaire:', formData); // Debug
 
     this.clubRequestService.createEventRequest(formData).subscribe({
       next: (response) => {
-        this.showAlert('success', 'Demande envoyée avec succès.');
-        this.eventForm.reset({
-          financial_request: false,
-          requested_amount: 0,
-          attendees: 0,
-          need_equipment: false,
-          equipment_description: ''
-        });
-        this.loadEventRequests();
-        this.isSubmitting = false;
+        console.log('Réponse du serveur:', response);
+        this.showAlert('success', 'Demande créée avec succès');
       },
       error: (err) => {
-        console.error('Erreur lors de la soumission:', err);
-        this.showAlert('danger', 'Erreur lors de l\'envoi de la demande.');
+        console.error('Erreur:', err);
+        let message = "Erreur lors de l'envoi";
+
+        if (err.status === 400) {
+          message = err.error?.message || 'Données invalides';
+        } else if (err.status === 401) {
+          message = 'Authentification requise';
+        } else if (err.message.includes('club')) {
+          message = 'Problème d\'association avec un club';
+        }
+
+        this.showAlert('danger', message);
+      },
+      complete: () => {
         this.isSubmitting = false;
       }
     });
   }
-
   approveRequest(id: number): void {
     this.clubRequestService.approveEventRequest(id).subscribe({
       next: () => {

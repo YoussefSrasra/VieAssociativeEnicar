@@ -76,11 +76,7 @@ const routes: Routes = [
         loadComponent: () => import('./entretiens/entretiens.component')
           .then(c => c.EntretiensComponent)
       },
-      {
-        path: 'member-dashboard',
-        loadComponent: () => import('./member-dashboard/member-dashboard.component')
-          .then(c => c.MemberDashboardComponent)
-      },
+   
 
       {
         path: 'partnerships',
