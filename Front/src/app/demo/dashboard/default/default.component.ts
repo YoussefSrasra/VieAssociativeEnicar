@@ -12,13 +12,18 @@ import {  OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ClubService } from 'src/app/services/Club.service';
 import { environment } from 'src/environments/environment';
+import { LoginService } from 'src/app/login.service';
+
+
+
+
 export interface ClubBasicDTO {
   id: number;
   name: string; // Assume API uses 'name'; adjust if it uses 'nomClub'
-  description?: string;
+  /*description?: string;
   logo?: string; // Assume API uses 'logo'; adjust if it uses 'logoBase64'
   creator?: string; // Assume API uses 'creator'; adjust if it uses 'createur'
-  status?: 'APPROVED' | 'PENDING' | 'REJECTED'; // Assume API uses 'status'; adjust if it uses 'etat'
+  status?: 'APPROVED' | 'PENDING' | 'REJECTED'; // Assume API uses 'status'; adjust if it uses 'etat'*/
 }
 @Component({
   selector: 'app-default',
@@ -34,6 +39,7 @@ export interface ClubBasicDTO {
 })
 export class DefaultComponent implements AfterViewInit {
   private iconService = inject(IconService);
+  private loginService = inject(LoginService);
   private participantService = inject(ParticipantService);
   private demandeClubService = inject(DemandeClubService);
   private clubRequestService = inject(ClubRequestService);
@@ -44,22 +50,22 @@ export class DefaultComponent implements AfterViewInit {
   @ViewChild('eventTypeChart') eventTypeChartRef!: ElementRef;
   eventStats: any = {};
   clubStats: any = {};
+  userStats: any = {};
   partners: any[] = []; // Liste des partenaires
   loading = true;
   approvedClubs: any[] = [];
-    loadingClubs = true;
+  loadingClubs = true;
   loadingPartners = true;
-  popularClubs = [
-    { id: 1, name: 'Club de Football', logo: 'src/app/services/foot.jpg', members: '500' },
-    { id: 2, name: 'Club de Musique', logo: 'https://via.placeholder.com/50', members: '300' },
-    { id: 3, name: 'Club de Débat', logo: 'https://via.placeholder.com/50', members: '250' },
-    { id: 4, name: 'Club d’Art', logo: 'https://via.placeholder.com/50', members: '200' },
-    { id: 5, name: 'Club de Science', logo: 'https://via.placeholder.com/50', members: '180' }
-  ];
-  username: string = 'testUser'; // Fallback; replace with auth service
+  username:string = localStorage.getItem('username') || '';
+  
   ngOnInit(): void {
-    this.loadApprovedClubs();
-    this.loadBudgetData();
+     // Only load data needed for admin
+     if (this.isAdminView()) {
+      this.loadApprovedClubs();
+      this.loadBudgetData();
+      this.loadTotalUsers();
+      this.loadPartners();
+    }
 
   }
 
@@ -127,18 +133,16 @@ export class DefaultComponent implements AfterViewInit {
 
  loadApprovedClubs(): void {
     this.loadingClubs = true;
-    this.clubService.getUserClubs(this.username).subscribe({
+    this.clubService.getAllClubs().subscribe({
       next: (clubs: ClubBasicDTO[]) => {
         console.log('Fetched clubs:', clubs);
-        this.approvedClubs = clubs
-          .filter(club => club.status === 'APPROVED')
-          .slice(0, 5)
-          .map(club => ({
-            id: club.id,
-            nomClub: club.name, // Map 'name' to 'nomClub' for template
-            description: club.description || '',
-            createur: club.creator || 'Unknown' // Map 'creator' to 'createur'
-          }));
+        this.clubStats.totalClubs = clubs.length;
+        console.log('Total clubs:', this.clubStats.totalClubs);
+        const clubsActifsCard = this.AnalyticEcommerce.find(card => card.title === 'Clubs');
+        if (clubsActifsCard) {
+          clubsActifsCard.number = this.clubStats.totalClubs.toString();
+        }
+        
         this.loadingClubs = false;
       },
       error: (err) => {
@@ -147,6 +151,28 @@ export class DefaultComponent implements AfterViewInit {
       }
     });
   }
+
+
+  loadTotalUsers(): void {
+    this.loading = true;
+    this.loginService.getAllUsersDTO().subscribe({
+      next: (users) => {
+        this.userStats.totalUsers = users.length;
+        console.log('Fetched users:', users);
+        const totalUsersCard = this.AnalyticEcommerce.find(card => card.title === 'Utilisateurs Totaux');
+        console.log('Total users:', this.userStats.totalUsers);
+
+        if (totalUsersCard) {
+          totalUsersCard.number = this.userStats.totalUsers.toString();
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Erreur de chargement des utilisateurs', err);
+        this.loading = false;
+      }
+    });
+    }
 
   getRandomMembers(): number {
     // Fonction temporaire pour simuler le nombre de membres
@@ -225,7 +251,6 @@ export class DefaultComponent implements AfterViewInit {
     this.demandeClubService.getDemandes().subscribe({
       next: (demandes) => {
         this.clubStats = {
-          totalClubs: demandes.filter(d => d.etat === 'ACCEPTE').length,
           pendingRequests: demandes.filter(d => d.etat === 'EN_ATTENTE').length,
           rejectedRequests: demandes.filter(d => d.etat === 'REJETE').length
         };
@@ -284,6 +309,20 @@ loadCharts() {
 
 
 }
+isAdminView(): boolean {
+  const role = localStorage.getItem('role'); // Or parse from 'currentUser'
+  return role === 'ADMIN';
+}
+
+isManagerView(): boolean {
+  const role = localStorage.getItem('role');
+  return role === 'MANAGER';
+}
+
+isMemberView(): boolean {
+  const role = localStorage.getItem('role');
+  return role === 'MEMBER' || (!this.isAdminView() && !this.isManagerView());
+}
 
   AnalyticEcommerce = [
     {
@@ -292,17 +331,15 @@ loadCharts() {
       background: 'bg-light-primary',
       border: 'border-primary',
       icon: 'rise',
-      percentage: '0%',
       color: 'text-primary',
       number: '0'
     },
     {
-      title: 'Participants Totaux',
+      title: 'Utilisateurs Totaux',
       amount: '0',
       background: 'bg-light-primary',
       border: 'border-primary',
       icon: 'rise',
-      percentage: '0%',
       color: 'text-primary',
       number: '0'
     },
@@ -312,17 +349,15 @@ loadCharts() {
       background: 'bg-light-warning',
       border: 'border-warning',
       icon: 'fall',
-      percentage: '0%',
       color: 'text-warning',
       number: '0'
     },
     {
-      title: 'Clubs Actifs',
+      title: 'Clubs',
       amount: '0',
       background: 'bg-light-success',
       border: 'border-success',
       icon: 'rise',
-      percentage: '0%',
       color: 'text-success',
       number: '0'
     }

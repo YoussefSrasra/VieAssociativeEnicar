@@ -16,8 +16,17 @@ export class ClubService {
     return this.http.get<ClubBasicDTO[]>(`${this.apiUrl}/username/${encodeURIComponent(username)}`).pipe(
       tap({
         next: (response) => console.log('Clubs response:', response),
-        error: (err) => console.error('Error fetching members:', err)
+        error: (err) => console.error('Error fetching clubs:', err)
       })
     );;
+  }
+
+  getAllClubs(): Observable<ClubBasicDTO[]> {
+    return this.http.get<ClubBasicDTO[]>(`${this.apiUrl}/basic`).pipe(
+      tap({
+        next: (response) => console.log('All clubs response:', response),
+        error: (err) => console.error('Error fetching all clubs:', err)
+      })
+    );
   }
 }

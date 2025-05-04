@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
     import org.springframework.stereotype.Service;
 
 import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
+import com.dev.backdev.Auth.dto.UserDTO;
 import com.dev.backdev.Auth.dto.UserRegistrationDTO;
     import com.dev.backdev.Auth.dto.UserResponseDto;
     import com.dev.backdev.Auth.dto.UserUpdateDTO;
@@ -109,6 +110,12 @@ import com.dev.backdev.Enums.ClubRole;
             return userRepository.save(user);
         }
 
+
+        public List<UserDTO> getAllUsersDTO() {
+            return userRepository.findAll().stream()
+                .map(user -> new UserDTO(user.getId(), user.getNom(), user.getPrenom()))
+                .collect(Collectors.toList());
+        }
 
         public void deleteUser(Long userId) {
             User user = userRepository.findById(userId)

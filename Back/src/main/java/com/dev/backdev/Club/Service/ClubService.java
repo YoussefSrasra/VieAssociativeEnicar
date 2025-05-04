@@ -272,4 +272,9 @@ public class ClubService {
         return club.isEnrollmentOpen();
     }
 
+    public List<ClubBasicDTO> getAllClubsBasic() {
+        List<Club> clubs = clubRepository.findAll();
+        return clubs.stream().map(club -> new ClubBasicDTO(club.getId(), club.getName())).collect(Collectors.toList());
+    }
+
 }
