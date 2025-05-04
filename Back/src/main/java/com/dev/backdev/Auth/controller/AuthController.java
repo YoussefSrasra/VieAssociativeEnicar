@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
+import com.dev.backdev.Auth.dto.UserDTO;
 import com.dev.backdev.Auth.dto.UserRegistrationDTO;
 import com.dev.backdev.Auth.dto.UserResponseDto;
 import com.dev.backdev.Auth.dto.UserUpdateDTO;
@@ -122,6 +123,11 @@ public class AuthController {
      @GetMapping("/users")
     public List<UserResponseDto> getAllUsers() {
         return authService.getAllUsers();
+    }
+
+    @GetMapping("/users/dto")
+    public List<UserDTO> getAllUsersDTO() {
+        return authService.getAllUsersDTO();
     }
 
 

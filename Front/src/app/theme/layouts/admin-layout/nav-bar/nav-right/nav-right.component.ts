@@ -138,11 +138,15 @@ export class NavRightComponent {
   }
   
   canSwitchToManager(): boolean {
-    const clubRole = this.currentUser.role; // or however you store it
     const role = localStorage.getItem('role');
+    if (role === 'ADMIN' || role === 'MANAGER') {
+      return false; // Admins can't switch to manager
+    }
+    const clubRole = this.currentUser?.role;
+
     const isInManagerSession = localStorage.getItem('managerSession') !== null;
   
-    return clubRole && clubRole !== 'MEMBER' && role!='ADMIN' && !isInManagerSession;
+    return clubRole && clubRole !== 'MEMBER' && !isInManagerSession;
   }
   
   isManagerSession(): boolean {

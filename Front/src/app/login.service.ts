@@ -17,6 +17,12 @@ interface LoginResponse {
   role: string;
 }
 
+interface UserDTO {
+  id: number;
+  nom: string;
+  prenom: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -79,5 +85,9 @@ export class LoginService {
     localStorage.removeItem('managerSession');
     localStorage.removeItem('personalSession');
     this.router.navigate(['/login']);
+  }
+
+  getAllUsersDTO(): Observable<UserDTO[]> {
+    return this.http.get<UserDTO[]>('http://localhost:8080/api/public/users/dto');
   }
 }
