@@ -7,6 +7,23 @@
     <p class="file-formats">Formats: JPG, PNG, GIF - Max 7MB</p>
   </div>
 
+  <!-- Messages d'erreur -->
+  <div *ngIf="errorMessage" class="error-message">
+    <i class="bi bi-exclamation-circle error-icon"></i>
+    <div class="error-text">{{ errorMessage }}</div>
+    <button class="error-close" (click)="errorMessage = ''">
+      <i class="bi bi-x"></i>
+    </button>
+  </div>
+
+  <!-- Messages de succès -->
+  <div *ngIf="successMessage" class="success-message">
+    <div class="success-icon">
+      <i class="bi bi-check-circle"></i>
+    </div>
+    <div class="success-text">{{ successMessage }}</div>
+  </div>
+
   <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" *ngIf="!isLoading" class="vertical-form">
     <!-- Photo Upload -->
     <div class="photo-upload">
@@ -166,7 +183,6 @@
       </button>
     </div>
   </form>
-
   <div *ngIf="isLoading" class="loading-spinner">
     <div class="spinner-border text-primary" role="status">
       <span class="visually-hidden">Chargement...</span>

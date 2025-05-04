@@ -159,7 +159,7 @@
       </div>
 
 
-
+      
 
 
       <form #participantForm="ngForm" (ngSubmit)="onSubmit(participantForm)" class="event-form">
@@ -174,8 +174,10 @@
             readonly
             required />
         </div>
+      
         <div class="form-row">
           <div class="form-group">
+            <label for="nom" class="form-label">Nom</label>
             <input
               type="text"
               name="nom"
@@ -186,6 +188,7 @@
               required />
           </div>
           <div class="form-group">
+            <label for="prenom" class="form-label">Prénom</label>
             <input
               type="text"
               name="prenom"
@@ -196,25 +199,32 @@
               required />
           </div>
           <div class="form-group">
+            <label for="email" class="form-label">Email institutionnel</label>
             <input
               type="email"
-              name="email"
+              name="emailEnicar"
               class="form-control"
               id="email"
               [(ngModel)]="formData.email"
-              placeholder="Email"
-              required />
+              placeholder="nom.prenom@enicar.ucar.tn"
+              pattern="^[a-zA-Z]+\.[a-zA-Z]+@enicar\.ucar\.tn$"
+              required
+              #emailRef="ngModel" />
+            <div *ngIf="emailRef.invalid && emailRef.touched" class="error-message">
+              Veuillez entrer un email au format nom.prenom&#64;enicar.ucar.tn
+            </div>
           </div>
         </div>
+      
         <div class="form-row">
           <div class="form-group">
+            <label for="niveau" class="form-label">Niveau d'études</label>
             <select
               name="niveau"
               id="niveau"
               class="form-select"
               [(ngModel)]="formData.niveauEtudes"
-              required
-              aria-label="Niveau d'études">
+              required>
               <option value="">Niveau d'études</option>
               <option value="1A">1ère année</option>
               <option value="2A">2ème année</option>
@@ -222,13 +232,13 @@
             </select>
           </div>
           <div class="form-group">
+            <label for="comite" class="form-label">Comité</label>
             <select
               name="comite"
               id="comite"
               class="form-select"
               [(ngModel)]="formData.comite"
-              required
-              aria-label="Comité">
+              required>
               <option value="">Choisissez un comité</option>
               <option *ngFor="let committee of selectedEvent.committees" [value]="committee">
                 {{ committee }}
@@ -236,6 +246,7 @@
             </select>
           </div>
         </div>
+      
         <div class="form-group radio-group">
           <fieldset>
             <legend>Participation :</legend>
@@ -265,20 +276,34 @@
             </div>
           </fieldset>
         </div>
+      
         <div class="form-group">
+          <label for="motivation" class="form-label">Motivation</label>
           <textarea
             class="form-control"
             name="motivation"
+            id="motivation"
             rows="5"
             [(ngModel)]="formData.motivation"
             placeholder="Expliquez votre motivation pour participer..."
             required></textarea>
         </div>
+      
         <div class="form-submit">
           <button type="submit" class="submit-button">Envoyer la candidature</button>
           <button type="button" class="cancel-button" (click)="selectedEvent = null">Annuler</button>
         </div>
       </form>
+      
+      <div *ngIf="successMessage" class="alert alert-success">
+        {{ successMessage }}
+      </div>
+      
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      
+      
     </div>
 
     <!-- Modale pour les détails de l'événement -->

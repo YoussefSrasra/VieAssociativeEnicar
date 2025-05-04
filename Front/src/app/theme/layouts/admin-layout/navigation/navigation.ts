@@ -112,7 +112,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/event-launch',
         //icon: 'bg-colors',
-        roles: ['ADMIN','MANAGER']
+        roles: ['ADMIN']
       },
       {
         id: 'event suivi ',
@@ -121,7 +121,7 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/admin/event-registrations',
         //icon: 'bg-colors',
-        roles: ['ADMIN','MANAGER']
+        roles: ['ADMIN']
       },
       {
         id: 'demande evenet  ',
@@ -177,7 +177,7 @@ export const NavigationItems: NavigationItem[] = [
         //icon: 'bg-colors',
         roles: ['MANAGER']
       },
-      {
+     /* {
         id: 'contacts-urgence  ',
         title: 'Contacts-urgence ',
         type: 'item',
@@ -185,7 +185,11 @@ export const NavigationItems: NavigationItem[] = [
         url: '/contacts-urgence',
         //icon: 'bg-colors',
         roles: ['ADMIN']
-      },
+
+      },*/
+     
+
+      
 
       {
         id: 'feedback-list  ',
@@ -203,9 +207,11 @@ export const NavigationItems: NavigationItem[] = [
         classes: 'nav-item',
         url: '/feedback-evenement',
         //icon: 'bg-colors',
-        roles: ['MANAGER']
+
+        roles: ['MEMBER']
+
       },
-      {
+    /*  {
         id: 'tabler',
         title: 'Tabler',
         type: 'item',
@@ -214,35 +220,13 @@ export const NavigationItems: NavigationItem[] = [
         icon: 'ant-design',
         target: true,
         external: true
-      }
 
+      }*/
+  
     ]
-  },
 
-   {
-    id: 'other',
-    title: 'Other',
-    type: 'group',
-    icon: 'icon-navigation',
-    children: [
-     {
-        id: 'sample-page',
-        title: 'Sample Page',
-        type: 'item',
-        url: '/sample-page',
-        classes: 'nav-item',
-        icon: 'chrome'
-      },
-      {
-        id: 'document',
-        title: 'Document',
-        type: 'item',
-        classes: 'nav-item',
-        url: 'https://codedthemes.gitbook.io/mantis-angular/',
-        //icon: 'question',
-        target: true,
-        external: true
-      }
-    ]
-  }
-];
+  
+   
+
+
+  }]

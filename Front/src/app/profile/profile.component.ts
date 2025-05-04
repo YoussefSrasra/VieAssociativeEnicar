@@ -4,7 +4,7 @@ import { ProfileService } from './profile.service';
 import { UserProfile, Filiere, Formation, Niveau, Sexe } from './models/profile.model';
 import { FormBuilder, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import {  NavigationStart } from '@angular/router';
+import { NavigationStart } from '@angular/router';
 import { HostListener } from '@angular/core';
 
 @Component({
@@ -29,6 +29,11 @@ export class ProfileComponent implements OnInit {
   formationOptions = Object.values(Formation);
   niveauOptions = Object.values(Niveau);
   sexeOptions = Object.values(Sexe);
+  
+  // Messages d'erreur et de succès
+  errorMessage: string = '';
+  successMessage: string = '';
+  fieldErrors: { [key: string]: string } = {};
 
   constructor(
     private router: Router,
@@ -42,15 +47,35 @@ export class ProfileComponent implements OnInit {
     this.loadProfile();
     this.profileForm.valueChanges.subscribe(() => {
       this.formModified = this.profileForm.dirty;
+      this.clearMessages();
     });
     this.router.events.subscribe(event => {
       if (this.isFirstLogin && event instanceof NavigationStart) {
         if (!event.url.includes('/profile')) {
           this.router.navigate(['/profile']);
-          alert('Vous devez compléter votre profil avant de naviguer ailleurs.');
+          this.showErrorMessage('Vous devez compléter votre profil avant de naviguer ailleurs.');
+          this.scrollToTop();
         }
       }
     });
+  }
+
+  private clearMessages(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.fieldErrors = {};
+  }
+
+  private showErrorMessage(message: string): void {
+    this.errorMessage = message;
+
+    setTimeout(() => this.errorMessage = '', 5000); // Disappears after 5 seconds
+  }
+
+  private showSuccessMessage(message: string): void {
+    this.successMessage = message;
+    this.scrollToTop();
+    setTimeout(() => this.successMessage = '', 5000); // Disappears after 5 seconds
   }
 
   createForm(): void {
@@ -82,19 +107,20 @@ export class ProfileComponent implements OnInit {
   }
 
   loadProfile(): void {
-    this.profileService.getCurrentUser().subscribe(
-      (profile) => {
+    this.profileService.getCurrentUser().subscribe({
+      next: (profile) => {
         this.userProfile = profile;
         this.currentRole = profile.role;
         this.isFirstLogin = profile.firstLogin;
         this.initializeFormBasedOnRole(profile);
         this.isLoading = false;
       },
-      (error) => {
+      error: (error) => {
         console.error('Error loading profile', error);
         this.isLoading = false;
+        this.showErrorMessage('Erreur lors du chargement du profil. Veuillez réessayer.');
       }
-    );
+    });
   }
 
   private initializeFormBasedOnRole(profile: UserProfile): void {
@@ -127,7 +153,13 @@ export class ProfileComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       if (file.size > 7 * 1024 * 1024) {
-        alert('La taille du fichier dépasse 7MB');
+        this.showErrorMessage('La taille du fichier dépasse 7MB');
+        return;
+      }
+      
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        this.showErrorMessage('Type de fichier non supporté. Veuillez uploader une image (JPEG, PNG ou GIF)');
         return;
       }
       
@@ -136,36 +168,52 @@ export class ProfileComponent implements OnInit {
         const base64Image = e.target.result.split(',')[1];
         this.profileForm.patchValue({ photo: base64Image });
         this.userProfile.photo = base64Image;
+        this.formModified = true;
+      };
+      reader.onerror = () => {
+        this.showErrorMessage('Erreur lors de la lecture du fichier');
       };
       reader.readAsDataURL(file);
     }
   }
 
   onSubmit(): void {
-     if (this.isFirstLogin) {
+    this.clearMessages();
+    
+    if (this.isFirstLogin) {
       let requiredFields: string[];
 
-    // Mark all required fields as touched to show errors
-    if (this.currentRole === 'MEMBER') {
-      requiredFields = ['nom', 'prenom', 'email', 'cin', 'filiere', 'niveau', 'sexe', 'formation', 'password'];
-    } else if (this.currentRole === 'ADMIN') {
-      requiredFields = ['nom', 'prenom', 'email', 'cin', 'sexe', 'password'];
-    } else if (this.currentRole === 'MANAGER') {
-      requiredFields = ['email', 'password']; // Managers only need email and password
-    }
-    let hasErrors = false;
-    
-    requiredFields.forEach(field => {
-      if (!this.profileForm.get(field).value) {
-        this.profileForm.get(field).markAsTouched();
+      if (this.currentRole === 'MEMBER') {
+        requiredFields = ['nom', 'prenom', 'email', 'cin', 'filiere', 'niveau', 'sexe', 'formation'];
+      } else if (this.currentRole === 'ADMIN') {
+        requiredFields = ['nom', 'prenom', 'email', 'cin', 'sexe'];
+      } else if (this.currentRole === 'MANAGER') {
+        requiredFields = ['email'];
+      }
+
+      let hasErrors = false;
+      this.fieldErrors = {};
+      
+      requiredFields.forEach(field => {
+        if (!this.profileForm.get(field).value) {
+          this.fieldErrors[field] = 'Ce champ est obligatoire';
+          this.profileForm.get(field).markAsTouched();
+          hasErrors = true;
+        }
+      });
+
+      // Vérification spéciale pour le mot de passe lors du premier login
+      if (!this.profileForm.get('password').value) {
+        this.fieldErrors['password'] = 'Vous devez définir un mot de passe';
+        this.profileForm.get('password').markAsTouched();
         hasErrors = true;
       }
-    });
-    if (hasErrors) {
-      alert('Veuillez remplir tous les champs obligatoires');
-      return;
+
+      if (hasErrors) {
+        this.showErrorMessage('Veuillez remplir tous les champs obligatoires');
+        return;
+      }
     }
-  }
 
     this.isSubmitting = true;
     const formData = this.filterDataByRole(this.profileForm.getRawValue());
@@ -174,14 +222,29 @@ export class ProfileComponent implements OnInit {
       const { currentPassword, password, confirmPassword } = formData;
 
       if (password || confirmPassword) {
-        if (password !== confirmPassword) {
-          alert('Les mots de passe ne correspondent pas');
+        if (!currentPassword) {
+          this.fieldErrors['currentPassword'] = 'Le mot de passe actuel est requis';
+          this.profileForm.get('currentPassword').markAsTouched();
           this.isSubmitting = false;
+          this.showErrorMessage('Le mot de passe actuel est requis pour changer le mot de passe');
           return;
         }
-        if (currentPassword === password) {
-          alert('Le nouveau mot de passe doit être différent');
+        
+        if (password !== confirmPassword) {
+          this.fieldErrors['confirmPassword'] = 'Les mots de passe ne correspondent pas';
+          this.profileForm.get('confirmPassword').markAsTouched();
           this.isSubmitting = false;
+          this.showErrorMessage('Les mots de passe ne correspondent pas');
+          this.scrollToTop();
+          return;
+        }
+        
+        if (currentPassword === password) {
+          this.fieldErrors['password'] = 'Le nouveau mot de passe doit être différent';
+          this.profileForm.get('password').markAsTouched();
+          this.isSubmitting = false;
+          this.showErrorMessage('Le nouveau mot de passe doit être différent de l\'actuel');
+          this.scrollToTop();
           return;
         }
       }
@@ -194,25 +257,50 @@ export class ProfileComponent implements OnInit {
         cleanedData[key] = profileData[key];
       }
     });
+    
     if (!cleanedData['password']) {
       delete cleanedData['currentPassword'];
     }
   
-  
-    const update$ = this.profileService.updateProfile(cleanedData);
-
-    update$.subscribe({
+    this.profileService.updateProfile(cleanedData).subscribe({
       next: (updatedProfile) => {
         this.userProfile = updatedProfile;
         this.isFirstLogin = false;
         this.isSubmitting = false;
-        alert('Profil mis à jour avec succès!');
-        this.router.navigate(['dashboard/default']);
+        this.formModified = false;
+        this.showSuccessMessage('Profil mis à jour avec succès!');
+        this.scrollToTop();
+        
+       
+          this.router.navigate(['dashboard/default']);
+        
       },
       error: (error) => {
         console.error('Erreur de mise à jour:', error);
         this.isSubmitting = false;
-        alert('Erreur: ' + (error.error?.message || error.message));
+        
+        if (error.status === 400) {
+          // Gestion des erreurs de validation du serveur
+          if (error.error.errors) {
+            Object.keys(error.error.errors).forEach(key => {
+              this.fieldErrors[key] = error.error.errors[key];
+              this.profileForm.get(key)?.markAsTouched();
+            });
+            this.showErrorMessage('Veuillez corriger les erreurs dans le formulaire');
+            this.scrollToTop();
+          } else {
+            this.showErrorMessage(error.error.message || 'Erreur lors de la mise à jour du profil');
+            this.scrollToTop();
+          }
+        } else if (error.status === 401) {
+          this.showErrorMessage('Mot de passe actuel incorrect');
+          this.scrollToTop();
+          this.fieldErrors['currentPassword'] = 'Mot de passe incorrect';
+          this.profileForm.get('currentPassword').markAsTouched();
+        } else {
+          this.showErrorMessage('Une erreur est survenue. Veuillez réessayer plus tard.');
+          this.scrollToTop();
+        }
       }
     });
   }
@@ -248,7 +336,8 @@ export class ProfileComponent implements OnInit {
 
   checkUnsavedChanges(): void {
     if (this.isFirstLogin) {
-      alert('Vous devez compléter votre profil avant de quitter cette page.');
+      this.showErrorMessage('Vous devez compléter votre profil avant de quitter cette page.');
+      this.scrollToTop();
       return;
     }
 
@@ -268,19 +357,22 @@ export class ProfileComponent implements OnInit {
       event.returnValue = 'Vous avez des modifications non enregistrées';
     }
   }
+
   formatImage(user: UserProfile | null): string {
     if (!user || !user.photo) {
       return 'assets/images/default-profile.png';
     }
   
-    // Check if the photo already starts with "data:image/"
     if (user.photo.startsWith('data:image/')) {
-      return user.photo; // Already has the header, return directly
+      return user.photo;
     }
   
-    // Otherwise, add the header manually
     return 'data:image/jpeg;base64,' + user.photo;
   }
-
-  
+  private scrollToTop() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth' // Pour un défilement doux
+    });
+  }
 }

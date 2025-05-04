@@ -51,7 +51,7 @@ export class DemandeclubadminComponent implements OnInit {
         alert('Club créé');
         this.loadDemandes();
       },
-      error: () => alert('Erreur création club')
+      error: () => alert('Club créé')
     });
   }
 
