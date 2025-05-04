@@ -50,7 +50,7 @@ public class ParticipantService {
 public List<Participant> findByEventName(String eventName) {
     return participantRepository.findByEventName(eventName);
 }
-
+/* 
 public void approveParticipant(Long id) {
     Participant participant = participantRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Participant non trouvé avec l'id: " + id));
@@ -63,6 +63,20 @@ public void rejectParticipant(Long id) {
     Participant participant = participantRepository.findById(id)
         .orElseThrow(() -> new RuntimeException("Participant non trouvé avec l'id: " + id));
     
+    participant.setStatus("REJECTED");
+    participantRepository.save(participant);
+}
+*/
+public void approveParticipant(Long id) {
+    Participant participant = participantRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Participant non trouvé"));
+    participant.setStatus("APPROVED");
+    participantRepository.save(participant);
+}
+
+public void rejectParticipant(Long id) {
+    Participant participant = participantRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("Participant non trouvé"));
     participant.setStatus("REJECTED");
     participantRepository.save(participant);
 }

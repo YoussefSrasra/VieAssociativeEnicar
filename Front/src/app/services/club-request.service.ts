@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders ,HttpParams } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { map ,tap } from 'rxjs/operators';
+import { AuthServiceService } from './auth-service.service';
 
 interface EventRequest {
   id?: number;
@@ -18,10 +19,7 @@ interface EventRequest {
   needEquipment: boolean;
   equipmentDescription?: string;
   status?: string;
-  club: {
-    id: number;
-    name?: string;  // optionnel si seulement l'ID est requis pour la création
-  };
+
 }
 
 interface EventRequestDTO{
@@ -40,13 +38,38 @@ interface EventRequestDTO{
   providedIn: 'root'
 })
 export class ClubRequestService {
-  private apiUrl = 'http://localhost:8080/api/event-requests';
-  private clubsUrl = 'http://localhost:8080/api/clubs';
+  private apiUrl = 'http://localhost:8081/api/event-requests';
+  private clubsUrl = 'http://localhost:8081/api/clubs';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient ,    private authService: AuthServiceService // Injectez AuthService
+  ) { }
+
+private getHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
 
   createEventRequest(eventRequest: EventRequest): Observable<EventRequest> {
-    return this.http.post<EventRequest>(this.apiUrl, eventRequest);
+    // Récupère l'ID du club de l'utilisateur connecté
+    const clubId = this.authService.getCurrentUserClubId();
+
+    return this.http.post<EventRequest>(
+      this.apiUrl,
+      {
+        ...eventRequest,
+        club: { id: clubId } // Ajoute l'ID du club automatiquement
+      },
+      { headers: this.getHeaders() }
+    );
+  }
+  participateInEvent(eventId: number): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/events/${eventId}/participate`, {});
   }
 
   getEventRequests(): Observable<EventRequest[]> {
@@ -114,4 +137,13 @@ getAcceptedEventsByClub(clubId : number): Observable<EventRequestDTO[]>{
   return this.http.get<EventRequestDTO[]>(`${this.apiUrl}/approved/club/${clubId}`).pipe(
     tap(data => console.log(`API response for approved/club/${clubId}`, data)))
 }
+
+getEventsByIds(eventIds: number[]): Observable<EventRequestDTO[]> {
+  let params = new HttpParams();
+
+  params = params.append('ids', eventIds.join(',')); // Convertit [1, 2, 3] en "1,2,3"
+  return this.http.get<EventRequestDTO[]>(`${this.apiUrl}/by-ids`, { params });
+}
+
+
 }

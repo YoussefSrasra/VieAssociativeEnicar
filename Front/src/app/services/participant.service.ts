@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient,HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs'; // Ajout de throwError
 import { catchError, map } from 'rxjs/operators';
 
@@ -26,7 +26,7 @@ interface Participant {
   providedIn: 'root'
 })
 export class ParticipantService {
-  private apiUrl = 'http://localhost:8080/api/participants';
+  private apiUrl = 'http://localhost:8081/api/participants';
 
   constructor(private http: HttpClient) { }
 
@@ -71,21 +71,31 @@ getParticipantsByEvent(eventName: string): Observable<Participant[]> {
       error.error?.message || 'Server error occurred'
     ));
   }
-  approveParticipant(id: number): Observable<void> {
-    const url = `${this.apiUrl}/${id}/approve`;
-    console.log("URL de la requête PATCH :", url);  // Affiche l'URL dans la console
-    return this.http.patch<void>(url, {}).pipe(
-      catchError((error) => {
-        console.error('Erreur lors de l\'approbation:', error);
-        return throwError(() => new Error(error.error?.message || 'Erreur serveur'));
+  approveParticipant(id: number): Observable<any> {
+    const url = `http://localhost:8081/api/participants/${id}/approve`;
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    });
+
+    return this.http.patch(url, {}, { headers, withCredentials: true }).pipe(
+      catchError(error => {
+        console.error('Erreur complète:', error);
+        if (error.status === 0) {
+          throw new Error('Impossible de se connecter au serveur. Vérifiez que le backend est démarré et accessible.');
+        }
+        throw error;
       })
     );
   }
 
   rejectParticipant(id: number): Observable<void> {
-    return this.http.patch<void>(
-      `${this.apiUrl}/${id}/reject`,
-      {}
+    const url = `${this.apiUrl}/${id}/reject`;
+    return this.http.patch<void>(url, {}).pipe(
+      catchError((error) => {
+        console.error('Erreur lors du refus:', error);
+        return throwError(() => new Error(error.error?.message || 'Erreur serveur'));
+      })
     );
   }
 

@@ -1,0 +1,55 @@
+/* Styles globaux */
+.container-fluid {
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 56px);
+}
+
+.card {
+  transition: all 0.3s ease;
+  &:hover {
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Form elements */
+.form-control, .input-group-text {
+  border-radius: 8px !important;
+  transition: all 0.2s ease;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+  border-color: #86b7fe;
+}
+
+.invalid-feedback {
+  font-size: 0.8rem;
+}
+
+/* Bouton */
+.btn-primary {
+  background-color: #0d6efd;
+  border: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #0b5ed7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+  }
+
+  &:disabled {
+    background-color: #86b7fe;
+    cursor: not-allowed;
+  }
+}
+
+/* Input number specific */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+}

@@ -50,8 +50,11 @@ public class EventRequestController {
     
     
 
-
- 
+    @GetMapping("/by-ids")
+    public ResponseEntity<List<EventRequestDTO>> getEventsByIds(@RequestParam("ids") List<Long> eventIds) {
+        List<EventRequestDTO> events = eventRequestService.getEventsByIds(eventIds);
+        return ResponseEntity.ok(events);
+    }
 
 
 

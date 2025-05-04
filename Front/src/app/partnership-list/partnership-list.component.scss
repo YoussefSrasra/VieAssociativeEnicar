@@ -1,0 +1,110 @@
+/* Styles globaux */
+.container-fluid {
+  background-color: #f8f9fa;
+}
+
+/* Carte */
+.card {
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.08);
+  }
+}
+
+/* Tableau */
+.table {
+  th {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+
+  td {
+    vertical-align: middle;
+    padding: 1rem;
+    border-color: #f0f2f5;
+  }
+
+  tr:last-child {
+    border-bottom: none;
+  }
+}
+
+/* Badges */
+.badge {
+  padding: 0.35em 0.65em;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Boutons */
+.btn {
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.825rem;
+  }
+
+  &-outline-primary:hover {
+    background-color: var(--bs-primary);
+    color: white;
+  }
+}
+
+/* Icônes */
+.fas {
+  margin-right: 0.25rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .table-responsive {
+    border: 0;
+
+    table {
+      display: block;
+      width: 100%;
+    }
+
+    thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    thead tr {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+    }
+
+    tr {
+      border: 1px solid #dee2e6;
+      margin-bottom: 1rem;
+    }
+
+    td {
+      border: none;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      padding-left: 50%;
+      text-align: right;
+
+      &:before {
+        position: absolute;
+        left: 1rem;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: 600;
+        content: attr(data-label);
+      }
+    }
+  }
+}

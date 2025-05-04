@@ -4,8 +4,8 @@
 
 @for (item of item().children; track item) {
   @if (item.type === 'collapse') {
-    <app-nav-collapse 
-      [item]="item" 
+    <app-nav-collapse
+      [item]="item"
       (dynamicCollapseClick)="dynamicCollapseClick.emit($event)"> <!-- 👈 emit upward -->
     </app-nav-collapse>
   } @else if (item.type === 'item') {

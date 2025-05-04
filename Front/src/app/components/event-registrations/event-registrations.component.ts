@@ -96,19 +96,7 @@ export class EventRegistrationsComponent implements OnInit {
     );
   }
 
-  sendReminder(event: any): void {
-    if (confirm(`Envoyer un rappel pour ${event.eventName} ?`)) {
-      this.participantService.sendReminder(event.id).subscribe({
-        next: () => {
-          alert(`Rappel envoyé aux ${event.registeredCount} participants !`);
-        },
-        error: (err) => {
-          console.error('Erreur:', err);
-          alert('Erreur lors de l\'envoi des rappels');
-        }
-      });
-    }
-  }
+
 
   exportParticipants(): void {
     if (!this.selectedEvent) return;
@@ -134,35 +122,6 @@ export class EventRegistrationsComponent implements OnInit {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
-  }
-  approveParticipant(participantId: number) {
-    if (confirm('Confirmez l\'approbation de ce participant ?')) {
-      this.participantService.approveParticipant(participantId).subscribe({
-        next: () => {
-          alert('Participant approuvé avec succès');
-          this.refreshParticipants();
-        },
-        error: (err) => {
-          alert('Erreur lors de l\'approbation');
-          console.error(err);
-        }
-      });
-    }
-  }
-
-  rejectParticipant(participantId: number) {
-    if (confirm("Confirmez le refus de ce participant ?")) {
-      this.participantService.rejectParticipant(participantId).subscribe({
-        next: () => {
-          alert("Participant refusé avec succès");
-          this.refreshParticipants();
-        },
-        error: (err) => {
-          alert("Erreur lors du refus");
-          console.error(err);
-        }
-      });
-    }
   }
 
 

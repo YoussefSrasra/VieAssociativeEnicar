@@ -7,7 +7,7 @@ import { UserProfile } from './models/profile.model';
   providedIn: 'root'
 })
 export class ProfileService {
-  private apiUrl = 'http://localhost:8080/api/public';
+  private apiUrl = 'http://localhost:8081/api/public';
 
   constructor(private http: HttpClient) { }
 
@@ -25,20 +25,20 @@ export class ProfileService {
   }
   private cleanProfileData(data: any): any {
     const cleanedData: any = {};
-    
+
     // Only include fields that have values
     Object.keys(data).forEach(key => {
       if (data[key] !== null && data[key] !== undefined && data[key] !== '') {
         cleanedData[key] = data[key];
       }
     });
-  
+
     // Special handling for password fields
     if (!cleanedData.password) {
       delete cleanedData.currentPassword;
       delete cleanedData.password;
     }
-  
+
     return cleanedData;
   }
 
