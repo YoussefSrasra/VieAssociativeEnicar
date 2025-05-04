@@ -211,6 +211,13 @@ import com.dev.backdev.Enums.ClubRole;
                 .collect(Collectors.toList());
         }
 
+        public List<String> getAdminEmails() {
+            // Assuming you have a UserRepository and Admin role is stored in user roles
+            return userRepository.findByRole("ADMIN")
+                                 .stream()
+                                 .map(User::getEmail)
+                                 .collect(Collectors.toList());
+        }
         // 4. Get user by username
         public Optional<UserResponseDto> getUserByUsername(String username) {
             return userRepository.findByUsername(username)

@@ -159,4 +159,9 @@ public class AuthController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/admin-emails")
+    public ResponseEntity<List<String>> getAdminEmails() {
+        return ResponseEntity.ok(authService.getAdminEmails());
+    }
+
 }

@@ -2,7 +2,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-
 // Project import
 import { NavigationItem } from '../../navigation';
 
@@ -17,15 +16,20 @@ import { IconDirective } from '@ant-design/icons-angular';
 export class NavItemComponent {
   // public props
   @Input() item!: NavigationItem;
-
+  
   // public method
   closeOtherMenu(event: MouseEvent) {
     const ele = event.target as HTMLElement;
 
-    if (this.item?.id?.startsWith('club-')) {
-      console.log('Storing selected club ID to localStorage:', this.item.id);
-      localStorage.setItem('selectedClubId', this.item.id);
-    }
+    // if (this.item?.id?.startsWith('club-')) {
+    //   console.log('Storing selected club ID to localStorage:', this.item.id);
+    //   console.log('Hiba Test:', this.item.id);
+    //   const match = this.item.id.match(/^club-(\d+)$/);
+    //   if (match) {
+    //     this.clubSelectionService.setSelectedClubId(+match[1]);
+    //   }
+    //   localStorage.setItem('selectedClubId', this.item.id);
+    // }
     if (ele !== null && ele !== undefined) {
       const parent = ele.parentElement as HTMLElement;
       const up_parent = ((parent.parentElement as HTMLElement).parentElement as HTMLElement).parentElement as HTMLElement;
