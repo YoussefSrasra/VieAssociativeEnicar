@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { CardComponent } from '../../shared/components/card/card.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { PartnerService } from '../../services/partner.service'; // Assure-toi du chemin correct vers ton service
-import { CommonModule } from '@angular/common'; // Importation de CommonModule si nécessaire
+import { PartnerService } from '../../services/partner.service';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-partnerships',
   standalone: true,
-  imports: [CardComponent, ReactiveFormsModule,CommonModule],
+  imports: [CardComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './partnerships.component.html',
   styleUrls: ['./partnerships.component.scss']
 })
@@ -30,73 +31,96 @@ export class PartnershipsComponent implements OnInit {
     'Partenaire Académique'
   ];
 
-  partners: any[] = [];  // Liste des partenaires
+  partners: any[] = [];
   editingPartner: any = null;
+
+  successMessage: string | null = null;
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private partnerService: PartnerService) {}
 
   ngOnInit() {
-    this.loadPartners();  // Charger les partenaires au démarrage
+    this.loadPartners();
   }
 
-  // Charger la liste des partenaires
   loadPartners() {
     this.partnerService.getAllPartners().subscribe(
       (data) => {
         this.partners = data;
       },
       (error) => {
-        console.error('Erreur lors du chargement des partenaires', error);
+        this.showError('Erreur lors du chargement des partenaires');
+        console.error(error);
       }
     );
   }
 
-  // Soumettre le formulaire
   onSubmit() {
     if (this.partnershipForm.valid) {
       const formData = this.partnershipForm.value;
 
       if (this.editingPartner) {
-        // Mise à jour du partenaire existant
         this.partnerService.updatePartner(this.editingPartner.id, formData).subscribe(
           () => {
-            this.loadPartners();  // Recharger les partenaires après mise à jour
+            this.loadPartners();
+            this.showSuccess('Partenaire mis à jour avec succès !');
             this.resetForm();
           },
-          (error) => console.error('Erreur lors de la mise à jour du partenaire', error)
+          (error) => {
+            this.showError('Erreur lors de la mise à jour du partenaire');
+            console.error(error);
+          }
         );
       } else {
-        // Ajouter un nouveau partenaire
         this.partnerService.createPartner(formData).subscribe(
           () => {
-            this.loadPartners();  // Recharger les partenaires après ajout
+            this.loadPartners();
+            this.showSuccess('Partenaire ajouté avec succès !');
             this.resetForm();
           },
-          (error) => console.error('Erreur lors de l\'ajout du partenaire', error)
+          (error) => {
+            this.showError('Erreur lors de l\'ajout du partenaire');
+            console.error(error);
+          }
         );
       }
     }
   }
 
-  // Modifier un partenaire
   editPartner(partner: any) {
     this.editingPartner = partner;
     this.partnershipForm.patchValue(partner);
   }
 
-  // Supprimer un partenaire
   deletePartner(id: number) {
     this.partnerService.deletePartner(id).subscribe(
       () => {
-        this.loadPartners();  // Recharger les partenaires après suppression
+        this.loadPartners();
+        this.showSuccess('Partenaire supprimé avec succès !');
       },
-      (error) => console.error('Erreur lors de la suppression du partenaire', error)
+      (error) => {
+        this.showError('Erreur lors de la suppression du partenaire');
+        console.error(error);
+      }
     );
   }
 
-  // Réinitialiser le formulaire
   resetForm() {
     this.partnershipForm.reset();
     this.editingPartner = null;
+  }
+
+  private showSuccess(message: string) {
+    this.successMessage = message;
+    this.errorMessage = null;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => this.successMessage = null, 3000);
+  }
+
+  private showError(message: string) {
+    this.errorMessage = message;
+    this.successMessage = null;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => this.errorMessage = null, 5000);
   }
 }

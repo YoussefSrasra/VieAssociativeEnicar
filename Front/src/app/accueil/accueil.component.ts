@@ -49,6 +49,9 @@ export class AccueilComponent implements OnInit {
   selectedEvent: Event | null = null;
   showModal: boolean = false;
   modalEvent: Event | null = null;
+  successMessage: string | null = null;
+errorMessage: string | null = null;
+
 
   constructor(
     private eventService: EventLaunchService,
@@ -118,20 +121,41 @@ export class AccueilComponent implements OnInit {
   }
 
   onSubmit(form: NgForm): void {
+    this.successMessage = null;
+    this.errorMessage = null;
+  
+    const emailPattern = /^[a-zA-Z]+\.[a-zA-Z]+@enicar\.ucar\.tn$/;
+  
+    if (!emailPattern.test(this.formData.email)) {
+      this.errorMessage = "Veuillez entrer un email au format nom.prenom@enicar.ucar.tn";
+     
+      return;
+    }
+  
     if (form.valid && this.selectedEvent) {
       this.participantService.registerParticipant(this.formData).subscribe({
-        next: (response) => {
-          alert('Inscription réussie !');
+        next: () => {
+          this.successMessage = 'Inscription réussie !';
+          this.errorMessage = null;
+         
           form.resetForm();
           this.selectedEvent = null;
         },
-        error: (err) => {
-          console.error('Erreur:', err);
-          alert('Une erreur est survenue');
+        error: () => {
+          this.errorMessage = 'Une erreur est survenue lors de l\'inscription.';
+          this.successMessage = null;
+        
         },
       });
+    } else {
+      this.errorMessage = 'Veuillez remplir correctement le formulaire.';
+      this.successMessage = null;
+      
     }
   }
+  
+  
+  
 
   scrollTo(sectionId: string) {
     const element = document.getElementById(sectionId);
