@@ -3,17 +3,13 @@ import { RouterModule } from '@angular/router';
 import { LoginService } from 'src/app/login.service';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { catchError, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
 import { UserProfile } from 'src/app/profile/models/profile.model';
 import { ProfileService } from 'src/app/profile/profile.service';
 
-
 @Component({
   selector: 'app-auth-login',
-  imports: [RouterModule, FormsModule,CommonModule],
+  imports: [RouterModule, FormsModule, CommonModule],
   templateUrl: './auth-login.component.html',
   styleUrl: './auth-login.component.scss'
 })
@@ -23,6 +19,9 @@ export class AuthLoginComponent {
   errorMessage = '';
   isFirstLogin = true;
   userProfile: UserProfile | null = null;
+  adminEmails: string[] = [];
+  loadingEmails = false;
+  showForgotPasswordModal = false;
 
   constructor(
     private loginService: LoginService,
@@ -64,6 +63,25 @@ export class AuthLoginComponent {
         }
       });
   }
-  
-  
+
+  openForgotPasswordModal() {
+    this.loadingEmails = true;
+    this.showForgotPasswordModal = true;
+    
+    this.loginService.getAdminEmails().subscribe({
+      next: (emails) => {
+        this.adminEmails = emails;
+        this.loadingEmails = false;
+      },
+      error: (err) => {
+        console.error('Failed to fetch admin emails', err);
+        this.loadingEmails = false;
+        this.errorMessage = 'Failed to load admin emails';
+      }
+    });
+  }
+
+  closeForgotPasswordModal() {
+    this.showForgotPasswordModal = false;
+  }
 }

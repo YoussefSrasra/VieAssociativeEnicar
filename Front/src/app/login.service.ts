@@ -67,6 +67,10 @@ export class LoginService {
     // Optional: emit via a BehaviorSubject if multiple components depend on it
   }
 
+  getAdminEmails() {
+    return this.http.get<string[]>('http://localhost:8080/api/public/admin-emails');
+}
+
   logout(): void {
     localStorage.removeItem('token');
     localStorage.removeItem('role');

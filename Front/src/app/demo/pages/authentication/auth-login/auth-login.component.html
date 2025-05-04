@@ -46,12 +46,40 @@
 
             <div class="d-flex mt-3 justify-content-between">
               <h5 class="text-secondary f-w-400">
-                <a href="javascript:">Forgot Password?</a>
+                <a href="javascript:" (click)="openForgotPasswordModal()">Forgot Password?</a>
               </h5>
             </div>
 
             <div class="d-grid mt-4">
               <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <div *ngIf="showForgotPasswordModal" class="modal-overlay">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Password Reset</h5>
+                    <button type="button" class="close-btn" (click)="closeForgotPasswordModal()">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <p>In Order To Reset Your Password, Please contact one of these admins through their emails:</p>
+                    
+                    <div *ngIf="loadingEmails" class="loading-spinner">
+                      Loading admin emails...
+                    </div>
+                    
+                    <ul *ngIf="adminEmails.length > 0 && !loadingEmails">
+                      <li *ngFor="let email of adminEmails">{{ email }}</li>
+                    </ul>
+                    
+                    <div *ngIf="adminEmails.length === 0 && !loadingEmails" class="no-emails">
+                      No admin emails found
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeForgotPasswordModal()">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </form>
 
