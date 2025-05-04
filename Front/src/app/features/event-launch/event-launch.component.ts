@@ -85,8 +85,15 @@ export class EventLaunchComponent {
   private showSuccessAlert(): void {
     this.successMessage = 'Événement créé avec succès ! 🎉';
     this.errorMessage = '';
+    
+    // Scroll to top avec animation smooth
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+    
     setTimeout(() => this.successMessage = '', 3000); // Disparaît après 3s
-  }
+}
 
   private showErrorAlert(error: any): void {
     this.errorMessage = error.message || 'Une erreur est survenue ❌';
