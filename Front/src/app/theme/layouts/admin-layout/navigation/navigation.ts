@@ -189,7 +189,7 @@ export const NavigationItems: NavigationItem[] = [
       },*/
      
 
-      },
+      
 
       {
         id: 'feedback-list  ',
@@ -229,4 +229,4 @@ export const NavigationItems: NavigationItem[] = [
    
 
 
-  
+  }]
