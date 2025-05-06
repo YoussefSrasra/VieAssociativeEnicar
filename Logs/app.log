@@ -1,0 +1,74 @@
+2025-05-06T10:58:16.926+01:00  INFO 16828 --- [backdev] [main] com.dev.backdev.BackdevApplication       : Starting BackdevApplication using Java 17.0.12 with PID 16828 (C:\Users\lenovo\Desktop\Vie Associative Enicar\Back\target\classes started by lenovo in C:\Users\lenovo\Desktop\Vie Associative Enicar)
+2025-05-06T10:58:16.933+01:00  INFO 16828 --- [backdev] [main] com.dev.backdev.BackdevApplication       : No active profile set, falling back to 1 default profile: "default"
+2025-05-06T10:58:18.571+01:00  INFO 16828 --- [backdev] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-06T10:58:18.832+01:00  INFO 16828 --- [backdev] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 243 ms. Found 13 JPA repository interfaces.
+2025-05-06T10:58:20.118+01:00  INFO 16828 --- [backdev] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-06T10:58:20.140+01:00  INFO 16828 --- [backdev] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-06T10:58:20.142+01:00  INFO 16828 --- [backdev] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-06T10:58:20.265+01:00  INFO 16828 --- [backdev] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-06T10:58:20.267+01:00  INFO 16828 --- [backdev] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3180 ms
+2025-05-06T10:58:20.622+01:00  INFO 16828 --- [backdev] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-06T10:58:20.718+01:00  INFO 16828 --- [backdev] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2025-05-06T10:58:20.786+01:00  INFO 16828 --- [backdev] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-06T10:58:21.188+01:00  INFO 16828 --- [backdev] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-06T10:58:21.240+01:00  INFO 16828 --- [backdev] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-06T10:58:22.017+01:00  INFO 16828 --- [backdev] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@165aa43a
+2025-05-06T10:58:22.020+01:00  INFO 16828 --- [backdev] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-06T10:58:22.170+01:00  INFO 16828 --- [backdev] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-06T10:58:23.840+01:00  INFO 16828 --- [backdev] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-06T10:58:24.014+01:00  INFO 16828 --- [backdev] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-06T10:58:24.554+01:00  INFO 16828 --- [backdev] [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-06T10:58:25.904+01:00  WARN 16828 --- [backdev] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-06T10:58:26.245+01:00  INFO 16828 --- [backdev] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2025-05-06T10:58:26.750+01:00  INFO 16828 --- [backdev] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-06T10:58:26.761+01:00  INFO 16828 --- [backdev] [main] com.dev.backdev.BackdevApplication       : Started BackdevApplication in 10.882 seconds (process running for 11.508)
+2025-05-06T10:58:32.438+01:00  INFO 16828 --- [backdev] [http-nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-06T10:58:32.439+01:00  INFO 16828 --- [backdev] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-05-06T10:58:32.444+01:00  INFO 16828 --- [backdev] [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2025-05-06T10:58:32.708+01:00  INFO 16828 --- [backdev] [http-nio-8080-exec-1] c.d.b.Auth.controller.AuthController     : Login attempt for user: ArijSouissi
+2025-05-06T10:58:32.945+01:00  INFO 16828 --- [backdev] [http-nio-8080-exec-1] c.d.b.Auth.controller.AuthController     : Authentication successful for user: ArijSouissi
+2025-05-06T11:01:46.860+01:00  INFO 17400 --- [backdev] [main] com.dev.backdev.BackdevApplication       : Starting BackdevApplication using Java 17.0.12 with PID 17400 (C:\Users\lenovo\Desktop\Vie Associative Enicar\Back\target\classes started by lenovo in C:\Users\lenovo\Desktop\Vie Associative Enicar)
+2025-05-06T11:01:46.864+01:00 DEBUG 17400 --- [backdev] [main] com.dev.backdev.BackdevApplication       : Running with Spring Boot v3.5.0-SNAPSHOT, Spring v6.2.6
+2025-05-06T11:01:46.866+01:00  INFO 17400 --- [backdev] [main] com.dev.backdev.BackdevApplication       : No active profile set, falling back to 1 default profile: "default"
+2025-05-06T11:01:47.997+01:00  INFO 17400 --- [backdev] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-06T11:01:48.221+01:00  INFO 17400 --- [backdev] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 209 ms. Found 13 JPA repository interfaces.
+2025-05-06T11:01:49.008+01:00  INFO 17400 --- [backdev] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-05-06T11:01:49.025+01:00  INFO 17400 --- [backdev] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-05-06T11:01:49.026+01:00  INFO 17400 --- [backdev] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2025-05-06T11:01:49.102+01:00  INFO 17400 --- [backdev] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-05-06T11:01:49.103+01:00  INFO 17400 --- [backdev] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2170 ms
+2025-05-06T11:01:49.307+01:00  INFO 17400 --- [backdev] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-06T11:01:49.394+01:00  INFO 17400 --- [backdev] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2025-05-06T11:01:49.454+01:00  INFO 17400 --- [backdev] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-06T11:01:49.921+01:00  INFO 17400 --- [backdev] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-06T11:01:49.967+01:00  INFO 17400 --- [backdev] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-06T11:01:50.334+01:00  INFO 17400 --- [backdev] [main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@40538370
+2025-05-06T11:01:50.337+01:00  INFO 17400 --- [backdev] [main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-06T11:01:50.449+01:00  INFO 17400 --- [backdev] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 8.0.41
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-06T11:01:51.843+01:00  INFO 17400 --- [backdev] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-05-06T11:01:52.008+01:00  INFO 17400 --- [backdev] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-06T11:01:52.473+01:00 DEBUG 17400 --- [backdev] [main] c.d.b.A.s.JwtAuthenticationFilter        : Filter 'jwtAuthenticationFilter' configured for use
+2025-05-06T11:01:52.624+01:00  INFO 17400 --- [backdev] [main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-06T11:01:53.802+01:00  WARN 17400 --- [backdev] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-05-06T11:01:54.126+01:00  INFO 17400 --- [backdev] [main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImpl
+2025-05-06T11:01:54.574+01:00  INFO 17400 --- [backdev] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-05-06T11:01:54.584+01:00  INFO 17400 --- [backdev] [main] com.dev.backdev.BackdevApplication       : Started BackdevApplication in 8.493 seconds (process running for 8.933)
+2025-05-06T11:01:56.341+01:00  INFO 17400 --- [backdev] [http-nio-8080-exec-4] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-05-06T11:01:56.342+01:00  INFO 17400 --- [backdev] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-05-06T11:01:56.344+01:00  INFO 17400 --- [backdev] [http-nio-8080-exec-4] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2025-05-06T11:01:56.558+01:00  INFO 17400 --- [backdev] [http-nio-8080-exec-4] c.d.b.Auth.controller.AuthController     : Login attempt for user: ArijSouissi
+2025-05-06T11:01:56.806+01:00  INFO 17400 --- [backdev] [http-nio-8080-exec-4] c.d.b.Auth.controller.AuthController     : Authentication successful for user: ArijSouissi

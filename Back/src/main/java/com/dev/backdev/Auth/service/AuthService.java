@@ -232,7 +232,6 @@ import jakarta.transaction.Transactional;
         //         .orElseThrow(() -> new RuntimeException("User not found"));
         // }
 
-        // 4. Get user by username
         public Optional<UserResponseDto> getUserByUsername(String username) {
             return userRepository.findByUsername(username)
                 .map(this::convertToUserResponseDTO);
@@ -262,22 +261,18 @@ import jakarta.transaction.Transactional;
             if (updateDTO.getEmail() != null) user.setEmail(updateDTO.getEmail());
             if (updateDTO.getRole() != null) user.setRole(updateDTO.getRole());
             if (updateDTO.getPassword() != null) {
-                // 1. Verify current password was provided
                 if (updateDTO.getCurrentPassword() == null) {
                     throw new IllegalArgumentException("Current password is required");
                 }
                 
-                // 2. Verify current password matches
                 if (!passwordEncoder.matches(updateDTO.getCurrentPassword(), user.getPassword())) {
                     throw new IllegalArgumentException("Current password is incorrect");
                 }
                 
-                // 3. Validate new password
                 if (updateDTO.getPassword().length() < 8) {
                     throw new IllegalArgumentException("Password must be at least 8 characters");
                 }
                 
-                // 4. Don't allow setting same password
                 if (passwordEncoder.matches(updateDTO.getPassword(), user.getPassword())) {
                     throw new IllegalArgumentException("New password must be different from current password");
                 }
@@ -293,13 +288,9 @@ import jakarta.transaction.Transactional;
             if (updateDTO.getFormation() != null) user.setFormation(updateDTO.getFormation());
             if (updateDTO.getPhoto() != null) user.setPhoto(updateDTO.getPhoto());
 
-            user.setFirstLogin(false); // Mark as completed
+            user.setFirstLogin(false); 
 
-            // Update club (if provided)
-            /*if (updateDTO.getMemberClubNames() != null) {
-                updateClubMemberships(user, updateDTO.getMemberClubNames());
-            }*/
-
+            
             User savedUser = userRepository.save(user);
             return new UserResponseDto(savedUser); // Converts to DTO
         }
@@ -309,7 +300,6 @@ import jakarta.transaction.Transactional;
             !newClubNames.contains(membership.getClub().getName())
             );
             
-            // Ajouter les nouveaux membreships
             newClubNames.forEach(clubName -> {
                 if (user.getClubMemberships().stream()
                     .noneMatch(m -> m.getClub().getName().equals(clubName))) {
@@ -326,19 +316,15 @@ import jakarta.transaction.Transactional;
         }
 
         public User completeProfile(String username, ProfileCompletionDTO dto) {
-            // 1. Find user
             User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
             
-            // 2. Validate it's first login
             if (!user.isFirstLogin()) {
                 throw new IllegalStateException("Profile already completed");
             }
             
-            // 3. Manual validation
             validateProfileCompletion(dto);
             
-            // 4. Update user
             user.setNom(dto.getNom());
             user.setPrenom(dto.getPrenom());
             user.setCin(dto.getCin());
@@ -348,12 +334,11 @@ import jakarta.transaction.Transactional;
             user.setFormation(dto.getFormation());
             user.setPhoto(dto.getPhoto());
             user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
-            user.setFirstLogin(false); // Mark as completed
+            user.setFirstLogin(false); 
             
             return userRepository.save(user);
         }
 
-        // Manual validation
         private void validateProfileCompletion(ProfileCompletionDTO dto) {
             if (dto.getNewPassword() == null || dto.getNewPassword().length() < 8) {
                 throw new IllegalArgumentException("Password must be at least 8 characters");

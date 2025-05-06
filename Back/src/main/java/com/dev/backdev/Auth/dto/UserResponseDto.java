@@ -30,9 +30,9 @@ public class UserResponseDto {
     private Formation formation;
     private String photo;
     private boolean FirstLogin;
-    private String managedClubName; // Nom du club géré (si manager)
-    private Set<String> memberClubNames; // Noms des clubs où l'utilisateur est membre
-    private boolean isManagerAccount; // Indique si c'est un compte manager
+    private String managedClubName; 
+    private Set<String> memberClubNames; 
+    private boolean isManagerAccount; 
 
     public UserResponseDto(User user) {
         this.id = user.getId();
@@ -49,16 +49,15 @@ public class UserResponseDto {
         this.formation = user.getFormation();
         this.photo = user.getPhoto();
         
-        // Détermine si c'est un compte manager
+        
         this.isManagerAccount = user.getResponsibleClub() != null 
             && user.getUsername().equals(user.getResponsibleClub().getName());
         
-        // Club géré (si manager)
+        
         this.managedClubName = user.getResponsibleClub() != null 
             ? user.getResponsibleClub().getName() 
             : null;
             
-        // Clubs où l'utilisateur est membre
         this.memberClubNames = user.getClubMemberships().stream()
             .map(membership -> membership.getClub().getName())
             .collect(Collectors.toSet());

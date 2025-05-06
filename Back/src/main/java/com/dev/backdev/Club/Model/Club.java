@@ -40,7 +40,7 @@ public class Club {
     @Enumerated(EnumType.STRING)
     private ClubStatus status; 
     @Lob
-    @Column(columnDefinition = "LONGTEXT") // For MySQL
+    @Column(columnDefinition = "LONGTEXT") 
     private String logo;
     @OneToOne
     @JoinColumn(name = "responsible_member_id", referencedColumnName = "id")

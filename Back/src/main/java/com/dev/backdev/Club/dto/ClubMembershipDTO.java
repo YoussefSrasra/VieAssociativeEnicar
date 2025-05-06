@@ -25,6 +25,6 @@ public class ClubMembershipDTO {
         this.email = membership.getUser().getEmail();
         this.photo = membership.getUser().getPhoto();
         this.clubName = membership.getClub().getName();
-        this.role = membership.getRole().name(); // Convertit l'énum en chaîne de caractères
+        this.role = membership.getRole().name();
     }
 }

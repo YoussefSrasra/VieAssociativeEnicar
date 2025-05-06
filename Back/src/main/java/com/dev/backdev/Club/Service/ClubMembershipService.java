@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ClubMembershipService {
     private final ClubMembershipRepository membershipRepository;
-    private final UserRepository userRepository; // Assuming you have a UserRepository to fetch users
-    private final ClubRepository clubRepository; // Assuming you have a ClubRepository to fetch clubs
+    private final UserRepository userRepository; 
+    private final ClubRepository clubRepository; 
 
     public ClubMembership createMembership(User user, Club club, ClubRole role) {
         ClubMembership membership = new ClubMembership();

@@ -5,9 +5,8 @@ public class ManagerWithClubDto {
     private String email;
     private String clubName;
     private String clubStatus;
-    private Long clubId; // Ajouté pour permettre la suppression
+    private Long clubId; 
     
-    // Getters and Setters
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
     public String getEmail() { return email; }

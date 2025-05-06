@@ -11,7 +11,6 @@ import com.dev.backdev.Club.Model.ClubMembership;
 
 public interface ClubMembershipRepository extends JpaRepository<ClubMembership, Long> {
     
-    // Requête pour trouver un membership spécifique
     @Query("SELECT m FROM ClubMembership m WHERE m.user.username = :username AND m.club.name = :clubName")
     Optional<ClubMembership> findByUserAndClub(
         @Param("username") String username,
@@ -19,7 +18,6 @@ public interface ClubMembershipRepository extends JpaRepository<ClubMembership, 
     );
     Optional <ClubMembership> findByUserUsernameAndClubId(String username ,Long  clubId);
     
-    // Trouver tous les membreships d'un club
     List<ClubMembership> findByClubName(String clubName);
     List<ClubMembership> findByClubId(Long clubId);
 }

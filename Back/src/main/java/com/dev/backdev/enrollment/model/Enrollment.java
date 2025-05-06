@@ -51,10 +51,9 @@ public class Enrollment {
     private EnrollmentStatus etat;
 
     
-    @Column(name = "club_id") // Juste la colonne ID
-    private Long clubId; // Remplace Club club par Long clubId
+    @Column(name = "club_id") 
+    private Long clubId; 
 
-    // Getters and setters
 
     public EnrollmentStatus getEtat() {
         return etat;

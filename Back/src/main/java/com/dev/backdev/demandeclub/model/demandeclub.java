@@ -1,7 +1,16 @@
 package com.dev.backdev.demandeclub.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -20,12 +29,12 @@ public class demandeclub {
     private String nomClub;
     
     @Column(columnDefinition = "TEXT")
-    private String logoBase64; // Stocke uniquement la chaîne base64 de l'image
+    private String logoBase64; 
     
     @Column(columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Etat etat = Etat.EN_ATTENTE; // Valeur par défaut "EN_ATTENTE"
+    private Etat etat = Etat.EN_ATTENTE; 
 }

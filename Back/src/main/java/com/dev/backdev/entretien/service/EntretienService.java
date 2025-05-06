@@ -33,7 +33,6 @@ public class EntretienService {
         this.entretienRepository = entretienRepository;
     }
 
-    // Méthodes existantes
     public List<Entretien> getAllEntretiens() {
         return entretienRepository.findAll();
     }
@@ -50,7 +49,6 @@ public class EntretienService {
         entretienRepository.deleteById(id);
     }
 
-    // Méthodes ajoutées pour supporter la création automatique
     public boolean existsByEnrollment(Enrollment enrollment) {
         return entretienRepository.existsByEnrollment(enrollment);
     }
@@ -59,7 +57,6 @@ public class EntretienService {
         return entretienRepository.findByEnrollment(enrollment);
     }
 
-    // Version améliorée de updateEntretien
     public Optional<Entretien> updateEntretien(Long id, Entretien entretienDetails) {
         return entretienRepository.findById(id)
                 .map(entretien -> {
@@ -75,7 +72,6 @@ public class EntretienService {
                     }
                     
     
-                    // Optional: if you want confirmation to be updated only when explicitly set, change field type to Boolean
                     entretien.setConfirmation(entretienDetails.isConfirmation());
     
                     if (entretienDetails.getResultat() != null) {
@@ -106,7 +102,6 @@ public class EntretienService {
        Entretien entretien = entretienRepository.findById(entretiensId)
         .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
       long clubid = entretien.getEnrollment().getClubId();
-        // 1. Récupérer le club
             Club cluba = clubService.getClubByIdWithoutDTO(clubid)
             .orElseThrow(() -> new RuntimeException("Club non trouvé"));
 
