@@ -4,5 +4,5 @@ public enum StatutEntretien {
     ACHEVE,
     EN_ATTENTE,
     ANNULE,
-    COMPTE,
+    COMPTE
 }

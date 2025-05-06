@@ -199,6 +199,24 @@ public class ClubService {
         return convertToDTO(club);
     }
 
+    public void assignMemberToClub (String clubName, String username){
+        Club club =  clubRepository.findByName(clubName)
+        .orElseThrow(() -> new RuntimeException("Club not found"));
+        User user = userRepository.findByUsername(username)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+        boolean alreadyMember = club.getMemberships().stream()
+                    .anyMatch(m -> m.getUser().equals(user));
+        if (!alreadyMember) {
+            ClubMembership membership = new ClubMembership();
+            membership.setUser(user);
+            membership.setClub(club);
+            membership.setRole(ClubRole.MEMBER); // Rôle par défaut
+            membershipRepository.save(membership);
+            club.getMemberships().add(membership);
+        }
+
+    }
+
     public ClubDTO removeMembersFromClub(String name, Set<String> usernames) {
         Club club = clubRepository.findByName(name)
                 .orElseThrow(() -> new RuntimeException("Club not found"));

@@ -55,20 +55,57 @@ export class DefaultComponent implements AfterViewInit {
   loading = true;
   approvedClubs: any[] = [];
   loadingClubs = true;
+  userRole: string | null = null;
+  isLoadingUser = true;
   loadingPartners = true;
   username:string = localStorage.getItem('username') || '';
   
   ngOnInit(): void {
      // Only load data needed for admin
-     if (this.isAdminView()) {
+    //  if (localStorage.getItem('role') === 'ADMIN') {
+    //   this.loadApprovedClubs();
+    //   this.loadBudgetData();
+    //   this.loadTotalUsers();
+    //   this.loadPartners();
+    //   this.loadStats();
+    //   this.loadEventRequestStats();
+    //   this.loadClubStats();
+    //   this.loadCharts();
+    // }
+    this.fetchUserData();
+
+  }
+
+  fetchUserData(): void {
+    this.loginService.getCurrentUser().subscribe({
+      next: (user) => {
+        this.userRole = user.role; // Stockez le rôle
+        this.username = user.username;
+        localStorage.setItem('role', user.role);
+        
+        this.isLoadingUser = false;
+        this.loadDataBasedOnRole(); // Chargez les données seulement après
+      },
+      error: (err) => {
+        console.error('Error fetching user data', err);
+        this.isLoadingUser = false;
+      }
+    });
+  }
+  loadDataBasedOnRole(): void {
+    if (this.userRole === 'ADMIN') {
       this.loadApprovedClubs();
       this.loadBudgetData();
       this.loadTotalUsers();
       this.loadPartners();
+      this.loadStats();
+      this.loadEventRequestStats();
+      this.loadClubStats();
+      this.loadCharts();
     }
-
+    // Pas de else nécessaire - les autres rôles n'ont pas besoin de données supplémentaires
   }
-
+  
   loadBudgetData(): void {
     this.clubRequestService.getAllRequests().subscribe({
       next: (requests) => {

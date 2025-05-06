@@ -1,5 +1,8 @@
-<li class="nav-item coded-hasmenu" [routerLinkActive]="['active']" [class.coded-trigger]="item.triggerExpansion">
-  <a [routerLinkActive]="['active']" (click)="handleClick($event)">
+<li class="nav-item coded-hasmenu"
+    id="collapse-{{item.id}}"
+    [routerLinkActive]="['active']"
+    [class.coded-trigger]="item.triggerExpansion">
+      <a [routerLinkActive]="['active']" (click)="handleClick($event)">
     @if (item.icon) {
       <span class="coded-micon">
         <i antIcon [type]="item.icon" theme="outline"></i>
@@ -23,6 +26,7 @@
       } @else if (child.type === 'collapse') {
         <app-nav-collapse 
           [item]="child" 
+          [shouldExpand]="child.shouldExpand"
           (dynamicCollapseClick)="dynamicCollapseClick.emit($event)"
           (showCollapseItem)="showCollapseItem.emit()">
         </app-nav-collapse>

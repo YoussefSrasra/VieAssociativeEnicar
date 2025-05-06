@@ -4,6 +4,7 @@ import java.util.Date; // Use java.util.Date
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
@@ -30,6 +31,10 @@ public class JwtUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        // Ensure consistent role case
+        claims.put("roles", userDetails.getAuthorities().stream()
+                .map(ga -> ga.getAuthority().replace("ROLE_", "").toUpperCase()) // Force uppercase
+                .collect(Collectors.toList()));
         return createToken(claims, userDetails.getUsername());
     }
 
@@ -43,10 +48,13 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
+    public Boolean validateToken(String token) {
         try {
-            final String username = extractUsername(token);
-            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+            Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token);
+            return true;
         } catch (Exception e) {
             System.out.println("Token validation failed: " + e.getMessage());
             return false;
@@ -66,7 +74,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         try {
             return Jwts.parserBuilder()
                     .setSigningKey(secretKey)

@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
 
 // Define your backend's User interface (adjust fields if needed)
 export interface User {
@@ -64,8 +64,25 @@ export class LoginService {
 
   // Fetch user profile for current JWT token
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>('http://localhost:8080/api/public/me');
-  }
+    // const token = localStorage.getItem('token');
+    // if (!token) {
+    //     return throwError(() => new Error('No token found'));
+    // }
+
+    return this.http.get<User>('http://localhost:8080/api/public/me', {
+        // headers: new HttpHeaders({
+        //     'Authorization': `Bearer ${token}`,
+        //     'Content-Type': 'application/json'
+        // })
+    }).pipe(
+        catchError(error => {
+            console.error('Auth error:', error);
+            // Optional: redirect to login
+            // this.router.navigate(['/login']);
+            return throwError(() => error);
+        })
+    );
+}
 
   // Manually update the in-memory user state
   setCurrentUser(user: User): void {

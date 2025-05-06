@@ -55,9 +55,9 @@ const routes: Routes = [
           .then(c => c.FeedbackEvenementComponent)
       },
       {
-        path: 'feedbacks',
-        loadComponent: () => import('./feedback-list/feedback-list.component')
-          .then(c => c.FeedbackListComponent)
+        path: 'club/:id/feedback-evenement',
+        loadComponent: () => import('./feedback-evenement/feedback-evenement.component')
+          .then(c => c.FeedbackEvenementComponent)
       },
 
 
@@ -102,7 +102,7 @@ const routes: Routes = [
 
 
       {
-        path: 'my-events',
+        path: 'club/:id/my-events',
         loadComponent: () => import('./my-events/my-events.component')
           .then(c => c.MyEventsComponent)
       },
