@@ -106,8 +106,6 @@ public class ClubController {
     }
 
     @GetMapping("/username/{username}")
-
-
     public ResponseEntity<List<ClubBasicDTO>> getClubsByUsername(@PathVariable String username) {
 
         List<ClubBasicDTO> clubs = clubService.getClubsByUsername(username);
@@ -120,5 +118,11 @@ public class ClubController {
             List<ClubDTO> clubs = clubService.getClubsByUserName(username);
             return ResponseEntity.ok(clubs);
     }
+
+    @PostMapping("assign/user/{clubName}/{username}")
+    public void assignMemberToClub(@PathVariable  String clubName, @PathVariable String username ){
+        clubService.assignMemberToClub(clubName, username);
+    }
+    
    
 }

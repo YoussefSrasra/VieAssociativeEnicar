@@ -30,6 +30,7 @@ export class NavCollapseComponent {
   @Output() dynamicCollapseClick = new EventEmitter<string>();
   @Output() showCollapseItem = new EventEmitter<void>();
   @Output() loadClubs = new EventEmitter<void>();
+  @Input() shouldExpand: boolean = false;
 
   @Input() item!: NavigationItem;
   windowWidth: number;
@@ -37,9 +38,19 @@ export class NavCollapseComponent {
   constructor(private clubSelectionService: ClubSelectionService) {
     this.windowWidth = window.innerWidth;
   }
-
+  ngOnChanges() {
+    if (this.shouldExpand) {
+      setTimeout(() => {
+        const element = document.querySelector(`#collapse-${this.item.id}`);
+        if (element && !element.classList.contains('coded-trigger')) {
+          element.classList.add('coded-trigger');
+        }
+      }, 50);
+    }
+  }
   // Modify the navCollapse method
   navCollapse(event: MouseEvent) {
+
     event.preventDefault(); // Prevent default behavior
     event.stopPropagation(); // Stop event bubbling
 

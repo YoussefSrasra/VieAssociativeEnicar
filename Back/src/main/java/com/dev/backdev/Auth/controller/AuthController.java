@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,23 +71,30 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
-        Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
+public ResponseEntity<?> login(@RequestBody User user) {
+    Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
 
-        if (foundUser.isPresent() && passwordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
-            // Générer le JWT
+    if (foundUser.isPresent() && passwordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
+        // Fix: Use consistent role case
+        String dbRole = foundUser.get().getRole(); // "MEMBER"
+        String authority = "ROLE_" + dbRole; // "ROLE_MEMBER"
+        
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(foundUser.get().getUsername())
                 .password(foundUser.get().getPassword())
-                .authorities("ROLE_" + foundUser.get().getRole()) // Add role as authority
+                .authorities(authority)
                 .build();
 
         String token = jwtUtil.generateToken(userDetails);
-            return ResponseEntity.ok(Map.of("token", token, "role", foundUser.get().getRole()));
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Invalid username or password"));
-        }
+        return ResponseEntity.ok(Map.of(
+            "token", token,
+            "role", dbRole // Return original case
+        ));
+    } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            .body(Map.of("message", "Invalid username or password"));
     }
+}
 
      @PostMapping("/complete-profile")
     public ResponseEntity<UserResponseDto> completeProfile(
@@ -141,6 +149,11 @@ public class AuthController {
         return authService.getUsersByClubName(clubName);
     }
 
+    @GetMapping ("/user/by-email/{email}")
+    public Optional<UserResponseDto> getUsersByEmail(@PathVariable String email) {
+        return authService.getUserByEmail(email);
+    }
+
     @GetMapping("/users/{username}")
     public ResponseEntity<UserResponseDto> getUserByUsername(@PathVariable String username) {
         Optional<UserResponseDto> user = authService.getUserByUsername(username);
@@ -159,8 +172,13 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        return userRepository.findByUsername(userDetails.getUsername())
+    public ResponseEntity<UserResponseDto> getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        
+        String username = authentication.getName();
+        return userRepository.findByUsername(username)
                 .map(user -> ResponseEntity.ok(new UserResponseDto(user)))
                 .orElse(ResponseEntity.notFound().build());
     }

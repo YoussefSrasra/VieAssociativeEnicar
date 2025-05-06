@@ -1,19 +1,22 @@
 package com.dev.backdev.entretien.service;
 
-import com.dev.backdev.entretien.model.Entretien;
-import com.dev.backdev.entretien.repository.EntretienRepository;
-import com.dev.backdev.Club.Model.Club;
-import com.dev.backdev.Club.Service.ClubService;
+import java.util.List;
+import java.util.Optional;
 
-import com.dev.backdev.Enums.ClubRole;
-
-import com.dev.backdev.Auth.service.AuthService;
-import com.dev.backdev.enrollment.model.Enrollment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import com.dev.backdev.Auth.dto.UserResponseDto;
+import com.dev.backdev.Auth.service.AuthService;
+import com.dev.backdev.Club.Model.Club;
+import com.dev.backdev.Club.Service.ClubService;
+import com.dev.backdev.Club.dto.ClubDTO;
+import com.dev.backdev.Enums.ClubRole;
+import com.dev.backdev.enrollment.model.Enrollment;
+import com.dev.backdev.entretien.model.Entretien;
+import com.dev.backdev.entretien.model.ResultatEntretien;
+import com.dev.backdev.entretien.model.StatutEntretien;
+import com.dev.backdev.entretien.repository.EntretienRepository;
 
 @Service
 public class EntretienService {
@@ -60,14 +63,38 @@ public class EntretienService {
     public Optional<Entretien> updateEntretien(Long id, Entretien entretienDetails) {
         return entretienRepository.findById(id)
                 .map(entretien -> {
-                    entretien.setDateEntretien(entretienDetails.getDateEntretien());
-                    entretien.setHeureEntretien(entretienDetails.getHeureEntretien());
-                    entretien.setStatut(entretienDetails.getStatut());
+                    if (entretienDetails.getDateEntretien() != null) {
+                        entretien.setDateEntretien(entretienDetails.getDateEntretien());
+                    }
+    
+                    if (entretienDetails.getHeureEntretien() != null) {
+                        entretien.setHeureEntretien(entretienDetails.getHeureEntretien());
+                    }
+                    if (entretienDetails.getStatut() != null) {
+                        entretien.setStatut(entretienDetails.getStatut());
+                    }
+                    
+    
+                    // Optional: if you want confirmation to be updated only when explicitly set, change field type to Boolean
                     entretien.setConfirmation(entretienDetails.isConfirmation());
-                    entretien.setResultat(entretienDetails.getResultat());
+    
+                    if (entretienDetails.getResultat() != null) {
+                        entretien.setResultat(entretienDetails.getResultat());
+                        if (entretienDetails.getResultat() == ResultatEntretien.ACCEPTE ) {
+                            if (authService.getUserByEmail(entretien.getEnrollment().getEmail()).isPresent()) {
+                                UserResponseDto user = authService.getUserByEmail(entretien.getEnrollment().getEmail()).get();
+                                Optional<ClubDTO> club = clubService.getClubById(entretien.getEnrollment().getClubId());
+                                clubService.assignMemberToClub(club.get().getName(),user.getUsername());
+                                entretien.setStatut(StatutEntretien.COMPTE);
+                            }
+                           
+                        } 
+                    }
+    
                     return entretienRepository.save(entretien);
-                });
+                }); 
     }
+    
     public List<Entretien> getEntretiensByClubId(Long clubId) {
         return entretienRepository.findByClubId(clubId);
     }

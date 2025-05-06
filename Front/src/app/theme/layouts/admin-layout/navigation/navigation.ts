@@ -6,6 +6,7 @@ export interface NavigationItem {
   icon?: string;
   hidden?: boolean;
   url?: string;
+  shouldExpand ?: boolean; // <--- Add this line
   classes?: string;
   groupClasses?: string;
   exactMatch?: boolean;
@@ -30,7 +31,7 @@ export const NavigationItems: NavigationItem[] = [
     children: [
       {
         id: 'default',
-        title: 'Default',
+        title: 'Dashboard',
         type: 'item',
         classes: 'nav-item',
         url: '/dashboard/default',
@@ -43,7 +44,7 @@ export const NavigationItems: NavigationItem[] = [
 
   {
     id: 'utilities',
-    title: '',
+    title: 'Functionalities',
     type: 'group',
     icon: 'icon-navigation',
 
@@ -200,7 +201,7 @@ export const NavigationItems: NavigationItem[] = [
 
         roles: ['ADMIN','MANAGER'],
       },
-       {
+       /*{
         id: 'feedback-evenement  ',
         title: 'Feedback-evenement ',
         type: 'item',
@@ -210,7 +211,7 @@ export const NavigationItems: NavigationItem[] = [
 
         roles: ['MEMBER']
 
-      },
+      },*/
     /*  {
         id: 'tabler',
         title: 'Tabler',

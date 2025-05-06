@@ -58,8 +58,8 @@ export class NavContentComponent implements OnInit {
 
   private clubSubmenuItems: DynamicChild[] = [
     { title: 'Events', url: (id) => `/club/${id}/events` },
-    { title: 'Events inscrit ', url: (id) => `my-events` },
-    { title: 'feedback', url: (id) => `feedback-evenement` }
+    { title: 'Events inscrit ', url: (id) => `/club/${id}/my-events` },
+    { title: 'Feedback', url: (id) => `/club/${id}/feedback-evenement` }
   ];
 
   constructor() {
@@ -123,12 +123,13 @@ export class NavContentComponent implements OnInit {
     private handleRouteChange(): void {
       const currentUrl = this.router.url;
       const clubsItem = this.findMyClubsItem(this.navigations);
+      const selectedClubId = localStorage.getItem('selectedClubId');
 
         // Force le rechargement des clubs quand on navigue vers une URL de club
-        if (currentUrl.includes('/club/') && clubsItem) {
+        if (selectedClubId && clubsItem) {
           this.loadClubsForUser(); // true pour forcer le rechargement
         }
-
+        
         this.cdr.detectChanges();
     }
 
@@ -192,10 +193,9 @@ export class NavContentComponent implements OnInit {
     }, 200);
   }
   private ensureMenuVisible(): void {
-    const activeMenu = document.querySelector('.coded-hasmenu.show');
-    if (!activeMenu) {
-      const firstMenu = document.querySelector('.coded-hasmenu');
-      firstMenu?.classList.add('show');
+    const myClubs = document.querySelector(`#collapse-my-clubs`);
+    if (myClubs && !myClubs.classList.contains('coded-trigger')) {
+      myClubs.classList.add('coded-trigger');
     }
   }
   private findMyClubsItem(items: NavigationItem[]): NavigationItem | undefined {
@@ -250,6 +250,8 @@ export class NavContentComponent implements OnInit {
       title: club.name,
       type: 'collapse',
       icon: 'icon-people',
+      triggerExpansion: true, // Mark it for initial opening
+      shouldExpand: true, // <-- New input to control expansion from parent
       children: this.clubSubmenuItems.map(child => ({
         id: `club-${club.id}-${child.title.toLowerCase()}`,
         title: child.title,

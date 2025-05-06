@@ -12,19 +12,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import com.dev.backdev.Auth.dto.ProfileCompletionDTO;
 import com.dev.backdev.Auth.dto.UserDTO;
 import com.dev.backdev.Auth.dto.UserRegistrationDTO;
-    import com.dev.backdev.Auth.dto.UserResponseDto;
+import com.dev.backdev.Auth.dto.UserResponseDto;
     import com.dev.backdev.Auth.dto.UserUpdateDTO;
     import com.dev.backdev.Auth.model.User;
     import com.dev.backdev.Auth.repository.UserRepository;
     import com.dev.backdev.Auth.util.JwtUtil;
-import com.dev.backdev.Club.Model.Club;
+    import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Model.ClubMembership;
-    import com.dev.backdev.Club.Repository.ClubMembershipRepository;
-import com.dev.backdev.Club.Repository.ClubRepository;
+import com.dev.backdev.Club.Repository.ClubMembershipRepository;
+    import com.dev.backdev.Club.Repository.ClubRepository;
 import com.dev.backdev.Email.EmailService;
 import com.dev.backdev.Enums.ClubRole;
 
-    import jakarta.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 
     @Service
@@ -225,6 +225,13 @@ import com.dev.backdev.Enums.ClubRole;
                                  .map(User::getEmail)
                                  .collect(Collectors.toList());
         }
+
+        // public UserEmailDTO getUserByEmail(String email) {
+        //     return userRepository.findByEmail(email)
+        //         .map(user -> new UserEmailDTO(user.getId(), user.getEmail()))
+        //         .orElseThrow(() -> new RuntimeException("User not found"));
+        // }
+
         // 4. Get user by username
         public Optional<UserResponseDto> getUserByUsername(String username) {
             return userRepository.findByUsername(username)

@@ -63,7 +63,7 @@ export class GenerationCompteComponent implements OnInit {
   genererCompte(entretien: any): void {
     this.entretienService.creercompte(entretien.id).subscribe({
       next: () => {
-        entretien.statut = 'COMPTE';
+        entretien.statut ='COMPTE';
         this.entretienService.updateEntretien(entretien.id, entretien).subscribe({
           next: () => {
             this.successMessage = 'Compte créé et statut mis à jour avec succès';
