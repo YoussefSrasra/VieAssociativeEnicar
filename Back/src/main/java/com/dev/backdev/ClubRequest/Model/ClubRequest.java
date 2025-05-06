@@ -6,7 +6,14 @@ import java.util.List;
 
 import com.dev.backdev.Club.Model.Club;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class ClubRequest {
@@ -16,8 +23,8 @@ public class ClubRequest {
     private Long id;
 
    
-    private String type; // Forum, Hackathon, EnicARobotos...
-    @Column(name = "event_name", nullable = false) // Exactement comme dans la base
+    private String type; 
+    @Column(name = "event_name", nullable = false) 
     private String eventName;
         private String description;
         @Column(name = "start_date")
@@ -29,24 +36,23 @@ public class ClubRequest {
         private String location;
 
     @ElementCollection
-    private List<String> committeeTypes; // Organisation, Logistique...
+    private List<String> committeeTypes;
     @Column(name = "financial_request")
 
     private boolean financialRequest;
     
 
     private Double requestedAmount;
-        private String status; // Pending, Approved, Rejected
+        private String status;
         private boolean needEquipment;
 
         @ElementCollection
-        private List<String> requestedEquipment; // Remplace equipmentDescription
+        private List<String> requestedEquipment; 
         
     @ManyToOne
     @JoinColumn(name = "club_id")
     private Club club;
 
-    // Constructors
     public ClubRequest() {}
 
     public ClubRequest(String type, String eventName, String description, LocalDate startDate, LocalDate endDate, 
@@ -65,7 +71,6 @@ public class ClubRequest {
         this.club = club;
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

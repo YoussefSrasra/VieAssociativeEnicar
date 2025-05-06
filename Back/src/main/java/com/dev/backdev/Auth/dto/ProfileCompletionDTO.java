@@ -32,7 +32,5 @@ public class ProfileCompletionDTO {
     
     private Formation formation;
     
-    private String photo; // Base64 encoded image
-    
-    // Getters and setters
+    private String photo; 
 }

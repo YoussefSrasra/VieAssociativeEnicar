@@ -40,14 +40,12 @@ protected void doFilterInternal(HttpServletRequest request, HttpServletResponse 
             String username = jwtUtils.extractUsername(jwt);
             List<String> roles = claims.get("roles", List.class);
             
-            // Debug logging
             System.out.println("=== JWT AUTH DEBUG ===");
             System.out.println("Username: " + username);
             System.out.println("Raw roles from token: " + roles);
             
             List<GrantedAuthority> authorities = roles.stream()
             .map(role -> {
-                // Ensure consistent role formatting
                 String roleName = role.startsWith("ROLE_") ? role : "ROLE_" + role;
                 System.out.println("Creating authority: " + roleName); // Debug
                 return new SimpleGrantedAuthority(roleName);

@@ -1,17 +1,18 @@
 package com.dev.backdev.EventRequest.Service;
 
-import com.dev.backdev.EventRequest.DTO.EventRequestDTO;
-import com.dev.backdev.EventRequest.Model.EventRequest;
-import com.dev.backdev.EventRequest.Model.EventRequest.RequestStatus;
-import com.dev.backdev.EventRequest.Repository.EventRequestRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.dev.backdev.EventRequest.DTO.EventRequestDTO;
+import com.dev.backdev.EventRequest.Model.EventRequest;
+import com.dev.backdev.EventRequest.Model.EventRequest.RequestStatus;
+import com.dev.backdev.EventRequest.Repository.EventRequestRepository;
 
 @Service
 public class EventRequestService {
@@ -41,7 +42,6 @@ public class EventRequestService {
         return approvedEvents.stream()
             .map(eventRequest -> {
                 EventRequestDTO dto = new EventRequestDTO();
-                // Map all necessary fields from entity to DTO
                 dto.setId(eventRequest.getId());
                 dto.setType(eventRequest.getType());
                 dto.setClubName(eventRequest.getClub().getName());
@@ -50,7 +50,6 @@ public class EventRequestService {
                 dto.setStartDate(eventRequest.getStartDate());
                 dto.setEndDate(eventRequest.getEndDate());
                 dto.setLocation(eventRequest.getLocation());
-                // Include any other relevant fields
                 return dto;
             })
             .collect(Collectors.toList());
@@ -104,10 +103,9 @@ public class EventRequestService {
     }
     
     public List<Map<String, Object>> getAllEventRequestsWithClubNames() {
-        return eventRequestRepository.findAllForDisplay(); // Utilise la requête JOIN existante
+        return eventRequestRepository.findAllForDisplay(); 
     }
     
-// Dans EventRequestService.java
 public List<String> getEventNamesByClubId(Long clubId) {
     return eventRequestRepository.findEventNamesByClubId(clubId);
 }

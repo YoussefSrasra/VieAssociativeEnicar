@@ -31,7 +31,6 @@ public class JwtUtil {
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        // Ensure consistent role case
         claims.put("roles", userDetails.getAuthorities().stream()
                 .map(ga -> ga.getAuthority().replace("ROLE_", "").toUpperCase()) // Force uppercase
                 .collect(Collectors.toList()));
@@ -42,8 +41,8 @@ public class JwtUtil {
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis())) // java.util.Date
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs)) // java.util.Date
+                .setIssuedAt(new Date(System.currentTimeMillis())) 
+                .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationInMs)) 
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }

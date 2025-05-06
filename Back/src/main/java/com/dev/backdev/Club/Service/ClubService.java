@@ -42,7 +42,6 @@ public class ClubService {
             throw new IllegalArgumentException("Un club avec ce nom existe déjà");
         }
 
-        // 2. Crée le compte manager
         User manager = new User();
         manager.setUsername(club.getName());
         manager.setPassword(passwordEncoder.encode("changeme"));
@@ -50,7 +49,6 @@ public class ClubService {
         manager.setPhoto(club.getLogo()); // Photo = logo du club
         userRepository.save(manager);
 
-        // 3. Lie le manager au club
         club.setResponsibleMember(manager);
         Club savedClub = clubRepository.save(club);
 
@@ -96,7 +94,7 @@ public class ClubService {
         return userRepository.findByUsername(username)
                 .map(user -> user.getClubMemberships().stream()
                         .map(ClubMembership::getClub)  // Récupère le Club depuis ClubMembership
-                        .map(club -> new ClubBasicDTO(club.getId(), club.getName())) // Convertit en DTO minimal
+                        .map(club -> new ClubBasicDTO(club.getId(), club.getName()))
 
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
@@ -105,8 +103,8 @@ public class ClubService {
     public List<ClubDTO> getClubsByUserName(String userName) {
         return userRepository.findByUsername(userName)
                 .map(user -> user.getClubMemberships().stream()
-                        .map(ClubMembership::getClub) // Récupère le Club depuis ClubMembership
-                        .map(this::convertToDTO) // Convertit en DTO
+                        .map(ClubMembership::getClub) 
+                        .map(this::convertToDTO) 
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new RuntimeException("User not found with username: " + userName));
     }
@@ -128,7 +126,6 @@ public class ClubService {
 
     public Club updateClub(Long id, Club clubDetails) {
         return clubRepository.findById(id).map(club -> {
-            // Vérification et mise à jour du nom
             if (clubDetails.getName() != null) {
                 if (!clubDetails.getName().equals(club.getName()) &&
                         clubRepository.existsByName(clubDetails.getName())) {
@@ -137,35 +134,28 @@ public class ClubService {
                 club.setName(clubDetails.getName());
             }
     
-            // Spécialité
             if (clubDetails.getSpecialty() != null) {
                 club.setSpecialty(clubDetails.getSpecialty());
             }
     
-            // Statut
             if (clubDetails.getStatus() != null) {
                 club.setStatus(clubDetails.getStatus());
             }
     
-            // Logo
             if (clubDetails.getLogo() != null) {
                 club.setLogo(clubDetails.getLogo());
             }
     
-            // Responsable
             if (clubDetails.getResponsibleMember() != null) {
                 club.setResponsibleMember(clubDetails.getResponsibleMember());
             }
     
-            // Ouverture d’enrôlement
             club.setEnrollmentOpen(clubDetails.isEnrollmentOpen());
     
-            // Date de début de mandat
             if (clubDetails.getMandatStartDate() != null) {
                 club.setMandatStartDate(clubDetails.getMandatStartDate());
             }
     
-            // Durée du mandat
             if (clubDetails.getMandatDurationMonths() != null) {
                 club.setMandatDurationMonths(clubDetails.getMandatDurationMonths());
             }
@@ -182,7 +172,6 @@ public class ClubService {
         List<User> users = userRepository.findByUsernameIn(usernames);
 
         for (User user : users) {
-            // Vérifie si l'utilisateur est déjà membre
             boolean alreadyMember = club.getMemberships().stream()
                     .anyMatch(m -> m.getUser().equals(user));
 
@@ -190,7 +179,7 @@ public class ClubService {
                 ClubMembership membership = new ClubMembership();
                 membership.setUser(user);
                 membership.setClub(club);
-                membership.setRole(ClubRole.MEMBER); // Rôle par défaut
+                membership.setRole(ClubRole.MEMBER);
                 club.getMemberships().add(membership);
             }
         }
@@ -210,7 +199,7 @@ public class ClubService {
             ClubMembership membership = new ClubMembership();
             membership.setUser(user);
             membership.setClub(club);
-            membership.setRole(ClubRole.MEMBER); // Rôle par défaut
+            membership.setRole(ClubRole.MEMBER); 
             membershipRepository.save(membership);
             club.getMemberships().add(membership);
         }
@@ -223,7 +212,6 @@ public class ClubService {
 
         List<User> users = userRepository.findByUsernameIn(usernames);
 
-        // Supprime les membreships correspondants
         club.getMemberships().removeIf(membership -> users.contains(membership.getUser()) &&
                 membership.getRole() == ClubRole.MEMBER // Ne pas supprimer les rôles spéciaux
         );
@@ -237,16 +225,13 @@ public class ClubService {
         Club club = clubRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Club not found with id: " + id));
 
-        // Manually delete memberships
         club.getMemberships().forEach(membership -> membershipRepository.delete(membership));
 
-        // Optionally delete responsible member
         User responsible = club.getResponsibleMember();
         if (responsible != null) {
             userRepository.delete(responsible);
         }
 
-        // Delete the club itself
         clubRepository.delete(club);
     }
 
@@ -268,7 +253,7 @@ public class ClubService {
                 club.getId(),
                 club.getName(),
                 club.getSpecialty(),
-                club.getStatus(), // Convertit l'enum en String
+                club.getStatus(), 
                 club.getLogo(),
                 club.isEnrollmentOpen(),
                 managerUsername,

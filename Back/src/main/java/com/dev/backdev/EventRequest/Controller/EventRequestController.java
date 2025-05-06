@@ -1,5 +1,20 @@
 package com.dev.backdev.EventRequest.Controller;
 
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Club.Service.ClubService;
 import com.dev.backdev.Club.dto.ClubDTO;
@@ -7,13 +22,6 @@ import com.dev.backdev.EventRequest.DTO.EventRequestDTO;
 import com.dev.backdev.EventRequest.Model.EventRequest;
 import com.dev.backdev.EventRequest.Repository.EventRequestRepository;
 import com.dev.backdev.EventRequest.Service.EventRequestService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/event-requests")
@@ -26,21 +34,16 @@ public class EventRequestController {
     private ClubService clubService;
     @PostMapping
     public ResponseEntity<EventRequest> createEventRequest(@RequestBody EventRequest eventRequest) {
-        // Vérifier que le club existe et récupérer son DTO
         Long clubId = eventRequest.getClub().getId();
     
         ClubDTO clubDTO = clubService.getClubById(clubId)
                 .orElseThrow(() -> new RuntimeException("Club not found with id: " + clubId));
         
-        // Vous pouvez directement associer le clubDTO à l'eventRequest si ClubDTO est suffisant.
-        Club club = new Club();  // Créer une nouvelle instance si nécessaire ou récupérer via DTO
+        Club club = new Club();  
         club.setId(clubDTO.getId());
-        // Si des propriétés supplémentaires existent dans ClubDTO, les transférer ici.
         
-        // Associer le club trouvé à la demande d'événement
         eventRequest.setClub(club);
         
-        // Créer la demande d'événement
         EventRequest createdRequest = eventRequestService.createEventRequest(eventRequest);
         return ResponseEntity.ok(createdRequest);
 
@@ -59,7 +62,6 @@ public class EventRequestController {
 
 
 
-// Dans EventRequestController.java
 @GetMapping("/club/{clubId}/event-names")
 public ResponseEntity<List<String>> getEventNamesByClub(@PathVariable Long clubId) {
     List<String> eventNames = eventRequestService.getEventNamesByClubId(clubId);

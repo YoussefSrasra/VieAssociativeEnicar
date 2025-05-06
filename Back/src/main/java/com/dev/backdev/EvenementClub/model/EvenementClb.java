@@ -46,7 +46,6 @@ import lombok.ToString;
         private String remarques;
     @OneToMany(mappedBy = "evenement")
     private List<Enrollment> enrollments;
-        // Relation avec le responsable du club (User)
         @ManyToOne
         @JoinColumn(name = "responsable_id", nullable = false)
         private User responsable;

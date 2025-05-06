@@ -1,9 +1,15 @@
 package com.dev.backdev.lancerEvenement.controller;
 
+import java.util.List;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.dev.backdev.lancerEvenement.model.Event;
 import com.dev.backdev.lancerEvenement.service.EventService;
-import org.springframework.web.bind.annotation.*;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/even")
@@ -25,7 +31,6 @@ public class EventLaunchController {
     }
 
   
-    // Autres endpoints...
     @GetMapping("/latest")
 public Event getLatestEvent() {
     return eventService.getLatestEvent();

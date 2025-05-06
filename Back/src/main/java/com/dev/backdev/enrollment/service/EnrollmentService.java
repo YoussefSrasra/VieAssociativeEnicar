@@ -1,6 +1,8 @@
 package com.dev.backdev.enrollment.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import com.dev.backdev.enrollment.model.Enrollment;
@@ -10,9 +12,6 @@ import com.dev.backdev.entretien.model.Entretien;
 import com.dev.backdev.entretien.model.ResultatEntretien;
 import com.dev.backdev.entretien.model.StatutEntretien;
 import com.dev.backdev.entretien.service.EntretienService;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 public class EnrollmentService {
@@ -45,7 +44,6 @@ public class EnrollmentService {
         enrollment.setEtat(EnrollmentStatus.ACCEPTE);
         Enrollment updatedEnrollment = enrollmentRepository.save(enrollment);
 
-        // Création automatique de l'entretien
         createDefaultEntretien(enrollment);
 
         return updatedEnrollment;
@@ -69,7 +67,6 @@ public class EnrollmentService {
          entretien.setStatut(StatutEntretien.EN_ATTENTE);
         entretien.setResultat(ResultatEntretien.EN_ATTENTE);
         entretien.setConfirmation(false);
-        // dateEntretien et heureEntretien restent null
 
         entretienService.saveEntretien(entretien);
     }

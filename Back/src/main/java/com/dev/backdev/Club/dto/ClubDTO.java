@@ -19,15 +19,14 @@ public class ClubDTO {
     private Long id;
     private String name;
     private String specialty;
-    private ClubStatus status;  // Utilisation de l'enum plutôt que String
+    private ClubStatus status; 
     private String logo;
     private boolean enrollmentOpen;
-    private String responsibleMemberUsername;  // Plus explicite
-    private List<String> memberUsernames;     // Plus explicite
+    private String responsibleMemberUsername; 
+    private List<String> memberUsernames;   
     private LocalDate mandatStartDate;
     private Integer mandatDurationMonths;
     
-    // Constructeur à partir de l'entité Club
     public ClubDTO(Club club) {
         this.id = club.getId();
         this.name = club.getName();

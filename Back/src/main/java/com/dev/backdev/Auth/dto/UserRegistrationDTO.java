@@ -25,12 +25,5 @@ public class UserRegistrationDTO {
     private Formation formation;
     private String photo;
 
-    // Validation pour la création de compte manager
-    /*public void validateManagerAccount(ClubService clubService) {
-        if (this.role.equals("ROLE_MANAGER")) {
-            if (!clubService.existsByName(this.username)) {
-                throw new IllegalArgumentException("Le username doit correspondre à un club existant");
-            }
-        }
-    }*/
+    
 }

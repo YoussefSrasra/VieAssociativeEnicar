@@ -31,6 +31,9 @@ import com.dev.backdev.Auth.util.JwtUtil;
 import com.dev.backdev.Club.Model.Club;
 import com.dev.backdev.Enums.ClubRole;
 
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
+
 @RestController
 @RequestMapping("/api/public")
 public class AuthController {
@@ -48,6 +51,8 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRegistrationDTO userDto) {
+        log.info("Registering user: {}", userDto.getUsername());
+
         User user = authService.registerUser(userDto);
         return ResponseEntity.ok(new UserResponseDto(user));
     }
@@ -58,7 +63,6 @@ public class AuthController {
         return ResponseEntity.ok(new UserResponseDto(user));
     }
 
-    // Pour le switch compte membre -> manager
     @PostMapping("/switch-to-manager/{clubId}/{username}")
     public ResponseEntity<?> switchToManagerAccount(
         @PathVariable String username,
@@ -72,12 +76,15 @@ public class AuthController {
 
     @PostMapping("/login")
 public ResponseEntity<?> login(@RequestBody User user) {
+    log.info("Login attempt for user: {}", user.getUsername());
+
     Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
 
     if (foundUser.isPresent() && passwordEncoder.matches(user.getPassword(), foundUser.get().getPassword())) {
-        // Fix: Use consistent role case
-        String dbRole = foundUser.get().getRole(); // "MEMBER"
-        String authority = "ROLE_" + dbRole; // "ROLE_MEMBER"
+        log.info("Authentication successful for user: {}", user.getUsername());
+
+        String dbRole = foundUser.get().getRole(); 
+        String authority = "ROLE_" + dbRole; 
         
         UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                 .username(foundUser.get().getUsername())
@@ -88,9 +95,11 @@ public ResponseEntity<?> login(@RequestBody User user) {
         String token = jwtUtil.generateToken(userDetails);
         return ResponseEntity.ok(Map.of(
             "token", token,
-            "role", dbRole // Return original case
+            "role", dbRole 
         ));
     } else {
+        log.warn("Authentication failed for user: {}", user.getUsername());
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("message", "Invalid username or password"));
     }

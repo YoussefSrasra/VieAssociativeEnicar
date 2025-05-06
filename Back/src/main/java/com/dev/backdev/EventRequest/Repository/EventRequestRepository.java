@@ -1,12 +1,14 @@
 package com.dev.backdev.EventRequest.Repository;
 
-import com.dev.backdev.EventRequest.Model.EventRequest;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import java.util.List;
-import java.util.Map;
+
+import com.dev.backdev.EventRequest.Model.EventRequest;
 
 @Repository
 public interface EventRequestRepository extends JpaRepository<EventRequest, Long> {
@@ -25,12 +27,11 @@ public interface EventRequestRepository extends JpaRepository<EventRequest, Long
     "er.needEquipment as needEquipment, " +
     "er.equipmentDescription as equipmentDescription, " +
     "c.id as clubId, " +
-    "c.name as clubName) " + // Ajouté
+    "c.name as clubName) " + 
     "FROM EventRequest er JOIN er.club c " +
     "ORDER BY er.createdAt DESC")
 List<Map<String, Object>> findAllForDisplay();
 
-// Dans EventRequestRepository.java
 @Query("SELECT er.eventName FROM EventRequest er WHERE er.club.id = :clubId")
 List<String> findEventNamesByClubId(@Param("clubId") Long clubId);
 List<EventRequest> findByClubIdAndStatus(Long clubId, EventRequest.RequestStatus status); 

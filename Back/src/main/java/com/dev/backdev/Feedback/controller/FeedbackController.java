@@ -1,13 +1,18 @@
 package com.dev.backdev.Feedback.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.backdev.Feedback.model.Feedback;
 import com.dev.backdev.Feedback.service.FeedbackService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/feedbacks")
@@ -33,7 +38,7 @@ public class FeedbackController {
             List<Feedback> feedbackList = feedbackService.getAllFeedback();
             return ResponseEntity.ok(feedbackList);
         } catch (Exception e) {
-            e.printStackTrace(); // Log the error for debugging
+            e.printStackTrace(); 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                  .body("Error fetching feedbacks: " + e.getMessage());
         }

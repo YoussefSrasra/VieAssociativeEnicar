@@ -41,6 +41,5 @@ public class ClubMembership {
         this.role = role;
     }
 
-    // Getters and Setters...
     
 }

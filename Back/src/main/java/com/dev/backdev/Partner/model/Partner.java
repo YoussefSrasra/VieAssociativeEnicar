@@ -18,7 +18,6 @@ public class Partner {
     private Integer since;
     private String details;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }

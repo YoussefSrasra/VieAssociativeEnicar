@@ -1,9 +1,17 @@
 package com.dev.backdev.Feedback.model;
 
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 public class Feedback {
@@ -28,7 +36,6 @@ public class Feedback {
 
  
 
-    // Getters & Setters
 
     public Feedback(Long id, String firstName, String lastName, String email, String eventName, String comment,
             int rating, List<String> images, LocalDateTime createdAt) {
@@ -43,7 +50,6 @@ public class Feedback {
         this.createdAt = createdAt;
     }
     public Feedback() {
-        // no-args constructor required by JPA
     }
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;

@@ -60,7 +60,6 @@ public class User {
     @Column(nullable = false)
     private boolean firstLogin = true; // Add this field
     
-    // Constructors, Getters, and Setters
 
     public User(String username, String password, String email, String role) {
         this.username = username;
@@ -71,7 +70,7 @@ public class User {
 
     public void setResponsibleClub(Club responsibleClub) {
         if (this.responsibleClub == responsibleClub) {
-            return; // Already linked, stop the loop
+            return; 
         }
     
         if (this.responsibleClub != null) {

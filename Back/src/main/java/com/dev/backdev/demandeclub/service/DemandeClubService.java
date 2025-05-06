@@ -13,7 +13,7 @@ import com.dev.backdev.Club.Model.Club.ClubStatus;
 import com.dev.backdev.Club.Service.ClubService;
 import com.dev.backdev.Club.dto.ClubDTO;
 import com.dev.backdev.Email.EmailService;
-import com.dev.backdev.Enums.ClubRole; // Import ajouté
+import com.dev.backdev.Enums.ClubRole; 
 import com.dev.backdev.demandeclub.model.Etat;
 import com.dev.backdev.demandeclub.model.demandeclub;
 import com.dev.backdev.demandeclub.repository.DemandeClubRepository;
@@ -35,10 +35,8 @@ public class DemandeClubService {
 
 
     public ClubDTO accepterDemandeEtCreerClub(long demandeid) {
-        // 1. Récupérer la demande
         demandeclub demande = DemandeClubRepository.findById(demandeid)
             .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
-        // 1. Créer le club
         Club nouveauClub = new Club();
         nouveauClub.setName(demande.getNomClub());
         nouveauClub.setSpecialty(demande.getDescription());
@@ -48,7 +46,6 @@ public class DemandeClubService {
         Club clubCree = clubService.createClub(nouveauClub);
         emailService.sendClubCreationInfo(demande.getEmail(), demande.getNomClub());
 
-        // 2. Créer le compte visiteur (PRESIDENT) et l’ajouter au club
         authService.createVisitorAccount(
             demande.getNom(),
             demande.getPrenom(),
@@ -57,7 +54,6 @@ public class DemandeClubService {
             ClubRole.PRESIDENT
         );
 
-        // 3. Supprimer ou marquer la demande comme traitée
         DemandeClubRepository.delete(demande);
         ClubDTO clubDTO = new ClubDTO(clubCree);
         return clubDTO;
@@ -80,7 +76,6 @@ public class DemandeClubService {
             .orElseThrow(() -> new RuntimeException("Demande non trouvée"));
         
         try {
-            // Utilisation directe de l'enum Etat
             Etat etat = Etat.valueOf(newState.toUpperCase());
             demande.setEtat(etat);
             return DemandeClubRepository.save(demande);

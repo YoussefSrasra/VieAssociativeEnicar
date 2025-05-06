@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// New minimal DTO for club listing
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
